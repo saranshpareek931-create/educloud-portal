@@ -3,3 +3,4 @@ Flask
 qrcode[pil]
 Pillow
 gunicorn
+python-dotenv
