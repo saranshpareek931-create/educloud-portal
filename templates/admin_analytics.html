@@ -1,0 +1,786 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Admin Analytics - EduCloud Portal</title>
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f5f7fb;
+            color: #1f2937;
+        }
+
+        /* =========================
+           NAVBAR
+        ========================= */
+
+        .navbar {
+            background: #111827;
+            color: white;
+            padding: 16px 30px;
+
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            box-shadow: 0 3px 15px rgba(0, 0, 0, 0.12);
+        }
+
+        .brand {
+            font-size: 22px;
+            font-weight: 700;
+        }
+
+        .nav-right {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .nav-btn {
+            text-decoration: none;
+            color: white;
+
+            background: #374151;
+
+            padding: 9px 15px;
+
+            border-radius: 8px;
+
+            font-size: 14px;
+
+            transition: 0.2s;
+        }
+
+        .nav-btn:hover {
+            background: #4b5563;
+        }
+
+        .logout-btn {
+            background: #dc2626;
+        }
+
+        .logout-btn:hover {
+            background: #b91c1c;
+        }
+
+        /* =========================
+           PAGE
+        ========================= */
+
+        .container {
+            width: 92%;
+            max-width: 1250px;
+
+            margin: 35px auto;
+        }
+
+        .page-header {
+            margin-bottom: 25px;
+        }
+
+        .page-header h1 {
+            font-size: 32px;
+            margin-bottom: 8px;
+        }
+
+        .page-header p {
+            color: #6b7280;
+            font-size: 15px;
+        }
+
+        /* =========================
+           STAT CARDS
+        ========================= */
+
+        .stats-grid {
+            display: grid;
+
+            grid-template-columns:
+                repeat(4, 1fr);
+
+            gap: 18px;
+
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: white;
+
+            border-radius: 14px;
+
+            padding: 24px;
+
+            box-shadow:
+                0 5px 20px rgba(0, 0, 0, 0.07);
+
+            border: 1px solid #e5e7eb;
+        }
+
+        .stat-title {
+            font-size: 14px;
+            color: #6b7280;
+
+            margin-bottom: 10px;
+        }
+
+        .stat-number {
+            font-size: 32px;
+            font-weight: 700;
+
+            color: #111827;
+        }
+
+        /* =========================
+           SECTION
+        ========================= */
+
+        .section {
+            background: white;
+
+            border-radius: 14px;
+
+            padding: 25px;
+
+            margin-bottom: 25px;
+
+            box-shadow:
+                0 5px 20px rgba(0, 0, 0, 0.06);
+
+            border: 1px solid #e5e7eb;
+        }
+
+        .section-title {
+            font-size: 21px;
+            font-weight: 700;
+
+            margin-bottom: 20px;
+        }
+
+        /* =========================
+           BRANCH GRID
+        ========================= */
+
+        .branch-grid {
+            display: grid;
+
+            grid-template-columns:
+                repeat(4, 1fr);
+
+            gap: 18px;
+        }
+
+        .branch-card {
+            border: 1px solid #e5e7eb;
+
+            border-radius: 12px;
+
+            padding: 20px;
+
+            background: #fafafa;
+        }
+
+        .branch-name {
+            font-size: 18px;
+
+            font-weight: 700;
+
+            margin-bottom: 4px;
+        }
+
+        .branch-code {
+            color: #6b7280;
+
+            font-size: 13px;
+
+            margin-bottom: 18px;
+        }
+
+        .branch-stat {
+            display: flex;
+
+            justify-content: space-between;
+
+            padding: 9px 0;
+
+            border-bottom:
+                1px solid #eeeeee;
+
+            font-size: 14px;
+        }
+
+        .branch-stat:last-child {
+            border-bottom: none;
+        }
+
+        .branch-stat span:last-child {
+            font-weight: 700;
+        }
+
+        /* =========================
+           YEAR CHART
+        ========================= */
+
+        .year-chart {
+            display: flex;
+
+            flex-direction: column;
+
+            gap: 20px;
+        }
+
+        .year-row {
+            width: 100%;
+        }
+
+        .year-info {
+            display: flex;
+
+            justify-content: space-between;
+
+            margin-bottom: 8px;
+
+            font-size: 14px;
+        }
+
+        .year-name {
+            font-weight: 600;
+        }
+
+        .year-count {
+            color: #6b7280;
+        }
+
+        .bar-background {
+            width: 100%;
+
+            height: 18px;
+
+            background: #e5e7eb;
+
+            border-radius: 20px;
+
+            overflow: hidden;
+        }
+
+        .bar-fill {
+            height: 100%;
+
+            width: 0;
+
+            background: #5b67f1;
+
+            border-radius: 20px;
+
+            transition:
+                width 0.7s ease;
+        }
+
+        /* =========================
+           SUBJECT TABLE
+        ========================= */
+
+        .table-wrapper {
+            width: 100%;
+
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+
+            border-collapse: collapse;
+        }
+
+        th {
+            text-align: left;
+
+            background: #f3f4f6;
+
+            padding: 13px;
+
+            font-size: 14px;
+        }
+
+        td {
+            padding: 13px;
+
+            border-bottom:
+                1px solid #eeeeee;
+
+            font-size: 14px;
+        }
+
+        tr:hover td {
+            background: #fafafa;
+        }
+
+        .count-badge {
+            display: inline-block;
+
+            padding: 5px 10px;
+
+            background: #eef2ff;
+
+            color: #4338ca;
+
+            border-radius: 20px;
+
+            font-weight: 600;
+
+            font-size: 12px;
+        }
+
+        .empty {
+            text-align: center;
+
+            color: #6b7280;
+
+            padding: 25px;
+        }
+
+        /* =========================
+           RESPONSIVE
+        ========================= */
+
+        @media (max-width: 1000px) {
+
+            .stats-grid {
+                grid-template-columns:
+                    repeat(2, 1fr);
+            }
+
+            .branch-grid {
+                grid-template-columns:
+                    repeat(2, 1fr);
+            }
+
+        }
+
+        @media (max-width: 650px) {
+
+            .navbar {
+                padding: 14px 18px;
+
+                flex-direction: column;
+
+                gap: 12px;
+
+                align-items: flex-start;
+            }
+
+            .container {
+                width: 94%;
+
+                margin: 25px auto;
+            }
+
+            .page-header h1 {
+                font-size: 26px;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .branch-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .section {
+                padding: 18px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- =========================
+     NAVBAR
+========================= -->
+
+<nav class="navbar">
+
+    <div class="brand">
+        EduCloud Portal
+    </div>
+
+    <div class="nav-right">
+
+        <a
+            href="/admin"
+            class="nav-btn">
+            Admin Dashboard
+        </a>
+
+        <a
+            href="/logout"
+            class="nav-btn logout-btn">
+            Logout
+        </a>
+
+    </div>
+
+</nav>
+
+
+<!-- =========================
+     MAIN CONTAINER
+========================= -->
+
+<div class="container">
+
+
+    <!-- HEADER -->
+
+    <div class="page-header">
+
+        <h1>
+            Analytics Dashboard
+        </h1>
+
+        <p>
+            Overview of your EduCloud Portal activity.
+        </p>
+
+    </div>
+
+
+    <!-- =========================
+         OVERALL STATS
+    ========================= -->
+
+    <div class="stats-grid">
+
+
+        <div class="stat-card">
+
+            <div class="stat-title">
+                Total Students
+            </div>
+
+            <div class="stat-number">
+                {{ total_students }}
+            </div>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <div class="stat-title">
+                Total Teachers
+            </div>
+
+            <div class="stat-number">
+                {{ total_teachers }}
+            </div>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <div class="stat-title">
+                Total Resources
+            </div>
+
+            <div class="stat-number">
+                {{ total_resources }}
+            </div>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <div class="stat-title">
+                Total Branches
+            </div>
+
+            <div class="stat-number">
+                {{ total_branches }}
+            </div>
+
+        </div>
+
+
+    </div>
+
+
+    <!-- =========================
+         BRANCH STATISTICS
+    ========================= -->
+
+    <div class="section">
+
+        <div class="section-title">
+            Branch-wise Statistics
+        </div>
+
+
+        <div class="branch-grid">
+
+
+            {% for branch in branch_stats %}
+
+            <div class="branch-card">
+
+
+                <div class="branch-name">
+                    {{ branch["name"] }}
+                </div>
+
+
+                <div class="branch-code">
+                    {{ branch["code"] }}
+                </div>
+
+
+                <div class="branch-stat">
+
+                    <span>
+                        Students
+                    </span>
+
+                    <span>
+                        {{ branch["students"] }}
+                    </span>
+
+                </div>
+
+
+                <div class="branch-stat">
+
+                    <span>
+                        Teachers
+                    </span>
+
+                    <span>
+                        {{ branch["teachers"] }}
+                    </span>
+
+                </div>
+
+
+                <div class="branch-stat">
+
+                    <span>
+                        Resources
+                    </span>
+
+                    <span>
+                        {{ branch["resources"] }}
+                    </span>
+
+                </div>
+
+
+            </div>
+
+            {% endfor %}
+
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================
+         YEAR-WISE RESOURCES
+    ========================= -->
+
+    <div class="section">
+
+        <div class="section-title">
+            Year-wise Resources
+        </div>
+
+
+        {% if year_stats %}
+
+        <div class="year-chart">
+
+
+            {% for item in year_stats %}
+
+            <div class="year-row">
+
+
+                <div class="year-info">
+
+                    <span class="year-name">
+                        {{ item["name"] }}
+                    </span>
+
+                    <span class="year-count">
+                        {{ item["resources"] }} resources
+                    </span>
+
+                </div>
+
+
+                <div class="bar-background">
+
+                    <div
+                        class="bar-fill"
+                        data-width="{{ item['percentage'] }}">
+                    </div>
+
+                </div>
+
+
+            </div>
+
+            {% endfor %}
+
+
+        </div>
+
+        {% else %}
+
+        <div class="empty">
+            No year data available.
+        </div>
+
+        {% endif %}
+
+
+    </div>
+
+
+    <!-- =========================
+         SUBJECT-WISE RESOURCES
+    ========================= -->
+
+    <div class="section">
+
+        <div class="section-title">
+            Subject-wise Resources
+        </div>
+
+
+        {% if subject_stats %}
+
+        <div class="table-wrapper">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            Subject
+                        </th>
+
+                        <th>
+                            Branch
+                        </th>
+
+                        <th>
+                            Resources
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+
+                    {% for subject in subject_stats %}
+
+                    <tr>
+
+                        <td>
+                            {{ subject["name"] }}
+                        </td>
+
+                        <td>
+                            {{ subject["branch_name"] }}
+                        </td>
+
+                        <td>
+
+                            <span class="count-badge">
+                                {{ subject["resources"] }}
+                            </span>
+
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+        {% else %}
+
+        <div class="empty">
+            No subject data available.
+        </div>
+
+        {% endif %}
+
+
+    </div>
+
+
+</div>
+
+
+<!-- =========================
+     BAR CHART JAVASCRIPT
+========================= -->
+
+<script>
+
+    document
+        .querySelectorAll(".bar-fill")
+        .forEach(function(bar) {
+
+            var width =
+                bar.getAttribute("data-width");
+
+            if (!width) {
+                width = 0;
+            }
+
+            bar.style.width =
+                width + "%";
+
+        });
+
+</script>
+
+
+</body>
+
+</html>

@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>QR Code - EduCloud</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
+    <style>
+
+        .qr-page {
+            max-width: 650px;
+            margin: 60px auto;
+            padding: 20px;
+        }
+
+        .qr-card {
+            background: #111827;
+            border: 1px solid #263244;
+            border-radius: 20px;
+            padding: 35px;
+            text-align: center;
+        }
+
+        .qr-card h1 {
+            margin-bottom: 10px;
+        }
+
+        .qr-card p {
+            color: #94a3b8;
+        }
+
+        .qr-image {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            display: inline-block;
+            margin: 25px 0;
+        }
+
+        .qr-image img {
+            width: 280px;
+            height: 280px;
+            display: block;
+        }
+
+        .resource-name {
+            font-size: 20px;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        .back-button {
+            display: inline-block;
+            padding: 12px 18px;
+            border-radius: 10px;
+            background: #2563eb;
+            color: white;
+            text-decoration: none;
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+<nav class="navbar">
+
+    <div class="logo">
+        ☁️ <span>EduCloud</span>
+    </div>
+
+    <a href="/logout"
+       class="nav-button">
+
+        Logout
+
+    </a>
+
+</nav>
+
+
+<main class="qr-page">
+
+    <div class="qr-card">
+
+        <h1>
+            📱 Resource QR Code
+        </h1>
+
+        <p>
+            Scan this QR code to access the resource.
+        </p>
+
+        <div class="resource-name">
+            {{ resource["title"] }}
+        </div>
+
+        <p>
+            {{ resource["year_name"] }}
+            •
+            {{ resource["subject_name"] }}
+        </p>
+
+
+        <div class="qr-image">
+
+            <img
+                src="{{ qr_url }}"
+                alt="Resource QR Code">
+
+        </div>
+
+
+        <br>
+
+        <a
+            href="/teacher"
+            class="back-button">
+
+            ← Back to Dashboard
+
+        </a>
+
+    </div>
+
+</main>
+
+</body>
+
+</html>

@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Edit Teacher - EduCloud</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
+    <style>
+
+        body {
+            min-height: 100vh;
+        }
+
+        .page {
+            max-width: 650px;
+            margin: 50px auto;
+            padding: 20px;
+        }
+
+        .card {
+            background: #111827;
+            border: 1px solid #263244;
+            border-radius: 20px;
+            padding: 30px;
+        }
+
+        h1 {
+            margin-top: 0;
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            color: #94a3b8;
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        input,
+        select {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 13px 14px;
+            border-radius: 10px;
+            border: 1px solid #334155;
+            background: #0b1120;
+            color: white;
+            font-size: 15px;
+            outline: none;
+        }
+
+        input:focus,
+        select:focus {
+            border-color: #2563eb;
+        }
+
+        .password-note {
+            margin-top: 7px;
+            color: #64748b;
+            font-size: 13px;
+        }
+
+        .error {
+            background: #451a1a;
+            border: 1px solid #7f1d1d;
+            color: #fecaca;
+            padding: 12px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 12px;
+            margin-top: 25px;
+        }
+
+        .button {
+            flex: 1;
+            text-align: center;
+            text-decoration: none;
+            border: none;
+            padding: 13px;
+            border-radius: 10px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 15px;
+        }
+
+        .save-button {
+            background: #2563eb;
+            color: white;
+        }
+
+        .back-button {
+            background: #1e293b;
+            color: white;
+        }
+
+        .button:hover {
+            opacity: 0.9;
+        }
+
+        @media (max-width: 600px) {
+
+            .page {
+                margin: 20px auto;
+            }
+
+            .card {
+                padding: 22px;
+            }
+
+            .buttons {
+                flex-direction: column;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+    <nav class="navbar">
+
+        <div class="logo">
+            ☁️ <span>EduCloud</span>
+        </div>
+
+        <a href="/logout"
+           class="nav-button">
+
+            Logout
+
+        </a>
+
+    </nav>
+
+
+    <main class="page">
+
+        <div class="card">
+
+            <h1>
+                ✏️ Edit Teacher
+            </h1>
+
+            <p class="subtitle">
+                Update teacher account details and branch.
+            </p>
+
+
+            {% if error %}
+
+            <div class="error">
+                {{ error }}
+            </div>
+
+            {% endif %}
+
+
+            <form method="POST">
+
+
+                <div class="form-group">
+
+                    <label>
+                        Teacher Name
+                    </label>
+
+                    <input
+                        type="text"
+                        name="name"
+                        value="{{ teacher['name'] }}"
+                        required>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>
+                        Username
+                    </label>
+
+                    <input
+                        type="text"
+                        name="username"
+                        value="{{ teacher['username'] }}"
+                        required>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>
+                        New Password
+                    </label>
+
+                    <input
+                        type="password"
+                        name="password"
+                        placeholder="Leave blank to keep current password">
+
+                    <div class="password-note">
+                        Leave this empty if you don't want to change the password.
+                    </div>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>
+                        Assigned Branch
+                    </label>
+
+                    <select
+                        name="branch_id"
+                        required>
+
+                        {% for branch in branches %}
+
+                        <option
+                            value="{{ branch['id'] }}"
+                            {% if branch['id'] == teacher['branch_id'] %}
+                            selected
+                            {% endif %}>
+
+                            {{ branch['name'] }}
+
+                        </option>
+
+                        {% endfor %}
+
+                    </select>
+
+                </div>
+
+
+                <div class="buttons">
+
+                    <button
+                        type="submit"
+                        class="button save-button">
+
+                        💾 Save Changes
+
+                    </button>
+
+
+                    <a
+                        href="/admin"
+                        class="button back-button">
+
+                        ← Back
+
+                    </a>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </main>
+
+</body>
+
+</html>

@@ -1,0 +1,360 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Add Student - EduCloud Portal</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background:
+                radial-gradient(circle at top left, #1e3a8a, transparent 35%),
+                radial-gradient(circle at bottom right, #312e81, transparent 35%),
+                #080b16;
+
+            color: white;
+            padding: 40px 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 650px;
+            margin: auto;
+        }
+
+        .top {
+            margin-bottom: 25px;
+        }
+
+        .back {
+            display: inline-block;
+            color: #c7d2fe;
+            text-decoration: none;
+            margin-bottom: 20px;
+        }
+
+        .back:hover {
+            color: white;
+        }
+
+        h1 {
+            font-size: 32px;
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            color: #aab3c5;
+        }
+
+        .card {
+            margin-top: 25px;
+            background: rgba(255,255,255,0.07);
+            border: 1px solid rgba(255,255,255,0.12);
+            border-radius: 20px;
+            padding: 30px;
+
+            backdrop-filter: blur(15px);
+
+            box-shadow:
+                0 20px 50px rgba(0,0,0,0.35);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #e5e7eb;
+            font-weight: 600;
+        }
+
+        input,
+        select {
+            width: 100%;
+            padding: 14px 15px;
+
+            border-radius: 12px;
+
+            border: 1px solid rgba(255,255,255,0.15);
+
+            background: rgba(0,0,0,0.25);
+
+            color: white;
+
+            outline: none;
+
+            font-size: 15px;
+        }
+
+        input:focus,
+        select:focus {
+            border-color: #6366f1;
+            box-shadow: 0 0 0 3px rgba(99,102,241,0.15);
+        }
+
+        select option {
+            background: #111827;
+            color: white;
+        }
+
+        .error {
+            background: rgba(239,68,68,0.12);
+            border: 1px solid rgba(239,68,68,0.35);
+            color: #fca5a5;
+
+            padding: 12px 15px;
+
+            border-radius: 10px;
+
+            margin-bottom: 20px;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 12px;
+            margin-top: 25px;
+        }
+
+        button,
+        .cancel {
+            flex: 1;
+
+            padding: 14px;
+
+            border-radius: 12px;
+
+            font-size: 15px;
+            font-weight: 600;
+
+            cursor: pointer;
+
+            text-align: center;
+            text-decoration: none;
+        }
+
+        button {
+            border: none;
+
+            background: linear-gradient(
+                135deg,
+                #6366f1,
+                #8b5cf6
+            );
+
+            color: white;
+        }
+
+        button:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
+        }
+
+        .cancel {
+            border: 1px solid rgba(255,255,255,0.15);
+            background: rgba(255,255,255,0.05);
+            color: #d1d5db;
+        }
+
+        .cancel:hover {
+            background: rgba(255,255,255,0.1);
+        }
+
+        @media (max-width: 600px) {
+
+            body {
+                padding: 25px 15px;
+            }
+
+            .card {
+                padding: 22px;
+            }
+
+            h1 {
+                font-size: 26px;
+            }
+
+            .buttons {
+                flex-direction: column;
+            }
+        }
+
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="top">
+
+        <a href="/admin" class="back">
+            ← Back to Admin Dashboard
+        </a>
+
+        <h1>🎓 Add Student</h1>
+
+        <p class="subtitle">
+            Create a student account and assign branch & year.
+        </p>
+
+    </div>
+
+
+    <div class="card">
+
+        {% if error %}
+
+        <div class="error">
+            ⚠️ {{ error }}
+        </div>
+
+        {% endif %}
+
+
+        <form method="POST">
+
+            <!-- NAME -->
+
+            <div class="form-group">
+
+                <label>
+                    Student Name
+                </label>
+
+                <input
+                    type="text"
+                    name="name"
+                    placeholder="Enter student name"
+                    required
+                >
+
+            </div>
+
+
+            <!-- USERNAME -->
+
+            <div class="form-group">
+
+                <label>
+                    Username
+                </label>
+
+                <input
+                    type="text"
+                    name="username"
+                    placeholder="Enter login username"
+                    required
+                >
+
+            </div>
+
+
+            <!-- PASSWORD -->
+
+            <div class="form-group">
+
+                <label>
+                    Password
+                </label>
+
+                <input
+                    type="password"
+                    name="password"
+                    placeholder="Enter password"
+                    required
+                >
+
+            </div>
+
+
+            <!-- BRANCH -->
+
+            <div class="form-group">
+
+                <label>
+                    Branch
+                </label>
+
+                <select name="branch_id" required>
+
+                    <option value="">
+                        Select Branch
+                    </option>
+
+                    {% for branch in branches %}
+
+                    <option value="{{ branch['id'] }}">
+                        {{ branch['name'] }}
+                    </option>
+
+                    {% endfor %}
+
+                </select>
+
+            </div>
+
+
+            <!-- YEAR -->
+
+            <div class="form-group">
+
+                <label>
+                    Year
+                </label>
+
+                <select name="year_id" required>
+
+                    <option value="">
+                        Select Year
+                    </option>
+
+                    {% for year in years %}
+
+                    <option value="{{ year['id'] }}">
+                        {{ year['name'] }}
+                    </option>
+
+                    {% endfor %}
+
+                </select>
+
+            </div>
+
+
+            <div class="buttons">
+
+                <a
+                    href="/admin"
+                    class="cancel"
+                >
+                    Cancel
+                </a>
+
+                <button type="submit">
+                    ➕ Create Student
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+</body>
+</html>
+```

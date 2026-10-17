@@ -1,0 +1,436 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resource Library | EduCloud</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Segoe UI", Arial, sans-serif;
+            background: #f5f7fb;
+            color: #172033;
+        }
+
+        .navbar {
+            background: #ffffff;
+            border-bottom: 1px solid #e8edf5;
+            padding: 18px 6%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .brand {
+            font-size: 23px;
+            font-weight: 800;
+            color: #3157d5;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 22px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #657087;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active {
+            color: #3157d5;
+        }
+
+        .container {
+            max-width: 1150px;
+            margin: 0 auto;
+            padding: 38px 22px 60px;
+        }
+
+        .back-link {
+            display: inline-block;
+            color: #3157d5;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 14px;
+            margin-bottom: 22px;
+        }
+
+        .hero {
+            background: linear-gradient(120deg, #e9efff, #f4f1ff);
+            border: 1px solid #e0e7ff;
+            border-radius: 22px;
+            padding: 32px;
+            margin-bottom: 28px;
+        }
+
+        .eyebrow {
+            color: #3157d5;
+            font-size: 12px;
+            font-weight: 800;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            margin-bottom: 12px;
+        }
+
+        h1 {
+            font-size: clamp(28px, 4vw, 38px);
+            margin-bottom: 10px;
+        }
+
+        .hero p {
+            color: #626e85;
+            line-height: 1.7;
+        }
+
+        .filters {
+            display: grid;
+            grid-template-columns: 1fr 230px auto;
+            gap: 12px;
+            margin-bottom: 28px;
+        }
+
+        input, select {
+            width: 100%;
+            min-width: 0;
+            padding: 14px 15px;
+            background: white;
+            border: 1px solid #dfe5ef;
+            border-radius: 12px;
+            outline: none;
+            color: #172033;
+            font-size: 14px;
+        }
+
+        input:focus, select:focus {
+            border-color: #6683f0;
+            box-shadow: 0 0 0 3px #3157d51a;
+        }
+
+        button {
+            padding: 14px 18px;
+            border: 0;
+            border-radius: 12px;
+            background: #e8edff;
+            color: #3157d5;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .section-heading {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 18px;
+        }
+
+        .section-heading h2 {
+            font-size: 21px;
+        }
+
+        .count {
+            font-size: 13px;
+            color: #78839a;
+        }
+
+        .resource-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 18px;
+        }
+
+        .resource-card {
+            background: #fff;
+            border: 1px solid #e7ebf3;
+            border-radius: 17px;
+            padding: 22px;
+            box-shadow: 0 5px 20px #17203306;
+            display: flex;
+            flex-direction: column;
+            min-height: 230px;
+        }
+
+        .file-icon {
+            width: 46px;
+            height: 46px;
+            border-radius: 13px;
+            background: #edf1ff;
+            display: grid;
+            place-items: center;
+            color: #3157d5;
+            font-size: 22px;
+            margin-bottom: 17px;
+        }
+
+        .subject {
+            color: #3157d5;
+            font-size: 12px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: .6px;
+            margin-bottom: 8px;
+        }
+
+        .resource-card h3 {
+            font-size: 17px;
+            line-height: 1.45;
+            margin-bottom: 8px;
+            overflow-wrap: anywhere;
+        }
+
+        .resource-card p {
+            color: #78839a;
+            font-size: 13px;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .actions {
+            display: flex;
+            gap: 10px;
+            margin-top: auto;
+        }
+
+        .actions a {
+            flex: 1;
+            text-align: center;
+            padding: 11px 8px;
+            border-radius: 10px;
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .view-btn {
+            background: #edf1ff;
+            color: #3157d5;
+        }
+
+        .download-btn {
+            background: #3157d5;
+            color: #fff;
+        }
+
+        .empty {
+            grid-column: 1 / -1;
+            background: #fff;
+            padding: 45px 20px;
+            text-align: center;
+            border: 1px dashed #d5dceb;
+            border-radius: 17px;
+            color: #78839a;
+        }
+
+        footer {
+            text-align: center;
+            color: #8a94a8;
+            font-size: 12px;
+            padding: 24px;
+        }
+
+        @media (max-width: 700px) {
+            .filters {
+                grid-template-columns: 1fr;
+            }
+
+            .hero {
+                padding: 24px;
+            }
+
+            .container {
+                padding: 25px 16px 40px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar">
+        <div class="brand">EduCloud.</div>
+
+        <div class="nav-links">
+            <a href="{{ url_for('student_dashboard') }}">Overview</a>
+            <a href="{{ url_for('student_resources') }}" class="active">Resources</a>
+            <a href="{{ url_for('student_resources') }}#resourceSearch">Search Library</a>
+            <a href="{{ url_for('logout') }}">Logout</a>
+        </div>
+    </nav>
+
+    <main class="container">
+        <a class="back-link" href="{{ url_for('student_dashboard') }}">
+            ← Back to Dashboard
+        </a>
+
+        <section class="hero">
+            <div class="eyebrow">Student Library</div>
+            <h1>Your learning resources.</h1>
+            <p>
+                Welcome, {{ name }}. Search your notes, practical files,
+                manuals and other study material in one place.
+            </p>
+        </section>
+
+        <section class="filters" id="resourceSearch">
+            <input
+                type="search"
+                id="searchInput"
+                placeholder="Search notes, PDFs, subjects..."
+                aria-label="Search resources"
+            >
+
+            <select id="subjectFilter" aria-label="Filter by subject">
+                <option value="">All Subjects</option>
+                {% for resource in resources %}
+                    <option value="{{ resource['subject_name']|lower }}">
+                        {{ resource['subject_name'] }}
+                    </option>
+                {% endfor %}
+            </select>
+
+            <button type="button" id="resetButton">Reset Filters</button>
+        </section>
+
+        <div class="section-heading">
+            <h2>Available Resources</h2>
+            <span class="count" id="resourceCount"></span>
+        </div>
+
+        <section class="resource-grid" id="resourceGrid">
+            {% for resource in resources %}
+            <article
+                class="resource-card"
+                data-title="{{ resource['title']|lower }}"
+                data-subject="{{ resource['subject_name']|lower }}"
+            >
+                <div class="file-icon">▤</div>
+
+                <div class="subject">{{ resource['subject_name'] }}</div>
+
+                <h3>{{ resource['title'] }}</h3>
+
+                <p>
+                    {{ resource['year_name'] }}
+                    · Study material
+                </p>
+
+                <div class="actions">
+                    <a
+                        class="view-btn"
+                        href="{{ url_for('view_resource', resource_id=resource['id']) }}"
+                    >
+                        View File
+                    </a>
+
+                    <a
+                        class="download-btn"
+                        href="/download/{{ resource['id'] }}"
+                    >
+                        Download
+                    </a>
+                </div>
+            </article>
+            {% else %}
+            <div class="empty" id="emptyMessage">
+                <h3>No resources available yet</h3>
+                <p>Your study materials will appear here when uploaded by your teacher.</p>
+            </div>
+            {% endfor %}
+        </section>
+    </main>
+
+    <footer>EduCloud Portal · Smart Campus Resources</footer>
+
+    <script>
+        const searchInput = document.getElementById("searchInput");
+        const subjectFilter = document.getElementById("subjectFilter");
+        const resetButton = document.getElementById("resetButton");
+        const cards = Array.from(document.querySelectorAll(".resource-card"));
+        const resourceCount = document.getElementById("resourceCount");
+        const resourceGrid = document.getElementById("resourceGrid");
+
+        // Remove duplicate subject options.
+        const subjectOptions = Array.from(subjectFilter.options);
+        const seenSubjects = new Set();
+
+        subjectOptions.forEach((option, index) => {
+            if (index === 0) return;
+
+            if (seenSubjects.has(option.value)) {
+                option.remove();
+            } else {
+                seenSubjects.add(option.value);
+            }
+        });
+
+        function filterResources() {
+            const searchText = searchInput.value.toLowerCase().trim();
+            const selectedSubject = subjectFilter.value;
+            let visibleCount = 0;
+
+            cards.forEach(card => {
+                const title = card.dataset.title || "";
+                const subject = card.dataset.subject || "";
+
+                const matchesSearch =
+                    title.includes(searchText) ||
+                    subject.includes(searchText);
+
+                const matchesSubject =
+                    !selectedSubject || subject === selectedSubject;
+
+                const visible = matchesSearch && matchesSubject;
+
+                card.style.display = visible ? "flex" : "none";
+
+                if (visible) visibleCount++;
+            });
+
+            resourceCount.textContent =
+                visibleCount + (visibleCount === 1 ? " resource" : " resources");
+
+            let emptyMessage = document.getElementById("filterEmptyMessage");
+
+            if (visibleCount === 0 && cards.length > 0) {
+                if (!emptyMessage) {
+                    emptyMessage = document.createElement("div");
+                    emptyMessage.id = "filterEmptyMessage";
+                    emptyMessage.className = "empty";
+                    emptyMessage.textContent =
+                        "No matching resources found. Try another search.";
+                    resourceGrid.appendChild(emptyMessage);
+                }
+                emptyMessage.style.display = "block";
+            } else if (emptyMessage) {
+                emptyMessage.style.display = "none";
+            }
+        }
+
+        searchInput.addEventListener("input", filterResources);
+        subjectFilter.addEventListener("change", filterResources);
+
+        resetButton.addEventListener("click", () => {
+            searchInput.value = "";
+            subjectFilter.value = "";
+            filterResources();
+        });
+
+        filterResources();
+    </script>
+</body>
+</html>
+```

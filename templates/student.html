@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EduCloud — Student Workspace</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+<style>
+:root{
+  --bg:#f4f6fb;
+  --panel:#ffffff;
+  --panel2:#f8f9fc;
+  --ink:#10131a;
+  --muted:#707887;
+  --line:#e7e9ef;
+  --accent:#5b4cf0;
+  --accent2:#7c6cff;
+  --accentSoft:#eeecff;
+  --green:#1c9a72;
+  --shadow:0 18px 55px rgba(27,31,45,.08);
+  --shadow2:0 8px 25px rgba(27,31,45,.06);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;
+  background:
+    radial-gradient(circle at 85% 0%,rgba(104,91,246,.10),transparent 28%),
+    radial-gradient(circle at 10% 30%,rgba(61,185,157,.06),transparent 24%),
+    var(--bg);
+  color:var(--ink);
+  font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+}
+a{text-decoration:none;color:inherit}
+button,input,select{font:inherit}
+
+.app{
+  min-height:100vh;
+  display:grid;
+  grid-template-columns:248px minmax(0,1fr);
+}
+
+/* ---------- RAIL ---------- */
+.rail{
+  position:sticky;
+  top:0;
+  height:100vh;
+  padding:24px 16px;
+  border-right:1px solid var(--line);
+  background:rgba(255,255,255,.76);
+  backdrop-filter:blur(22px);
+  display:flex;
+  flex-direction:column;
+  z-index:20;
+}
+.brand{
+  display:flex;align-items:center;gap:11px;
+  padding:5px 10px 28px;
+}
+.brand-mark{
+  width:36px;height:36px;border-radius:12px;
+  display:grid;place-items:center;
+  background:linear-gradient(145deg,#17152b,#6b5af4);
+  color:#fff;font-size:17px;
+  box-shadow:0 8px 18px rgba(91,76,240,.22);
+}
+.brand strong{font-size:17px;letter-spacing:-.5px}
+.brand small{display:block;color:#9298a5;font-size:10px;margin-top:2px}
+.rail-label{
+  color:#a0a5af;font-size:10px;font-weight:800;
+  letter-spacing:.13em;text-transform:uppercase;
+  padding:0 11px 9px;
+}
+.rail-nav{display:grid;gap:4px}
+.rail-link{
+  display:flex;align-items:center;gap:11px;
+  padding:11px 12px;border-radius:12px;
+  color:#737986;font-size:13px;font-weight:650;
+  transition:.2s ease;
+}
+.rail-link span:first-child{width:20px;text-align:center;font-size:15px}
+.rail-link:hover{background:#f2f1ff;color:var(--accent)}
+.rail-link.active{
+  background:#eeecff;color:#4f42dc;
+  box-shadow:inset 3px 0 0 var(--accent);
+}
+.rail-bottom{margin-top:auto}
+.identity{
+  margin-top:12px;padding:13px;
+  border:1px solid var(--line);border-radius:15px;
+  background:#fff;
+}
+.identity-row{display:flex;align-items:center;gap:10px}
+.avatar{
+  width:34px;height:34px;border-radius:11px;
+  display:grid;place-items:center;
+  background:#e9e7ff;color:#5144dd;font-weight:800;font-size:13px;
+}
+.identity b{display:block;font-size:12px;max-width:130px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.identity small{color:#989eaa;font-size:10px}
+.logout{
+  display:block;margin-top:10px;text-align:center;
+  padding:9px;border-radius:10px;
+  color:#8a5d64;background:#fff7f8;
+  font-size:11px;font-weight:750;
+}
+
+/* ---------- MAIN ---------- */
+.main{min-width:0;padding:0 34px 60px}
+.topbar{
+  height:78px;display:flex;align-items:center;justify-content:space-between;
+  max-width:1400px;margin:auto;
+}
+.breadcrumb{font-size:11px;color:#a0a5af;font-weight:700;letter-spacing:.03em}
+.breadcrumb b{color:#646b78}
+.top-actions{display:flex;align-items:center;gap:10px}
+.pill{
+  padding:8px 11px;border:1px solid var(--line);
+  background:rgba(255,255,255,.75);border-radius:999px;
+  color:#737986;font-size:11px;font-weight:700;
+}
+.hero{
+  max-width:1400px;margin:0 auto 22px;
+  min-height:270px;
+  border-radius:28px;
+  padding:38px 42px;
+  position:relative;overflow:hidden;
+  color:#fff;
+  background:
+    radial-gradient(circle at 80% 20%,rgba(169,160,255,.55),transparent 26%),
+    radial-gradient(circle at 95% 100%,rgba(40,196,163,.30),transparent 30%),
+    linear-gradient(125deg,#15142b 0%,#282151 48%,#5144b8 100%);
+  box-shadow:0 22px 65px rgba(44,36,104,.18);
+}
+.hero:before{
+  content:"";position:absolute;right:-90px;top:-130px;
+  width:420px;height:420px;border:1px solid rgba(255,255,255,.13);
+  border-radius:50%;
+}
+.hero:after{
+  content:"";position:absolute;right:70px;top:-55px;
+  width:270px;height:270px;border:1px solid rgba(255,255,255,.08);
+  border-radius:50%;
+}
+.hero-copy{position:relative;z-index:2;max-width:680px}
+.eyebrow{
+  display:inline-flex;align-items:center;gap:7px;
+  color:#c7c2ff;font-size:10px;font-weight:800;
+  letter-spacing:.14em;text-transform:uppercase;margin-bottom:17px;
+}
+.live-dot{width:6px;height:6px;border-radius:50%;background:#63dfb6;box-shadow:0 0 0 5px rgba(99,223,182,.1)}
+.hero h1{
+  font-size:clamp(34px,4vw,57px);
+  line-height:.98;letter-spacing:-.055em;margin:0 0 16px;
+}
+.hero h1 em{font-style:normal;color:#aaa2ff}
+.hero p{margin:0;color:#d3d1e3;font-size:14px;line-height:1.65;max-width:570px}
+.hero-side{
+  position:absolute;right:35px;bottom:28px;z-index:3;
+  width:205px;padding:15px;border:1px solid rgba(255,255,255,.14);
+  background:rgba(255,255,255,.08);backdrop-filter:blur(18px);
+  border-radius:18px;
+}
+.hero-side label{display:block;color:#a9a5ba;font-size:9px;text-transform:uppercase;letter-spacing:.12em;font-weight:800}
+.hero-side strong{display:block;margin-top:6px;font-size:16px}
+.hero-side span{display:block;margin-top:4px;color:#b8b5c8;font-size:10px}
+
+/* ---------- OVERVIEW ---------- */
+.overview{
+  max-width:1400px;margin:0 auto 22px;
+  display:grid;grid-template-columns:1.35fr .8fr .8fr .8fr;gap:12px;
+}
+.over-card{
+  min-height:105px;padding:18px;
+  background:rgba(255,255,255,.9);
+  border:1px solid var(--line);border-radius:18px;
+  box-shadow:var(--shadow2);
+  position:relative;overflow:hidden;
+}
+.over-card.primary{background:#18162d;color:#fff;border-color:#18162d}
+.over-card .label{font-size:9px;color:#9a9eaa;text-transform:uppercase;letter-spacing:.12em;font-weight:800}
+.primary .label{color:#9c97bd}
+.over-card .value{font-size:22px;font-weight:800;letter-spacing:-.04em;margin-top:9px}
+.over-card .sub{font-size:10px;color:#9298a5;margin-top:5px}
+.primary .sub{color:#aaa6bd}
+.over-card .mini-mark{
+  position:absolute;right:15px;top:15px;width:27px;height:27px;border-radius:9px;
+  display:grid;place-items:center;background:#f1efff;color:var(--accent);font-size:12px;
+}
+.primary .mini-mark{background:rgba(255,255,255,.10);color:#b9b3ff}
+
+/* ---------- LIBRARY ---------- */
+.workspace{
+  max-width:1400px;margin:auto;
+  display:grid;grid-template-columns:minmax(0,1fr) 255px;gap:18px;
+}
+.library{
+  background:rgba(255,255,255,.88);border:1px solid var(--line);
+  border-radius:24px;box-shadow:var(--shadow);overflow:hidden;
+}
+.library-head{
+  padding:24px 26px 18px;border-bottom:1px solid var(--line);
+  display:flex;align-items:flex-end;justify-content:space-between;gap:18px;
+}
+.kicker{font-size:9px;text-transform:uppercase;letter-spacing:.13em;color:#a0a5af;font-weight:800}
+.library-head h2{font-size:25px;letter-spacing:-.045em;margin:5px 0 0}
+.library-head p{margin:5px 0 0;color:#858b97;font-size:11px}
+.tool-row{
+  padding:13px 18px;background:#fbfbfd;border-bottom:1px solid var(--line);
+  display:grid;grid-template-columns:minmax(0,1fr) 180px auto;gap:8px;
+}
+.field{
+  height:40px;border:1px solid var(--line);border-radius:11px;
+  background:#fff;outline:none;padding:0 12px;color:var(--ink);font-size:12px;
+}
+.field:focus{border-color:#b9b2ff;box-shadow:0 0 0 3px rgba(91,76,240,.08)}
+.clear{
+  height:40px;padding:0 14px;border:1px solid var(--line);
+  border-radius:11px;background:#fff;color:#6e7480;font-size:11px;font-weight:750;cursor:pointer;
+}
+.clear:hover{background:#f3f1ff;color:var(--accent)}
+.filter-result{padding:10px 20px 0;color:#a0a5af;font-size:10px}
+
+.resource-container{padding:0 18px 20px}
+.subject-group{padding-top:19px}
+.subject-heading{
+  display:flex;align-items:center;gap:9px;
+  padding:0 7px 9px;border-bottom:1px solid var(--line);
+}
+.subject-icon{
+  width:25px;height:25px;border-radius:8px;background:var(--accentSoft);
+  display:grid;place-items:center;color:var(--accent);font-size:11px;
+}
+.subject-heading h3{font-size:12px;margin:0;letter-spacing:-.01em}
+.subject-heading:after{content:"";margin-left:auto;width:6px;height:6px;border-radius:50%;background:#d6d3ff}
+
+.resource-card{
+  display:grid;grid-template-columns:34px minmax(0,1fr) auto;
+  gap:12px;align-items:center;padding:15px 7px;
+  border-bottom:1px solid #f0f1f4;
+  transition:.18s ease;
+}
+.resource-card:hover{
+  margin:0 -7px;padding-left:14px;padding-right:14px;
+  border-radius:14px;background:#faf9ff;
+}
+.doc-icon{
+  width:34px;height:40px;border-radius:8px;
+  display:grid;place-items:center;
+  background:#f0efff;color:#5b4cf0;font-size:15px;
+  position:relative;
+}
+.doc-icon:after{
+  content:"";position:absolute;right:5px;top:5px;width:6px;height:6px;
+  border-top:1px solid #9d95ff;border-right:1px solid #9d95ff;
+}
+.resource-info{min-width:0}
+.resource-info h4{
+  margin:0 0 5px;font-size:13px;letter-spacing:-.01em;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+}
+.resource-info p{
+  margin:0;color:#969ba6;font-size:10px;line-height:1.45;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+}
+.meta{display:flex;gap:6px;flex-wrap:wrap;margin-top:7px}
+.meta span{
+  padding:3px 7px;border-radius:999px;background:#f4f5f8;
+  color:#7d838e;font-size:8px;font-weight:750;
+}
+.resource-right{display:flex;align-items:center;gap:9px}
+.qr{
+  width:55px;height:55px;padding:4px;border:1px solid #e2e4ea;
+  border-radius:9px;background:#fff;
+}
+.qr img{width:100%;height:100%;display:block}
+.actions{display:flex;gap:5px}
+.btn{
+  border:1px solid var(--line);background:#fff;color:#646a76;
+  border-radius:9px;padding:8px 10px;font-size:9px;font-weight:800;
+  white-space:nowrap;transition:.18s;
+}
+.btn:hover{border-color:#c9c4ff;color:var(--accent);background:#f8f7ff}
+.btn.download{background:#17152b;color:#fff;border-color:#17152b}
+.btn.download:hover{background:var(--accent);border-color:var(--accent)}
+
+.empty,.no-filter{
+  padding:60px 20px;text-align:center;color:#969ba6;
+}
+.empty .big,.no-filter .big{font-size:38px;margin-bottom:10px}
+.empty h3{margin:0 0 6px;color:#444a55;font-size:15px}
+.empty p{margin:0;font-size:11px}
+
+/* ---------- SIDE PANEL ---------- */
+.side-panel{display:grid;gap:12px;align-content:start}
+.side-box{
+  background:rgba(255,255,255,.9);border:1px solid var(--line);
+  border-radius:20px;padding:18px;box-shadow:var(--shadow2);
+}
+.side-box.dark{
+  color:#fff;background:#18162d;border-color:#18162d;
+  min-height:235px;position:relative;overflow:hidden;
+}
+.side-box.dark:before{
+  content:"";position:absolute;width:150px;height:150px;border-radius:50%;
+  right:-60px;top:-55px;border:1px solid rgba(255,255,255,.12);
+}
+.side-title{font-size:10px;font-weight:800;letter-spacing:.02em}
+.side-muted{font-size:9px;color:#9298a5;line-height:1.55;margin-top:7px}
+.dark .side-muted{color:#aaa6bd}
+.study-orbit{
+  width:108px;height:108px;border-radius:50%;
+  border:1px dashed #aaa5d0;margin:18px auto 12px;
+  display:grid;place-items:center;position:relative;
+}
+.study-orbit:before{content:"✦";font-size:23px;color:#aaa2ff}
+.orbit-dot{position:absolute;width:9px;height:9px;border-radius:50%;background:#6c5ef1;top:2px;left:49px;box-shadow:0 0 0 5px rgba(108,94,241,.12)}
+.side-stat{display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px solid var(--line);font-size:10px}
+.side-stat:last-child{border-bottom:0}
+.side-stat span{color:#959ba7}
+.side-stat b{font-size:10px}
+.tip{
+  padding:12px;border-radius:12px;background:#f8f7ff;
+  border:1px solid #ebe9ff;color:#686080;font-size:9px;line-height:1.55;
+}
+.tip b{color:#4f42dc}
+
+/* ---------- MOBILE ---------- */
+.mobile-top{display:none}
+@media(max-width:1000px){
+  .app{grid-template-columns:76px minmax(0,1fr)}
+  .rail{padding:18px 10px}
+  .brand{justify-content:center;padding:5px 0 25px}
+  .brand>div:not(.brand-mark),.rail-label,.rail-link b,.identity{display:none}
+  .rail-link{justify-content:center;padding:12px}
+  .rail-link.active{box-shadow:inset 3px 0 0 var(--accent)}
+  .main{padding:0 20px 45px}
+  .overview{grid-template-columns:repeat(2,1fr)}
+  .workspace{grid-template-columns:1fr}
+  .side-panel{grid-template-columns:1fr 1fr}
+}
+@media(max-width:680px){
+  .app{display:block}
+  .rail{display:none}
+  .main{padding:0 11px 35px}
+  .topbar{height:62px;padding:0 4px}
+  .breadcrumb{font-size:10px}
+  .top-actions .pill:first-child{display:none}
+  .hero{min-height:330px;padding:28px 24px;border-radius:23px}
+  .hero h1{font-size:39px}
+  .hero p{font-size:12px}
+  .hero-side{left:24px;right:auto;bottom:24px;width:190px}
+  .overview{grid-template-columns:1fr 1fr;gap:8px}
+  .over-card{min-height:94px;padding:14px}
+  .over-card.primary{grid-column:1/-1}
+  .workspace{display:block}
+  .library{border-radius:20px}
+  .library-head{display:block;padding:20px}
+  .library-head h2{font-size:22px}
+  .tool-row{grid-template-columns:1fr;padding:11px}
+  .resource-card{grid-template-columns:32px minmax(0,1fr);align-items:start}
+  .resource-right{grid-column:1/-1;padding-left:44px}
+  .qr{width:52px;height:52px}
+  .actions{flex:1}
+  .btn{flex:1;text-align:center}
+  .side-panel{display:grid;grid-template-columns:1fr;margin-top:12px}
+}
+@media(max-width:390px){
+  .hero h1{font-size:34px}
+  .hero-side{width:calc(100% - 48px)}
+  .overview{grid-template-columns:1fr}
+  .over-card.primary{grid-column:auto}
+  .resource-right{padding-left:0}
+  .actions{display:grid;grid-template-columns:1fr 1fr}
+}
+</style>
+</head>
+
+<body>
+<div class="app">
+
+  <aside class="rail">
+    <div class="brand">
+      <div class="brand-mark">✦</div>
+      <div>
+        <strong>EduCloud</strong>
+        <small>STUDENT WORKSPACE</small>
+      </div>
+    </div>
+
+    <div class="rail-label">Workspace</div>
+    <nav class="rail-nav">
+      <a class="rail-link active" href="#top"><span>⌂</span><b>Overview</b></a>
+      <a class="rail-link" href="#library"><span>▤</span><b>Resources</b></a>
+      <a class="rail-link" href="#library"><span>⌕</span><b>Search Library</b></a>
+    </nav>
+
+    <div class="rail-bottom">
+      <div class="rail-label">Account</div>
+      <div class="identity">
+        <div class="identity-row">
+          <div class="avatar">{{ name[:1]|upper if name else "S" }}</div>
+          <div>
+            <b>{{ name }}</b>
+            <small>Student access</small>
+          </div>
+        </div>
+        <a class="logout" href="/logout">Sign out</a>
+      </div>
+    </div>
+  </aside>
+
+  <main class="main" id="top">
+    <div class="topbar">
+      <div class="breadcrumb">EDUCLOUD <span> / </span> <b>STUDENT WORKSPACE</b></div>
+      <div class="top-actions">
+        <div class="pill">● Academic access active</div>
+        <div class="pill">{{ year["name"] if year else "Academic year" }}</div>
+      </div>
+    </div>
+
+    <section class="hero">
+      <div class="hero-copy">
+        <div class="eyebrow"><i class="live-dot"></i> Your academic workspace</div>
+        <h1>Study smarter.<br><em>Find everything faster.</em></h1>
+        <p>
+          Notes, PDFs, lab material and course resources — organized around your
+          branch and academic year, ready whenever you need them.
+        </p>
+      </div>
+
+      <div class="hero-side">
+        <label>Current academic track</label>
+        <strong>{{ branch["name"] if branch else "Not Assigned" }}</strong>
+        <span>{{ year["name"] if year else "Year not assigned" }} · Student access</span>
+      </div>
+    </section>
+
+    <section class="overview">
+      <div class="over-card primary">
+        <div class="label">Your workspace</div>
+        <div class="value">{{ name }}</div>
+        <div class="sub">Personalized resource access</div>
+        <div class="mini-mark">✦</div>
+      </div>
+
+      <div class="over-card">
+        <div class="label">Branch</div>
+        <div class="value" style="font-size:17px">{{ branch["name"] if branch else "—" }}</div>
+        <div class="sub">Assigned department</div>
+        <div class="mini-mark">⌘</div>
+      </div>
+
+      <div class="over-card">
+        <div class="label">Academic year</div>
+        <div class="value" style="font-size:17px">{{ year["name"] if year else "—" }}</div>
+        <div class="sub">Current track</div>
+        <div class="mini-mark">◈</div>
+      </div>
+
+      <div class="over-card">
+        <div class="label">Access</div>
+        <div class="value" style="font-size:17px">Student</div>
+        <div class="sub">Verified workspace</div>
+        <div class="mini-mark">✓</div>
+      </div>
+    </section>
+
+    <section class="workspace" id="library">
+
+      <div class="library">
+        <div class="library-head">
+          <div>
+            <div class="kicker">Knowledge library</div>
+            <h2>Your resources</h2>
+            <p>Everything uploaded for your branch and year, in one place.</p>
+          </div>
+        </div>
+
+        {% if resources %}
+        <div class="tool-row">
+          <input class="field" type="search" id="resourceSearch"
+                 placeholder="Search resources, subjects, filenames...">
+          <select class="field" id="subjectFilter">
+            <option value="">All subjects</option>
+          </select>
+          <button class="clear" type="button" id="clearFilters">Reset</button>
+        </div>
+
+        <div id="filterResult" class="filter-result"></div>
+
+        <div class="resource-container" id="resourceContainer">
+          {% set ns = namespace(current_subject="") %}
+
+          {% for resource in resources %}
+            {% if ns.current_subject != resource["subject_name"] %}
+              {% if ns.current_subject != "" %}</div>{% endif %}
+              {% set ns.current_subject = resource["subject_name"] %}
+
+              <div class="subject-group"
+                   data-subject-group="{{ resource['subject_name']|lower }}">
+                <div class="subject-heading">
+                  <div class="subject-icon">▤</div>
+                  <h3>{{ resource["subject_name"] }}</h3>
+                </div>
+            {% endif %}
+
+            <article class="resource-card"
+              data-title="{{ resource['title']|lower }}"
+              data-description="{{ (resource['description'] or '')|lower }}"
+              data-filename="{{ resource['filename']|lower }}"
+              data-subject="{{ resource['subject_name']|lower }}">
+
+              <div class="doc-icon">▱</div>
+
+              <div class="resource-info">
+                <h4>{{ resource["title"] }}</h4>
+                <p>{{ resource["description"] or "No description available." }}</p>
+                <div class="meta">
+                  <span>{{ resource["year_name"] }}</span>
+                  <span>{{ resource["filename"].split(".")[-1]|upper }}</span>
+                </div>
+              </div>
+
+              <div class="resource-right">
+                <div class="qr">
+                  <img src="{{ url_for('static', filename='qr_codes/resource_' ~ resource['id'] ~ '.png') }}"
+                       alt="QR Code">
+                </div>
+                <div class="actions">
+                  <a class="btn" href="/resource/{{ resource['id'] }}">View</a>
+                  <a class="btn download" href="/download/{{ resource['id'] }}">Download</a>
+                </div>
+              </div>
+            </article>
+          {% endfor %}
+
+          {% if ns.current_subject != "" %}</div>{% endif %}
+        </div>
+
+        <div id="noFilterResults" class="no-filter">
+          <div class="big">⌕</div>
+          <div>No resources match your search.</div>
+        </div>
+
+        {% else %}
+        <div class="empty">
+          <div class="big">◌</div>
+          <h3>Your library is waiting for its first resource.</h3>
+          <p>Your teacher has not uploaded resources for this branch and year yet.</p>
+        </div>
+        {% endif %}
+      </div>
+
+      <aside class="side-panel">
+        <div class="side-box dark">
+          <div class="side-title">Focus mode</div>
+          <div class="side-muted">A quiet little space for your academic workspace.</div>
+          <div class="study-orbit"><span class="orbit-dot"></span></div>
+          <div style="text-align:center;font-size:11px;color:#d5d2e5">Your resources, one workspace.</div>
+        </div>
+
+        <div class="side-box">
+          <div class="side-title">Workspace details</div>
+          <div class="side-stat"><span>Branch</span><b>{{ branch["name"] if branch else "—" }}</b></div>
+          <div class="side-stat"><span>Year</span><b>{{ year["name"] if year else "—" }}</b></div>
+          <div class="side-stat"><span>Account</span><b>Student</b></div>
+          <div class="side-stat"><span>Access</span><b style="color:var(--green)">Active</b></div>
+        </div>
+
+        <div class="side-box">
+          <div class="side-title">Pro tip</div>
+          <div class="tip">
+            <b>Scan → View → Download.</b><br>
+            Each resource has its own QR code, so you can quickly open the right material when you need it.
+          </div>
+        </div>
+      </aside>
+
+    </section>
+  </main>
+</div>
+
+<script>
+const searchInput = document.getElementById("resourceSearch");
+const subjectFilter = document.getElementById("subjectFilter");
+const clearFilters = document.getElementById("clearFilters");
+const filterResult = document.getElementById("filterResult");
+const noFilterResults = document.getElementById("noFilterResults");
+const cards = document.querySelectorAll(".resource-card");
+const groups = document.querySelectorAll(".subject-group");
+
+if (searchInput && subjectFilter) {
+  const subjects = new Set();
+
+  cards.forEach(card => {
+    if (card.dataset.subject) subjects.add(card.dataset.subject);
+  });
+
+  [...subjects].sort().forEach(subject => {
+    const option = document.createElement("option");
+    option.value = subject;
+    option.textContent = subject.replace(/\b\w/g, l => l.toUpperCase());
+    subjectFilter.appendChild(option);
+  });
+
+  function applyFilters(){
+    const query = searchInput.value.trim().toLowerCase();
+    const selected = subjectFilter.value;
+    let visible = 0;
+
+    cards.forEach(card => {
+      const searchable =
+        card.dataset.title + " " +
+        card.dataset.description + " " +
+        card.dataset.filename + " " +
+        card.dataset.subject;
+
+      const matchSearch = !query || searchable.includes(query);
+      const matchSubject = !selected || card.dataset.subject === selected;
+      const show = matchSearch && matchSubject;
+
+      card.style.display = show ? "grid" : "none";
+      if(show) visible++;
+    });
+
+    groups.forEach(group => {
+      const groupCards = group.querySelectorAll(".resource-card");
+      const anyVisible = [...groupCards].some(c => c.style.display !== "none");
+      group.style.display = anyVisible ? "" : "none";
+    });
+
+    if(filterResult){
+      filterResult.textContent =
+        (query || selected) ? `${visible} resource${visible === 1 ? "" : "s"} found` : "";
+    }
+    if(noFilterResults) noFilterResults.style.display = visible ? "none" : "block";
+  }
+
+  searchInput.addEventListener("input", applyFilters);
+  subjectFilter.addEventListener("change", applyFilters);
+  clearFilters.addEventListener("click", () => {
+    searchInput.value = "";
+    subjectFilter.value = "";
+    applyFilters();
+    searchInput.focus();
+  });
+
+  applyFilters();
+}
+</script>
+</body>
+</html>

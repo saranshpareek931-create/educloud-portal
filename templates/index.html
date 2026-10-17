@@ -1,0 +1,354 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>EduCloud — Your Campus, Connected</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap"
+          rel="stylesheet">
+</head>
+
+<body>
+
+<!-- NAVIGATION -->
+<nav class="navbar">
+    <a href="#home" class="logo">
+        <span class="logo-mark">e</span>
+        <span>educloud<span class="logo-dot">.</span></span>
+    </a>
+
+    <div class="nav-links">
+        <a href="#home">Home</a>
+        <a href="#features">Platform</a>
+        <a href="#about">About</a>
+    </div>
+
+    <a href="/login" class="nav-button">
+        Portal Login <span>↗</span>
+    </a>
+</nav>
+
+
+<!-- HERO -->
+<main>
+<section class="hero" id="home">
+
+    <div class="hero-content">
+        <div class="eyebrow">
+            <span class="status-dot"></span>
+            SMART CAMPUS · CONNECTED LEARNING
+        </div>
+
+        <h1>
+            Knowledge<br>
+            without <span class="text-accent">limits.</span>
+        </h1>
+
+        <p class="hero-description">
+            Your campus resources, all in one place.
+            Discover notes, lab manuals and study material
+            with a simpler, smarter way to learn.
+        </p>
+
+        <div class="hero-buttons">
+            <a href="/login" class="primary-button">
+                Explore your portal <span>↗</span>
+            </a>
+
+            <a href="#features" class="secondary-button">
+                Discover the platform <span>↓</span>
+            </a>
+        </div>
+
+        <div class="hero-note">
+            <span class="note-line"></span>
+            BUILT FOR STUDENTS. POWERED BY KNOWLEDGE.
+        </div>
+    </div>
+
+
+    <!-- RESOURCE DASHBOARD PREVIEW -->
+    <div class="hero-visual">
+        <div class="visual-topline">
+            <span>EDUCLOUD / RESOURCE HUB</span>
+            <span class="live-label"><span></span> SYSTEM READY</span>
+        </div>
+
+        <div class="resource-dashboard">
+            <div class="dashboard-header">
+                <div>
+                    <span class="dashboard-kicker">YOUR LEARNING SPACE</span>
+                    <h2>Everything<br>in sync.</h2>
+                </div>
+
+                <div class="cloud-symbol">
+                    <svg viewBox="0 0 64 64" fill="none"
+                         xmlns="http://www.w3.org/2000/svg">
+                        <path d="M18 45H47C55 45 59 39 59 32C59 25 53 20 46 20C43 10 35 6 27 9C20 11 17 17 17 23C9 23 4 28 4 35C4 41 10 45 18 45Z"
+                              stroke="currentColor" stroke-width="2.5"
+                              stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M24 34L30 40L42 27"
+                              stroke="#B7F36B" stroke-width="3"
+                              stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </div>
+            </div>
+
+            <div class="dashboard-divider"></div>
+
+            <div class="dashboard-section-title">
+                <span>RECENT RESOURCES</span>
+                <span class="resource-count">02 ITEMS</span>
+            </div>
+
+            <div class="resource-item">
+                <div class="file-icon pdf-icon">PDF</div>
+                <div class="resource-info">
+                    <strong>Data Structures</strong>
+                    <small>Stack &amp; Queue Notes</small>
+                </div>
+                <span class="file-arrow">↗</span>
+            </div>
+
+            <div class="resource-item">
+                <div class="file-icon db-icon">DB</div>
+                <div class="resource-info">
+                    <strong>Database Systems</strong>
+                    <small>SQL Fundamentals</small>
+                </div>
+                <span class="file-arrow">↗</span>
+            </div>
+
+            <div class="scan-panel">
+                <div class="scan-graphic">
+                    <svg viewBox="0 0 80 80" fill="none"
+                         xmlns="http://www.w3.org/2000/svg">
+                        <path d="M9 28V9H28M52 9H71V28M71 52V71H52M28 71H9V52"
+                              stroke="currentColor" stroke-width="4"
+                              stroke-linecap="square"/>
+                        <rect x="20" y="20" width="13" height="13"
+                              fill="currentColor"/>
+                        <rect x="47" y="20" width="13" height="13"
+                              fill="currentColor"/>
+                        <rect x="20" y="47" width="13" height="13"
+                              fill="currentColor"/>
+                        <path d="M45 46H51V52H45ZM57 46H61V61H46V57H57Z"
+                              fill="#B7F36B"/>
+                    </svg>
+                </div>
+
+                <div>
+                    <strong>One scan. Instant access.</strong>
+                    <p>Find your learning resources without the hassle.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="visual-caption">
+            <span>01 — DIGITAL CAMPUS</span>
+            <span>LEARN WITHOUT FRICTION ↗</span>
+        </div>
+    </div>
+
+</section>
+
+
+<!-- DARK STATEMENT SECTION -->
+<section class="statement-section" id="about">
+    <div class="statement-top">
+        <span class="section-index">01 / THE IDEA</span>
+        <span class="statement-symbol">✳</span>
+    </div>
+
+    <div class="statement-content">
+        <h2>
+            Less searching.<br>
+            More <span>learning.</span>
+        </h2>
+
+        <p>
+            Academic material shouldn't be difficult to find.
+            EduCloud brings teachers and students together
+            through one organized digital campus.
+        </p>
+    </div>
+
+    <div class="statement-bottom">
+        <span>YOUR CAMPUS. YOUR RESOURCES.</span>
+        <span>MADE FOR EVERYDAY LEARNING ↗</span>
+    </div>
+</section>
+
+
+<!-- FEATURES -->
+<section class="features" id="features">
+
+    <div class="features-heading">
+        <div>
+            <div class="eyebrow">
+                <span class="status-dot"></span>
+                THE PLATFORM
+            </div>
+
+            <h2>Learning tools.<br><span>Thoughtfully connected.</span></h2>
+        </div>
+
+        <p>
+            Everything your campus needs to organize,
+            share and access academic resources with ease.
+        </p>
+    </div>
+
+    <div class="feature-grid">
+
+        <article class="feature-card feature-card-main">
+            <div class="feature-card-top">
+                <span class="feature-number">01</span>
+                <span class="feature-symbol">↗</span>
+            </div>
+
+            <div class="feature-illustration teacher-illustration">
+                <div class="illustration-window">
+                    <div class="window-dots"><i></i><i></i><i></i></div>
+                    <div class="illustration-lines">
+                        <span></span><span></span><span></span>
+                    </div>
+                    <div class="upload-symbol">↑</div>
+                </div>
+            </div>
+
+            <h3>Teacher uploads</h3>
+            <p>
+                Notes, PDFs and lab manuals, organized and
+                ready to share with your students.
+            </p>
+        </article>
+
+
+        <article class="feature-card">
+            <div class="feature-card-top">
+                <span class="feature-number">02</span>
+                <span class="feature-symbol">↗</span>
+            </div>
+
+            <div class="feature-illustration qr-illustration">
+                <div class="qr-mini">
+                    <span>▦</span>
+                    <span>▦</span>
+                    <span>▦</span>
+                    <span>▦</span>
+                </div>
+                <div class="qr-orbit">SCAN<br>TO LEARN</div>
+            </div>
+
+            <h3>QR-powered access</h3>
+            <p>
+                Reach the right study material with a quick
+                scan instead of searching everywhere.
+            </p>
+        </article>
+
+
+        <article class="feature-card">
+            <div class="feature-card-top">
+                <span class="feature-number">03</span>
+                <span class="feature-symbol">↗</span>
+            </div>
+
+            <div class="feature-illustration library-illustration">
+                <div class="library-sheet sheet-one">PDF <span>↗</span></div>
+                <div class="library-sheet sheet-two">NOTES <span>↗</span></div>
+                <div class="library-sheet sheet-three">LAB <span>↗</span></div>
+            </div>
+
+            <h3>Organized library</h3>
+            <p>
+                Keep learning resources structured by branch,
+                year and subject for easier discovery.
+            </p>
+        </article>
+
+
+        <article class="feature-card feature-card-dark">
+            <div class="feature-card-top">
+                <span class="feature-number">04</span>
+                <span class="feature-symbol">↗</span>
+            </div>
+
+            <div class="feature-illustration search-illustration">
+                <div class="search-ring">
+                    <span></span>
+                </div>
+                <div class="search-line"></div>
+            </div>
+
+            <h3>Find it faster.</h3>
+            <p>
+                Search for the material you need and spend
+                more time learning, not looking.
+            </p>
+        </article>
+
+    </div>
+</section>
+
+
+<!-- CTA -->
+<section class="cta-section">
+    <div class="cta-glow"></div>
+
+    <div class="cta-content">
+        <div class="eyebrow">
+            <span class="status-dot"></span>
+            YOUR DIGITAL CAMPUS STARTS HERE
+        </div>
+
+        <h2>Ready to get<br><span>connected?</span></h2>
+
+        <p>
+            Sign in to access your EduCloud portal
+            and find the resources you need.
+        </p>
+
+        <a href="/login" class="primary-button">
+            Enter EduCloud <span>↗</span>
+        </a>
+    </div>
+
+    <div class="cta-decoration">
+        <div class="cta-circle circle-one"></div>
+        <div class="cta-circle circle-two"></div>
+        <div class="cta-center">e<span>.</span></div>
+    </div>
+</section>
+
+</main>
+
+
+<!-- FOOTER -->
+<footer class="footer">
+    <a href="#home" class="logo footer-logo">
+        <span class="logo-mark">e</span>
+        <span>educloud<span class="logo-dot">.</span></span>
+    </a>
+
+    <p>Smart campus. Connected learning.</p>
+
+    <a href="/login" class="footer-link">Portal Login ↗</a>
+
+    <div class="footer-bottom">
+        <span>© 2026 EduCloud Portal</span>
+        <span>BUILT FOR THE NEXT GENERATION OF LEARNERS.</span>
+    </div>
+</footer>
+
+</body>
+</html>

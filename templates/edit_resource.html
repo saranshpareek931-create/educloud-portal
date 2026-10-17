@@ -1,0 +1,381 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0">
+
+<title>Edit Resource - EduCloud</title>
+
+<link rel="stylesheet"
+      href="{{ url_for('static', filename='style.css') }}">
+
+<style>
+
+.edit-container {
+    max-width: 750px;
+    margin: 50px auto;
+    padding: 20px;
+}
+
+.edit-card {
+    background: #111827;
+    border: 1px solid #263244;
+    border-radius: 18px;
+    padding: 30px;
+}
+
+.edit-card h1 {
+    margin-top: 0;
+    margin-bottom: 8px;
+}
+
+.edit-card > p {
+    color: #94a3b8;
+    margin-bottom: 30px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+}
+
+.form-group input,
+.form-group textarea,
+.form-group select {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 13px 14px;
+    border-radius: 10px;
+    border: 1px solid #334155;
+    background: #0b1120;
+    color: white;
+    outline: none;
+    font-size: 15px;
+}
+
+.form-group textarea {
+    min-height: 120px;
+    resize: vertical;
+}
+
+.form-group input:focus,
+.form-group textarea:focus,
+.form-group select:focus {
+    border-color: #2563eb;
+}
+
+.current-file {
+    background: #0b1120;
+    border: 1px solid #263244;
+    padding: 14px;
+    border-radius: 10px;
+    margin-bottom: 25px;
+    color: #94a3b8;
+}
+
+.current-file strong {
+    color: white;
+}
+
+.button-row {
+    display: flex;
+    gap: 12px;
+    margin-top: 25px;
+}
+
+.save-button,
+.cancel-button {
+    flex: 1;
+    border: none;
+    padding: 14px;
+    border-radius: 10px;
+    font-size: 15px;
+    font-weight: bold;
+    cursor: pointer;
+    text-decoration: none;
+    text-align: center;
+}
+
+.save-button {
+    background: #2563eb;
+    color: white;
+}
+
+.save-button:hover {
+    opacity: 0.9;
+}
+
+.cancel-button {
+    background: #334155;
+    color: white;
+}
+
+.cancel-button:hover {
+    background: #475569;
+}
+
+@media (max-width: 600px) {
+
+    .edit-container {
+        padding: 15px;
+        margin: 25px auto;
+    }
+
+    .edit-card {
+        padding: 20px;
+    }
+
+    .button-row {
+        flex-direction: column;
+    }
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<nav class="navbar">
+
+    <div class="logo">
+        ☁️ <span>EduCloud</span>
+    </div>
+
+    <a href="/logout"
+       class="nav-button">
+        Logout
+    </a>
+
+</nav>
+
+
+<main class="edit-container">
+
+<div class="edit-card">
+
+    <h1>
+        ✏️ Edit Resource
+    </h1>
+
+    <p>
+        Update the resource details without uploading the file again.
+    </p>
+
+
+    <div class="current-file">
+
+        📄 Current File:
+
+        <strong>
+            {{ resource["filename"] }}
+        </strong>
+
+    </div>
+
+
+    <form
+        method="POST"
+        action="{{ url_for('edit_resource', resource_id=resource['id']) }}">
+
+
+        <div class="form-group">
+
+            <label>
+                Resource Title
+            </label>
+
+            <input
+                type="text"
+                name="title"
+                value="{{ resource['title'] }}"
+                required>
+
+        </div>
+
+
+        <div class="form-group">
+
+            <label>
+                Select Year
+            </label>
+
+            <select
+                name="year_id"
+                id="yearSelect"
+                required>
+
+                {% for year in years %}
+
+                <option
+                    value="{{ year['id'] }}"
+                    {% if year['id'] == resource['year_id'] %}
+                    selected
+                    {% endif %}>
+
+                    {{ year['name'] }}
+
+                </option>
+
+                {% endfor %}
+
+            </select>
+
+        </div>
+
+
+        <div class="form-group">
+
+            <label>
+                Select Subject
+            </label>
+
+            <select
+                name="subject_id"
+                id="subjectSelect"
+                required>
+
+                {% for subject in subjects %}
+
+                <option
+                    value="{{ subject['id'] }}"
+                    {% if subject['id'] == resource['subject_id'] %}
+                    selected
+                    {% endif %}>
+
+                    {{ subject['name'] }}
+
+                </option>
+
+                {% endfor %}
+
+            </select>
+
+        </div>
+
+
+        <div class="form-group">
+
+            <label>
+                Description
+            </label>
+
+            <textarea
+                name="description"
+                placeholder="Short description of this resource...">{{ resource['description'] or '' }}</textarea>
+
+        </div>
+
+
+        <div class="button-row">
+
+            <button
+                type="submit"
+                class="save-button">
+
+                💾 Save Changes
+
+            </button>
+
+
+            <a
+                href="/teacher"
+                class="cancel-button">
+
+                ← Cancel
+
+            </a>
+
+        </div>
+
+
+    </form>
+
+</div>
+
+</main>
+
+
+<script>
+
+const yearSelect =
+    document.getElementById("yearSelect");
+
+const subjectSelect =
+    document.getElementById("subjectSelect");
+
+
+yearSelect.addEventListener(
+    "change",
+    async function () {
+
+        const yearId = this.value;
+
+        subjectSelect.innerHTML =
+            '<option value="">Loading subjects...</option>';
+
+        subjectSelect.disabled = true;
+
+
+        try {
+
+            const response =
+                await fetch("/get-subjects/" + yearId);
+
+            const data =
+                await response.json();
+
+
+            subjectSelect.innerHTML =
+                '<option value="">Select Subject</option>';
+
+
+            data.subjects.forEach(function (subject) {
+
+                const option =
+                    document.createElement("option");
+
+                option.value =
+                    subject.id;
+
+                option.textContent =
+                    subject.name;
+
+                subjectSelect.appendChild(option);
+
+            });
+
+
+            subjectSelect.disabled = false;
+
+        }
+
+        catch (error) {
+
+            subjectSelect.innerHTML =
+                '<option value="">Unable to load subjects</option>';
+
+            console.error(error);
+
+        }
+
+    }
+);
+
+</script>
+
+</body>
+
+</html>
+```

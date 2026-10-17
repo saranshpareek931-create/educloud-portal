@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>{{ resource["title"] }} - EduCloud</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
+    <style>
+
+        .resource-page {
+            max-width: 800px;
+            margin: 70px auto;
+            padding: 20px;
+        }
+
+        .resource-box {
+            background: #111827;
+            border: 1px solid #263244;
+            border-radius: 20px;
+            padding: 35px;
+        }
+
+        .resource-icon {
+            font-size: 50px;
+            margin-bottom: 15px;
+        }
+
+        .resource-box h1 {
+            margin-bottom: 10px;
+        }
+
+        .description {
+            color: #94a3b8;
+            line-height: 1.7;
+            margin: 20px 0;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 7px 10px;
+            margin-right: 6px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            background: #172554;
+            color: #93c5fd;
+            font-size: 13px;
+        }
+
+        .download-button {
+            display: inline-block;
+            margin-top: 25px;
+            padding: 13px 20px;
+            background: #2563eb;
+            color: white;
+            text-decoration: none;
+            border-radius: 10px;
+            font-weight: 600;
+        }
+
+        .back-button {
+            display: inline-block;
+            margin-top: 15px;
+            margin-right: 10px;
+            padding: 13px 20px;
+            background: #1e293b;
+            color: white;
+            text-decoration: none;
+            border-radius: 10px;
+        }
+
+        .filename {
+            color: #64748b;
+            margin-top: 20px;
+            font-size: 13px;
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<nav class="navbar">
+
+    <div class="logo">
+        ☁️ <span>EduCloud</span>
+    </div>
+
+    <a href="/logout"
+       class="nav-button">
+
+        Logout
+
+    </a>
+
+</nav>
+
+
+<main class="resource-page">
+
+    <div class="resource-box">
+
+        <div class="resource-icon">
+            📄
+        </div>
+
+        <h1>
+            {{ resource["title"] }}
+        </h1>
+
+        <span class="badge">
+            {{ resource["branch_name"] }}
+        </span>
+
+        <span class="badge">
+            {{ resource["year_name"] }}
+        </span>
+
+        <span class="badge">
+            {{ resource["subject_name"] }}
+        </span>
+
+
+        <div class="description">
+
+            {{ resource["description"] or
+               "No description provided." }}
+
+        </div>
+
+
+        <a
+            href="/download/{{ resource['id'] }}"
+            class="download-button">
+
+            ⬇️ Download Resource
+
+        </a>
+
+
+        <a
+            href="/student"
+            class="back-button">
+
+            ← Back to Dashboard
+
+        </a>
+
+
+        <div class="filename">
+
+            📎 {{ resource["filename"] }}
+
+        </div>
+
+    </div>
+
+</main>
+
+
+</body>
+
+</html>
