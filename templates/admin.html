@@ -716,7 +716,7 @@
                         <td>
                             <div class="person">
                                 <div class="avatar">
-                                    {{ teacher.get('name', 'T')[:1]|upper }}
+                                    {{ (teacher['name'] or 'T')[:1]|upper }}
                                 </div>
                                 <div>
                                     <strong>{{ teacher['name'] }}</strong>
