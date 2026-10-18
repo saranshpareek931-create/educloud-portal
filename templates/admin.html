@@ -779,7 +779,7 @@
                         <td>
                             <div class="person">
                                 <div class="avatar">
-                                    {{ student.get('name', 'S')[:1]|upper }}
+                                    {{ (student['name'] or 'S')[:1]|upper }}
                                 </div>
                                 <div>
                                     <strong>{{ student['name'] }}</strong>
