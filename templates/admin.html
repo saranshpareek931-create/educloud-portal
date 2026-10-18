@@ -726,7 +726,7 @@
                         </td>
                         <td>
                             <span class="pill">
-                                {{ teacher.get('branch_name', teacher.get('branch', '—')) }}
+                                {{ teacher['branch_name'] or teacher['branch'] or '—' }}
                             </span>
                         </td>
                         <td>
