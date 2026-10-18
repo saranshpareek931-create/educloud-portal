@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, redirect, session, send_from_directory, url_for
-import sqlite3
+from db_compat import connect_database
 import os
 import time
 import qrcode
@@ -50,11 +50,7 @@ os.makedirs(QR_FOLDER, exist_ok=True)
 # ==================================================
 
 def get_db():
-
-    connection = sqlite3.connect(DATABASE)
-    connection.row_factory = sqlite3.Row
-
-    return connection
+    return connect_database()
 
 
 # ==================================================

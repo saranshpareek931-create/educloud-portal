@@ -1,6 +1,6 @@
-
 Flask
 qrcode[pil]
 Pillow
 gunicorn
 python-dotenv
+psycopg[binary]

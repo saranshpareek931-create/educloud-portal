@@ -1,360 +1,720 @@
-```html
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>Add Student - EduCloud Portal</title>
+    <title>Add Student | EduCloud Portal</title>
 
     <style>
+        :root {
+            --bg: #f5f7f2;
+            --card: #ffffff;
+            --text: #20251e;
+            --muted: #777e72;
+            --border: #e5e9df;
+            --accent: #c8f169;
+            --accent-hover: #b7e34f;
+            --input: #fbfcf9;
+            --shadow: 0 18px 50px rgba(35, 48, 26, 0.07);
+            --danger-bg: #fff1f0;
+            --danger: #b42318;
+        }
+
+        body.dark {
+            --bg: #141812;
+            --card: #20251e;
+            --text: #f0f4e9;
+            --muted: #a2aa98;
+            --border: #363d32;
+            --input: #191e17;
+            --shadow: 0 18px 50px rgba(0, 0, 0, 0.2);
+            --danger-bg: #3a211f;
+            --danger: #ffaaa3;
+        }
 
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: Arial, sans-serif;
+            font-family: Inter, -apple-system, BlinkMacSystemFont,
+                         "Segoe UI", Arial, sans-serif;
         }
 
         body {
             min-height: 100vh;
-            background:
-                radial-gradient(circle at top left, #1e3a8a, transparent 35%),
-                radial-gradient(circle at bottom right, #312e81, transparent 35%),
-                #080b16;
+            padding: 32px 20px 50px;
+            background: var(--bg);
+            color: var(--text);
+            transition: background 0.25s, color 0.25s;
+        }
 
-            color: white;
-            padding: 40px 20px;
+        button, input, select {
+            font: inherit;
         }
 
         .container {
             width: 100%;
-            max-width: 650px;
-            margin: auto;
+            max-width: 760px;
+            margin: 0 auto;
         }
 
-        .top {
-            margin-bottom: 25px;
+        .topbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            margin-bottom: 35px;
         }
 
-        .back {
-            display: inline-block;
-            color: #c7d2fe;
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .brand-icon {
+            display: grid;
+            place-items: center;
+            width: 45px;
+            height: 45px;
+            border-radius: 15px;
+            background: var(--accent);
+            color: #26351b;
+            font-size: 23px;
+        }
+
+        .brand-name {
+            font-size: 17px;
+            font-weight: 800;
+            letter-spacing: -0.4px;
+        }
+
+        .brand-caption {
+            margin-top: 3px;
+            color: var(--muted);
+            font-size: 12px;
+        }
+
+        .top-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .theme-btn, .back-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            min-height: 42px;
+            padding: 0 14px;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            background: var(--card);
+            color: var(--text);
             text-decoration: none;
-            margin-bottom: 20px;
+            font-size: 13px;
+            font-weight: 650;
+            cursor: pointer;
+            transition: 0.2s;
         }
 
-        .back:hover {
-            color: white;
+        .theme-btn:hover, .back-btn:hover {
+            border-color: #a6c95b;
+            transform: translateY(-1px);
+        }
+
+        .page-heading {
+            margin-bottom: 24px;
+        }
+
+        .eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            margin-bottom: 12px;
+            color: #617d32;
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+        }
+
+        body.dark .eyebrow {
+            color: var(--accent);
         }
 
         h1 {
-            font-size: 32px;
-            margin-bottom: 8px;
+            margin-bottom: 9px;
+            font-size: clamp(27px, 5vw, 36px);
+            font-weight: 800;
+            letter-spacing: -1.2px;
         }
 
         .subtitle {
-            color: #aab3c5;
+            max-width: 530px;
+            color: var(--muted);
+            font-size: 14px;
+            line-height: 1.7;
         }
 
-        .card {
-            margin-top: 25px;
-            background: rgba(255,255,255,0.07);
-            border: 1px solid rgba(255,255,255,0.12);
-            border-radius: 20px;
-            padding: 30px;
+        .form-card {
+            overflow: hidden;
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            background: var(--card);
+            box-shadow: var(--shadow);
+        }
 
-            backdrop-filter: blur(15px);
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 24px 28px;
+            border-bottom: 1px solid var(--border);
+        }
 
-            box-shadow:
-                0 20px 50px rgba(0,0,0,0.35);
+        .header-icon {
+            display: grid;
+            place-items: center;
+            flex-shrink: 0;
+            width: 47px;
+            height: 47px;
+            border-radius: 15px;
+            background: var(--accent);
+            color: #26351b;
+            font-size: 22px;
+        }
+
+        .card-header h2 {
+            font-size: 17px;
+            font-weight: 750;
+        }
+
+        .card-header p {
+            margin-top: 5px;
+            color: var(--muted);
+            font-size: 12px;
+        }
+
+        .form-content {
+            padding: 28px;
+        }
+
+        .section-title {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            margin-bottom: 20px;
+            font-size: 13px;
+            font-weight: 800;
+        }
+
+        .section-number {
+            display: grid;
+            place-items: center;
+            width: 25px;
+            height: 25px;
+            border-radius: 8px;
+            background: var(--input);
+            border: 1px solid var(--border);
+            color: var(--muted);
+            font-size: 11px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 21px 18px;
         }
 
         .form-group {
-            margin-bottom: 20px;
+            min-width: 0;
+        }
+
+        .form-group.full {
+            grid-column: 1 / -1;
         }
 
         label {
             display: block;
-            margin-bottom: 8px;
-            color: #e5e7eb;
-            font-weight: 600;
+            margin-bottom: 9px;
+            font-size: 13px;
+            font-weight: 700;
         }
 
-        input,
-        select {
-            width: 100%;
-            padding: 14px 15px;
+        .required {
+            color: #819c43;
+        }
 
-            border-radius: 12px;
+        .field-wrap {
+            position: relative;
+        }
 
-            border: 1px solid rgba(255,255,255,0.15);
-
-            background: rgba(0,0,0,0.25);
-
-            color: white;
-
-            outline: none;
-
+        .field-icon {
+            position: absolute;
+            top: 50%;
+            left: 14px;
+            transform: translateY(-50%);
             font-size: 15px;
+            pointer-events: none;
         }
 
-        input:focus,
-        select:focus {
-            border-color: #6366f1;
-            box-shadow: 0 0 0 3px rgba(99,102,241,0.15);
+        input, select {
+            width: 100%;
+            min-height: 49px;
+            padding: 13px 14px;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            outline: none;
+            background: var(--input);
+            color: var(--text);
+            font-size: 13px;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        input.with-icon, select.with-icon {
+            padding-left: 42px;
+        }
+
+        input::placeholder {
+            color: #9ba194;
+        }
+
+        input:focus, select:focus {
+            border-color: #a4c85a;
+            box-shadow: 0 0 0 4px rgba(200, 241, 105, 0.2);
+        }
+
+        select {
+            cursor: pointer;
         }
 
         select option {
-            background: #111827;
-            color: white;
+            background: var(--card);
+            color: var(--text);
+        }
+
+        .field-help {
+            margin-top: 7px;
+            color: var(--muted);
+            font-size: 11px;
+            line-height: 1.5;
         }
 
         .error {
-            background: rgba(239,68,68,0.12);
-            border: 1px solid rgba(239,68,68,0.35);
-            color: #fca5a5;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            margin-bottom: 24px;
+            padding: 14px 16px;
+            border: 1px solid rgba(220, 70, 60, 0.2);
+            border-radius: 12px;
+            background: var(--danger-bg);
+            color: var(--danger);
+            font-size: 13px;
+            line-height: 1.6;
+            overflow-wrap: anywhere;
+        }
 
-            padding: 12px 15px;
+        .form-divider {
+            height: 1px;
+            margin: 27px 0 23px;
+            background: var(--border);
+        }
 
-            border-radius: 10px;
+        .form-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+        }
 
-            margin-bottom: 20px;
+        .footer-note {
+            max-width: 220px;
+            color: var(--muted);
+            font-size: 11px;
+            line-height: 1.6;
         }
 
         .buttons {
             display: flex;
-            gap: 12px;
-            margin-top: 25px;
+            gap: 10px;
         }
 
-        button,
-        .cancel {
-            flex: 1;
-
-            padding: 14px;
-
+        .cancel-btn, .submit-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            min-height: 46px;
+            padding: 0 18px;
             border-radius: 12px;
-
-            font-size: 15px;
-            font-weight: 600;
-
-            cursor: pointer;
-
-            text-align: center;
+            font-size: 13px;
+            font-weight: 750;
             text-decoration: none;
+            cursor: pointer;
+            transition: 0.2s;
         }
 
-        button {
-            border: none;
-
-            background: linear-gradient(
-                135deg,
-                #6366f1,
-                #8b5cf6
-            );
-
-            color: white;
+        .cancel-btn {
+            border: 1px solid var(--border);
+            background: transparent;
+            color: var(--text);
         }
 
-        button:hover {
-            opacity: 0.9;
+        .submit-btn {
+            border: 1px solid var(--accent);
+            background: var(--accent);
+            color: #26351b;
+        }
+
+        .cancel-btn:hover {
+            background: var(--input);
+        }
+
+        .submit-btn:hover {
+            background: var(--accent-hover);
+            border-color: var(--accent-hover);
             transform: translateY(-1px);
         }
 
-        .cancel {
-            border: 1px solid rgba(255,255,255,0.15);
-            background: rgba(255,255,255,0.05);
-            color: #d1d5db;
+        .submit-btn:focus-visible,
+        .cancel-btn:focus-visible,
+        .theme-btn:focus-visible,
+        .back-btn:focus-visible {
+            outline: 3px solid #9ab94f;
+            outline-offset: 3px;
         }
 
-        .cancel:hover {
-            background: rgba(255,255,255,0.1);
+        .bottom-note {
+            margin-top: 19px;
+            text-align: center;
+            color: var(--muted);
+            font-size: 11px;
         }
 
         @media (max-width: 600px) {
-
             body {
-                padding: 25px 15px;
+                padding: 20px 13px 32px;
             }
 
-            .card {
-                padding: 22px;
+            .topbar {
+                align-items: flex-start;
+                margin-bottom: 29px;
             }
 
-            h1 {
-                font-size: 26px;
+            .brand {
+                gap: 9px;
+            }
+
+            .brand-icon {
+                width: 40px;
+                height: 40px;
+                border-radius: 12px;
+            }
+
+            .brand-name {
+                font-size: 15px;
+            }
+
+            .brand-caption {
+                font-size: 11px;
+            }
+
+            .theme-btn {
+                width: 42px;
+                padding: 0;
+                font-size: 0;
+            }
+
+            .theme-btn span {
+                font-size: 17px;
+            }
+
+            .back-btn {
+                min-height: 38px;
+                padding: 0 11px;
+                font-size: 12px;
+            }
+
+            .form-card {
+                border-radius: 19px;
+            }
+
+            .card-header {
+                padding: 20px;
+            }
+
+            .form-content {
+                padding: 21px 19px;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+                gap: 19px;
+            }
+
+            .form-group.full {
+                grid-column: auto;
+            }
+
+            .form-footer {
+                align-items: stretch;
+                flex-direction: column;
+            }
+
+            .footer-note {
+                max-width: none;
             }
 
             .buttons {
-                flex-direction: column;
+                width: 100%;
+            }
+
+            .cancel-btn, .submit-btn {
+                flex: 1;
+                padding: 0 10px;
             }
         }
 
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                transition: none !important;
+            }
+        }
     </style>
 </head>
 
 <body>
-
 <div class="container">
 
-    <div class="top">
-
-        <a href="/admin" class="back">
-            ← Back to Admin Dashboard
-        </a>
-
-        <h1>🎓 Add Student</h1>
-
-        <p class="subtitle">
-            Create a student account and assign branch & year.
-        </p>
-
-    </div>
-
-
-    <div class="card">
-
-        {% if error %}
-
-        <div class="error">
-            ⚠️ {{ error }}
+    <header class="topbar">
+        <div class="brand">
+            <div class="brand-icon">☁</div>
+            <div>
+                <div class="brand-name">EduCloud Portal</div>
+                <div class="brand-caption">Smart Campus Resources</div>
+            </div>
         </div>
 
-        {% endif %}
+        <div class="top-actions">
+            <a href="/admin" class="back-btn">← Dashboard</a>
+            <button type="button" class="theme-btn" id="themeToggle"
+                    aria-label="Toggle dark mode">
+                <span id="themeIcon">🌙</span> Theme
+            </button>
+        </div>
+    </header>
 
+    <main>
+        <section class="page-heading">
+            <div class="eyebrow">ADMINISTRATION / STUDENTS</div>
+            <h1>Add a new student</h1>
+            <p class="subtitle">
+                Create a student login and assign their branch and academic year
+                so they can access the right campus resources.
+            </p>
+        </section>
 
-        <form method="POST">
-
-            <!-- NAME -->
-
-            <div class="form-group">
-
-                <label>
-                    Student Name
-                </label>
-
-                <input
-                    type="text"
-                    name="name"
-                    placeholder="Enter student name"
-                    required
-                >
-
+        <section class="form-card">
+            <div class="card-header">
+                <div class="header-icon">🎓</div>
+                <div>
+                    <h2>Student information</h2>
+                    <p>Enter the student's details below.</p>
+                </div>
             </div>
 
+            <div class="form-content">
 
-            <!-- USERNAME -->
+                {% if error %}
+                <div class="error" role="alert">
+                    <span>⚠️</span>
+                    <span>{{ error }}</span>
+                </div>
+                {% endif %}
 
-            <div class="form-group">
+                <form method="POST">
+                    <div class="section-title">
+                        <span class="section-number">01</span>
+                        Personal and login details
+                    </div>
 
-                <label>
-                    Username
-                </label>
+                    <div class="form-grid">
+                        <div class="form-group full">
+                            <label for="studentName">
+                                Student name <span class="required">*</span>
+                            </label>
+                            <div class="field-wrap">
+                                <span class="field-icon">👤</span>
+                                <input
+                                    class="with-icon"
+                                    type="text"
+                                    id="studentName"
+                                    name="name"
+                                    placeholder="Enter full name"
+                                    autocomplete="name"
+                                    required
+                                >
+                            </div>
+                        </div>
 
-                <input
-                    type="text"
-                    name="username"
-                    placeholder="Enter login username"
-                    required
-                >
+                        <div class="form-group">
+                            <label for="username">
+                                Username <span class="required">*</span>
+                            </label>
+                            <div class="field-wrap">
+                                <span class="field-icon">⌨</span>
+                                <input
+                                    class="with-icon"
+                                    type="text"
+                                    id="username"
+                                    name="username"
+                                    placeholder="Create username"
+                                    autocomplete="username"
+                                    required
+                                >
+                            </div>
+                            <p class="field-help">Used to sign in to EduCloud.</p>
+                        </div>
 
+                        <div class="form-group">
+                            <label for="password">
+                                Password <span class="required">*</span>
+                            </label>
+                            <div class="field-wrap">
+                                <span class="field-icon">🔒</span>
+                                <input
+                                    class="with-icon"
+                                    type="password"
+                                    id="password"
+                                    name="password"
+                                    placeholder="Create password"
+                                    autocomplete="new-password"
+                                    required
+                                >
+                            </div>
+                            <p class="field-help">Keep login credentials secure.</p>
+                        </div>
+                    </div>
+
+                    <div class="form-divider"></div>
+
+                    <div class="section-title">
+                        <span class="section-number">02</span>
+                        Academic assignment
+                    </div>
+
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="branch">
+                                Branch <span class="required">*</span>
+                            </label>
+                            <div class="field-wrap">
+                                <span class="field-icon">🏢</span>
+                                <select
+                                    class="with-icon"
+                                    id="branch"
+                                    name="branch_id"
+                                    required
+                                >
+                                    <option value="">Select branch</option>
+                                    {% for branch in branches %}
+                                    <option value="{{ branch['id'] }}">
+                                        {{ branch['name'] }}
+                                    </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="year">
+                                Academic year <span class="required">*</span>
+                            </label>
+                            <div class="field-wrap">
+                                <span class="field-icon">📚</span>
+                                <select
+                                    class="with-icon"
+                                    id="year"
+                                    name="year_id"
+                                    required
+                                >
+                                    <option value="">Select year</option>
+                                    {% for year in years %}
+                                    <option value="{{ year['id'] }}">
+                                        {{ year['name'] }}
+                                    </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-divider"></div>
+
+                    <div class="form-footer">
+                        <p class="footer-note">
+                            <span class="required">*</span>
+                            Required fields. Check all details before creating
+                            the account.
+                        </p>
+
+                        <div class="buttons">
+                            <a href="/admin" class="cancel-btn">Cancel</a>
+                            <button type="submit" class="submit-btn">
+                                + Create student
+                            </button>
+                        </div>
+                    </div>
+                </form>
             </div>
+        </section>
 
-
-            <!-- PASSWORD -->
-
-            <div class="form-group">
-
-                <label>
-                    Password
-                </label>
-
-                <input
-                    type="password"
-                    name="password"
-                    placeholder="Enter password"
-                    required
-                >
-
-            </div>
-
-
-            <!-- BRANCH -->
-
-            <div class="form-group">
-
-                <label>
-                    Branch
-                </label>
-
-                <select name="branch_id" required>
-
-                    <option value="">
-                        Select Branch
-                    </option>
-
-                    {% for branch in branches %}
-
-                    <option value="{{ branch['id'] }}">
-                        {{ branch['name'] }}
-                    </option>
-
-                    {% endfor %}
-
-                </select>
-
-            </div>
-
-
-            <!-- YEAR -->
-
-            <div class="form-group">
-
-                <label>
-                    Year
-                </label>
-
-                <select name="year_id" required>
-
-                    <option value="">
-                        Select Year
-                    </option>
-
-                    {% for year in years %}
-
-                    <option value="{{ year['id'] }}">
-                        {{ year['name'] }}
-                    </option>
-
-                    {% endfor %}
-
-                </select>
-
-            </div>
-
-
-            <div class="buttons">
-
-                <a
-                    href="/admin"
-                    class="cancel"
-                >
-                    Cancel
-                </a>
-
-                <button type="submit">
-                    ➕ Create Student
-                </button>
-
-            </div>
-
-        </form>
-
-    </div>
-
+        <p class="bottom-note">
+            EduCloud Portal · Smart Campus Resources
+        </p>
+    </main>
 </div>
 
+<script>
+    const themeToggle = document.getElementById("themeToggle");
+    const themeIcon = document.getElementById("themeIcon");
+
+    function applyTheme(theme) {
+        document.body.classList.toggle("dark", theme === "dark");
+        themeIcon.textContent = theme === "dark" ? "☀️" : "🌙";
+        themeToggle.setAttribute(
+            "aria-label",
+            theme === "dark" ? "Switch to light mode" : "Switch to dark mode"
+        );
+    }
+
+    let savedTheme = "light";
+
+    try {
+        savedTheme = localStorage.getItem("educloud-admin-theme") || "light";
+    } catch (error) {
+        savedTheme = "light";
+    }
+
+    applyTheme(savedTheme);
+
+    themeToggle.addEventListener("click", function () {
+        const nextTheme = document.body.classList.contains("dark")
+            ? "light"
+            : "dark";
+
+        applyTheme(nextTheme);
+
+        try {
+            localStorage.setItem("educloud-admin-theme", nextTheme);
+        } catch (error) {
+            // Theme still works for the current page.
+        }
+    });
+</script>
 </body>
 </html>
-```

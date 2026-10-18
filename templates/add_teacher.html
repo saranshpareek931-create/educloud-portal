@@ -1,270 +1,656 @@
+
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-
     <meta charset="UTF-8">
-
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
-
-    <title>Add Teacher | EduCloud</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Teacher | EduCloud Portal</title>
 
     <style>
+        :root {
+            --bg: #f5f7f2;
+            --card: #ffffff;
+            --text: #20251e;
+            --muted: #777e72;
+            --border: #e5e9df;
+            --accent: #c8f169;
+            --accent-hover: #b7e34f;
+            --input: #fbfcf9;
+            --shadow: 0 18px 50px rgba(35, 48, 26, 0.07);
+            --danger-bg: #fff1f0;
+            --danger: #b42318;
+        }
+
+        body.dark {
+            --bg: #141812;
+            --card: #20251e;
+            --text: #f0f4e9;
+            --muted: #a2aa98;
+            --border: #363d32;
+            --input: #191e17;
+            --shadow: 0 18px 50px rgba(0, 0, 0, 0.2);
+            --danger-bg: #3a211f;
+            --danger: #ffaaa3;
+        }
 
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
+            font-family: Inter, -apple-system, BlinkMacSystemFont,
+                         "Segoe UI", Arial, sans-serif;
         }
 
         body {
-            font-family: Arial, sans-serif;
             min-height: 100vh;
-            background:
-                radial-gradient(circle at top left, #172554, transparent 35%),
-                radial-gradient(circle at bottom right, #312e81, transparent 35%),
-                #050816;
-            color: white;
-            padding: 30px;
+            padding: 30px 20px 45px;
+            background: var(--bg);
+            color: var(--text);
+            transition: background .25s, color .25s;
+        }
+
+        button, input, select {
+            font: inherit;
         }
 
         .navbar {
-            max-width: 1100px;
-            margin: auto;
+            max-width: 900px;
+            margin: 0 auto 42px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 40px;
+            gap: 15px;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-icon {
+            display: grid;
+            place-items: center;
+            width: 45px;
+            height: 45px;
+            border-radius: 15px;
+            background: var(--accent);
+            color: #26351b;
+            font-size: 23px;
         }
 
         .logo {
-            font-size: 25px;
-            font-weight: bold;
+            font-size: 18px;
+            font-weight: 800;
+            letter-spacing: -.5px;
         }
 
-        .back-btn {
+        .logo-subtitle {
+            margin-top: 4px;
+            color: var(--muted);
+            font-size: 12px;
+        }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+        }
+
+        .back-btn, .theme-btn {
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            min-height: 42px;
+            padding: 0 14px;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            background: var(--card);
+            color: var(--text);
             text-decoration: none;
-            color: white;
-            background: rgba(255,255,255,0.08);
-            border: 1px solid rgba(255,255,255,0.12);
-            padding: 10px 18px;
-            border-radius: 10px;
+            font-size: 13px;
+            font-weight: 650;
+            cursor: pointer;
+            transition: .2s;
+        }
+
+        .back-btn:hover, .theme-btn:hover {
+            border-color: #a6c95b;
+            transform: translateY(-1px);
         }
 
         .container {
-            max-width: 600px;
+            max-width: 700px;
             margin: auto;
         }
 
-        .card {
-            background: rgba(255,255,255,0.07);
-            border: 1px solid rgba(255,255,255,0.12);
-            backdrop-filter: blur(20px);
-            border-radius: 22px;
-            padding: 35px;
-            box-shadow: 0 25px 80px rgba(0,0,0,0.35);
+        .page-heading {
+            margin-bottom: 24px;
+        }
+
+        .eyebrow {
+            margin-bottom: 12px;
+            color: #617d32;
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+        }
+
+        body.dark .eyebrow {
+            color: var(--accent);
         }
 
         h1 {
-            margin-bottom: 8px;
+            margin-bottom: 9px;
+            font-size: clamp(28px, 5vw, 36px);
+            font-weight: 800;
+            letter-spacing: -1px;
         }
 
         .subtitle {
-            color: #a5b4fc;
-            margin-bottom: 30px;
+            max-width: 500px;
+            color: var(--muted);
+            font-size: 14px;
+            line-height: 1.7;
+        }
+
+        .card {
+            overflow: hidden;
+            border: 1px solid var(--border);
+            border-radius: 23px;
+            background: var(--card);
+            box-shadow: var(--shadow);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 24px 28px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .header-icon {
+            display: grid;
+            place-items: center;
+            flex-shrink: 0;
+            width: 48px;
+            height: 48px;
+            border-radius: 15px;
+            background: var(--accent);
+            color: #26351b;
+            font-size: 23px;
+        }
+
+        .card-header h2 {
+            font-size: 17px;
+            font-weight: 750;
+        }
+
+        .card-header p {
+            margin-top: 5px;
+            color: var(--muted);
+            font-size: 12px;
+        }
+
+        .card-content {
+            padding: 28px;
+        }
+
+        .section-title {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            margin-bottom: 22px;
+            font-size: 13px;
+            font-weight: 800;
+        }
+
+        .section-number {
+            display: grid;
+            place-items: center;
+            width: 26px;
+            height: 26px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: var(--input);
+            color: var(--muted);
+            font-size: 11px;
         }
 
         .form-group {
-            margin-bottom: 20px;
+            margin-bottom: 22px;
         }
 
         label {
             display: block;
-            margin-bottom: 8px;
-            font-weight: bold;
-            color: #e5e7eb;
+            margin-bottom: 9px;
+            font-size: 13px;
+            font-weight: 700;
         }
 
-        input,
-        select {
-            width: 100%;
-            padding: 14px;
-            border-radius: 12px;
-            border: 1px solid rgba(255,255,255,0.15);
-            background: rgba(0,0,0,0.25);
-            color: white;
-            outline: none;
+        .required {
+            color: #819c43;
+        }
+
+        .field-wrap {
+            position: relative;
+        }
+
+        .field-icon {
+            position: absolute;
+            top: 50%;
+            left: 14px;
+            transform: translateY(-50%);
+            pointer-events: none;
             font-size: 15px;
         }
 
-        select option {
-            background: #111827;
-            color: white;
+        input, select {
+            width: 100%;
+            min-height: 49px;
+            padding: 13px 14px 13px 42px;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            outline: none;
+            background: var(--input);
+            color: var(--text);
+            font-size: 13px;
+            transition: border-color .2s, box-shadow .2s;
         }
 
-        input:focus,
-        select:focus {
-            border-color: #818cf8;
+        input::placeholder {
+            color: #9ba194;
+        }
+
+        input:focus, select:focus {
+            border-color: #a4c85a;
+            box-shadow: 0 0 0 4px rgba(200, 241, 105, .2);
+        }
+
+        select {
+            cursor: pointer;
+        }
+
+        select option {
+            background: var(--card);
+            color: var(--text);
+        }
+
+        .help-text {
+            margin-top: 7px;
+            color: var(--muted);
+            font-size: 11px;
+            line-height: 1.5;
         }
 
         .error {
-            background: rgba(239,68,68,0.15);
-            border: 1px solid rgba(239,68,68,0.3);
-            color: #fca5a5;
-            padding: 12px;
-            border-radius: 10px;
-            margin-bottom: 20px;
-        }
-
-        .btn {
-            width: 100%;
-            border: none;
-            padding: 15px;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            margin-bottom: 23px;
+            padding: 14px 15px;
+            border: 1px solid rgba(220, 70, 60, .2);
             border-radius: 12px;
-            background: #6366f1;
-            color: white;
-            font-size: 16px;
-            font-weight: bold;
+            background: var(--danger-bg);
+            color: var(--danger);
+            font-size: 13px;
+            line-height: 1.6;
+            overflow-wrap: anywhere;
+        }
+
+        .divider {
+            height: 1px;
+            margin: 26px 0 24px;
+            background: var(--border);
+        }
+
+        .footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+        }
+
+        .footer-note {
+            max-width: 230px;
+            color: var(--muted);
+            font-size: 11px;
+            line-height: 1.6;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .cancel-btn, .submit-btn {
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            min-height: 46px;
+            padding: 0 18px;
+            border-radius: 12px;
+            font-size: 13px;
+            font-weight: 750;
+            text-decoration: none;
             cursor: pointer;
-            margin-top: 10px;
+            transition: .2s;
         }
 
-        .btn:hover {
-            background: #4f46e5;
+        .cancel-btn {
+            border: 1px solid var(--border);
+            background: transparent;
+            color: var(--text);
         }
 
+        .submit-btn {
+            border: 1px solid var(--accent);
+            background: var(--accent);
+            color: #26351b;
+        }
+
+        .cancel-btn:hover {
+            background: var(--input);
+        }
+
+        .submit-btn:hover {
+            border-color: var(--accent-hover);
+            background: var(--accent-hover);
+            transform: translateY(-1px);
+        }
+
+        .bottom-note {
+            margin-top: 20px;
+            color: var(--muted);
+            text-align: center;
+            font-size: 11px;
+        }
+
+        button:focus-visible, a:focus-visible {
+            outline: 3px solid #9ab94f;
+            outline-offset: 3px;
+        }
+
+        @media (max-width: 600px) {
+            body {
+                padding: 20px 13px 32px;
+            }
+
+            .navbar {
+                margin-bottom: 32px;
+            }
+
+            .logo {
+                font-size: 15px;
+            }
+
+            .logo-icon {
+                width: 40px;
+                height: 40px;
+                border-radius: 12px;
+            }
+
+            .logo-subtitle {
+                font-size: 10px;
+            }
+
+            .back-btn {
+                padding: 0 10px;
+                min-height: 39px;
+                font-size: 12px;
+            }
+
+            .theme-btn {
+                width: 40px;
+                padding: 0;
+                font-size: 0;
+            }
+
+            .theme-btn span {
+                font-size: 17px;
+            }
+
+            .card {
+                border-radius: 19px;
+            }
+
+            .card-header {
+                padding: 20px;
+            }
+
+            .card-content {
+                padding: 21px 19px;
+            }
+
+            .footer {
+                align-items: stretch;
+                flex-direction: column;
+            }
+
+            .footer-note {
+                max-width: none;
+            }
+
+            .form-actions {
+                width: 100%;
+            }
+
+            .cancel-btn, .submit-btn {
+                flex: 1;
+                padding: 0 10px;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                transition: none !important;
+            }
+        }
     </style>
-
 </head>
 
 <body>
-
-    <div class="navbar">
-
-        <div class="logo">
-            EduCloud
+    <header class="navbar">
+        <div class="brand">
+            <div class="logo-icon">☁</div>
+            <div>
+                <div class="logo">EduCloud Portal</div>
+                <div class="logo-subtitle">Smart Campus Resources</div>
+            </div>
         </div>
 
-        <a href="/admin" class="back-btn">
-            ← Back to Admin
-        </a>
+        <div class="nav-actions">
+            <a href="/admin" class="back-btn">← Dashboard</a>
+            <button type="button" class="theme-btn" id="themeToggle"
+                    aria-label="Toggle dark mode">
+                <span id="themeIcon">🌙</span> Theme
+            </button>
+        </div>
+    </header>
 
-    </div>
-
-
-    <div class="container">
-
-        <div class="card">
-
-            <h1>Add New Teacher</h1>
-
+    <main class="container">
+        <section class="page-heading">
+            <div class="eyebrow">ADMINISTRATION / TEACHERS</div>
+            <h1>Add a new teacher</h1>
             <p class="subtitle">
-                Create a teacher account and assign a branch.
+                Create a teacher account and assign a branch to manage
+                learning materials and campus resources.
             </p>
+        </section>
 
-
-            {% if error %}
-
-                <div class="error">
-                    {{ error }}
+        <section class="card">
+            <div class="card-header">
+                <div class="header-icon">👨‍🏫</div>
+                <div>
+                    <h2>Teacher information</h2>
+                    <p>Enter the account details below.</p>
                 </div>
+            </div>
 
-            {% endif %}
-
-
-            <form action="/admin/add-teacher"
-                  method="POST">
-
-
-                <div class="form-group">
-
-                    <label>
-                        Teacher Name
-                    </label>
-
-                    <input
-                        type="text"
-                        name="name"
-                        placeholder="Enter teacher name"
-                        required
-                    >
-
+            <div class="card-content">
+                {% if error %}
+                <div class="error" role="alert">
+                    <span>⚠️</span>
+                    <span>{{ error }}</span>
                 </div>
+                {% endif %}
 
+                <form action="/admin/add-teacher" method="POST">
+                    <div class="section-title">
+                        <span class="section-number">01</span>
+                        Personal and login details
+                    </div>
 
-                <div class="form-group">
+                    <div class="form-group">
+                        <label for="teacherName">
+                            Teacher name <span class="required">*</span>
+                        </label>
+                        <div class="field-wrap">
+                            <span class="field-icon">👤</span>
+                            <input
+                                type="text"
+                                id="teacherName"
+                                name="name"
+                                placeholder="Enter teacher's full name"
+                                autocomplete="name"
+                                required
+                            >
+                        </div>
+                    </div>
 
-                    <label>
-                        Username
-                    </label>
+                    <div class="form-group">
+                        <label for="username">
+                            Username <span class="required">*</span>
+                        </label>
+                        <div class="field-wrap">
+                            <span class="field-icon">⌨</span>
+                            <input
+                                type="text"
+                                id="username"
+                                name="username"
+                                placeholder="Create a login username"
+                                autocomplete="username"
+                                required
+                            >
+                        </div>
+                        <p class="help-text">
+                            The teacher will use this username to log in.
+                        </p>
+                    </div>
 
-                    <input
-                        type="text"
-                        name="username"
-                        placeholder="Enter username"
-                        required
-                    >
+                    <div class="form-group">
+                        <label for="password">
+                            Password <span class="required">*</span>
+                        </label>
+                        <div class="field-wrap">
+                            <span class="field-icon">🔒</span>
+                            <input
+                                type="password"
+                                id="password"
+                                name="password"
+                                placeholder="Create a secure password"
+                                autocomplete="new-password"
+                                required
+                            >
+                        </div>
+                        <p class="help-text">
+                            Use a strong password and share it securely.
+                        </p>
+                    </div>
 
-                </div>
+                    <div class="divider"></div>
 
+                    <div class="section-title">
+                        <span class="section-number">02</span>
+                        Branch assignment
+                    </div>
 
-                <div class="form-group">
+                    <div class="form-group">
+                        <label for="branch">
+                            Assign branch <span class="required">*</span>
+                        </label>
+                        <div class="field-wrap">
+                            <span class="field-icon">🏢</span>
+                            <select id="branch" name="branch_id" required>
+                                <option value="">Select a branch</option>
+                                {% for branch in branches %}
+                                <option value="{{ branch.id }}">
+                                    {{ branch.name }}
+                                </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <p class="help-text">
+                            Select the branch this teacher will be assigned to.
+                        </p>
+                    </div>
 
-                    <label>
-                        Password
-                    </label>
+                    <div class="divider"></div>
 
-                    <input
-                        type="password"
-                        name="password"
-                        placeholder="Enter password"
-                        required
-                    >
+                    <div class="footer">
+                        <p class="footer-note">
+                            <span class="required">*</span>
+                            All fields are required. Verify the information
+                            before creating the account.
+                        </p>
 
-                </div>
+                        <div class="form-actions">
+                            <a href="/admin" class="cancel-btn">Cancel</a>
+                            <button type="submit" class="submit-btn">
+                                + Create teacher
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </section>
 
+        <p class="bottom-note">
+            EduCloud Portal · Smart Campus Resources
+        </p>
+    </main>
 
-                <div class="form-group">
+    <script>
+        const themeToggle = document.getElementById("themeToggle");
+        const themeIcon = document.getElementById("themeIcon");
 
-                    <label>
-                        Assign Branch
-                    </label>
+        function applyTheme(theme) {
+            document.body.classList.toggle("dark", theme === "dark");
+            themeIcon.textContent = theme === "dark" ? "☀️" : "🌙";
 
-                    <select name="branch_id"
-                            required>
+            themeToggle.setAttribute(
+                "aria-label",
+                theme === "dark" ? "Switch to light mode" : "Switch to dark mode"
+            );
+        }
 
-                        <option value="">
-                            Select Branch
-                        </option>
+        let savedTheme = "light";
 
-                        {% for branch in branches %}
+        try {
+            savedTheme = localStorage.getItem("educloud-admin-theme") || "light";
+        } catch (error) {
+            savedTheme = "light";
+        }
 
-                            <option value="{{ branch.id }}">
-                                {{ branch.name }}
-                            </option>
+        applyTheme(savedTheme);
 
-                        {% endfor %}
+        themeToggle.addEventListener("click", function () {
+            const nextTheme = document.body.classList.contains("dark")
+                ? "light"
+                : "dark";
 
-                    </select>
+            applyTheme(nextTheme);
 
-                </div>
-
-
-                <button
-                    type="submit"
-                    class="btn">
-
-                    Create Teacher
-
-                </button>
-
-            </form>
-
-        </div>
-
-    </div>
-
+            try {
+                localStorage.setItem("educloud-admin-theme", nextTheme);
+            } catch (error) {
+                // Theme still works for this page.
+            }
+        });
+    </script>
 </body>
-
 </html>

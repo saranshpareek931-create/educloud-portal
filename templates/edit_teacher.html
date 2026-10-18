@@ -1,291 +1,512 @@
+
 <!DOCTYPE html>
-
 <html lang="en">
-
 <head>
-
     <meta charset="UTF-8">
-
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
-
-    <title>Edit Teacher - EduCloud</title>
-
-    <link rel="stylesheet"
-          href="{{ url_for('static', filename='style.css') }}">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Teacher | EduCloud Portal</title>
 
     <style>
+        :root {
+            --bg: #f5f7f2;
+            --panel: #ffffff;
+            --text: #20251f;
+            --muted: #7b8278;
+            --border: #e6e9e1;
+            --accent: #c8f169;
+            --accent-text: #26331b;
+            --input-bg: #fafbf8;
+            --danger-bg: #fff0ef;
+            --danger-text: #b42318;
+            --shadow: 0 16px 45px rgba(30,40,20,.07);
+        }
+
+        body.dark {
+            --bg: #171a16;
+            --panel: #222720;
+            --text: #f0f3eb;
+            --muted: #a1a99a;
+            --border: #353b32;
+            --accent: #c8f169;
+            --accent-text: #26331b;
+            --input-bg: #1a1e19;
+            --danger-bg: #3a2220;
+            --danger-text: #ffaaa2;
+            --shadow: 0 16px 45px rgba(0,0,0,.18);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
 
         body {
             min-height: 100vh;
+            font-family: Inter, "Segoe UI", Arial, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            transition: background .2s, color .2s;
         }
 
-        .page {
-            max-width: 650px;
-            margin: 50px auto;
-            padding: 20px;
+        a {
+            color: inherit;
+            text-decoration: none;
         }
 
-        .card {
-            background: #111827;
-            border: 1px solid #263244;
-            border-radius: 20px;
-            padding: 30px;
+        button, input, select {
+            font: inherit;
+        }
+
+        .navbar {
+            background: var(--panel);
+            border-bottom: 1px solid var(--border);
+            padding: 16px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 11px;
+        }
+
+        .brand-icon {
+            width: 42px;
+            height: 42px;
+            border-radius: 13px;
+            background: var(--accent);
+            color: var(--accent-text);
+            display: grid;
+            place-items: center;
+            font-size: 23px;
+            font-weight: 900;
+        }
+
+        .brand h2 {
+            font-size: 17px;
+            letter-spacing: -.4px;
+        }
+
+        .brand p {
+            margin-top: 4px;
+            color: var(--muted);
+            font-size: 11px;
+        }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+        }
+
+        .nav-btn, .theme-btn {
+            border: 1px solid var(--border);
+            background: var(--panel);
+            color: var(--text);
+            border-radius: 10px;
+            padding: 10px 13px;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .nav-btn:hover, .theme-btn:hover {
+            border-color: #a6c95d;
+        }
+
+        .container {
+            width: 92%;
+            max-width: 760px;
+            margin: 42px auto;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--muted);
+            font-size: 12px;
+            font-weight: 700;
+            margin-bottom: 26px;
+        }
+
+        .back-link:hover {
+            color: var(--text);
+        }
+
+        .page-heading {
+            margin-bottom: 25px;
+        }
+
+        .eyebrow {
+            color: var(--muted);
+            font-size: 10px;
+            font-weight: 800;
+            letter-spacing: 1.6px;
+            text-transform: uppercase;
+            margin-bottom: 10px;
         }
 
         h1 {
-            margin-top: 0;
-            margin-bottom: 8px;
+            font-size: clamp(27px, 4vw, 35px);
+            letter-spacing: -1.2px;
         }
 
         .subtitle {
-            color: #94a3b8;
-            margin-bottom: 30px;
+            color: var(--muted);
+            font-size: 13px;
+            line-height: 1.7;
+            margin-top: 9px;
+        }
+
+        .form-card {
+            background: var(--panel);
+            border: 1px solid var(--border);
+            border-radius: 19px;
+            padding: 30px;
+            box-shadow: var(--shadow);
+        }
+
+        .card-heading {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding-bottom: 22px;
+            margin-bottom: 24px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .card-icon {
+            width: 48px;
+            height: 48px;
+            display: grid;
+            place-items: center;
+            border-radius: 14px;
+            background: var(--accent);
+            color: var(--accent-text);
+            font-size: 22px;
+            flex-shrink: 0;
+        }
+
+        .card-heading h2 {
+            font-size: 16px;
+        }
+
+        .card-heading p {
+            color: var(--muted);
+            font-size: 12px;
+            margin-top: 5px;
+            line-height: 1.5;
+        }
+
+        .error {
+            background: var(--danger-bg);
+            color: var(--danger-text);
+            border: 1px solid var(--border);
+            border-radius: 11px;
+            padding: 13px 15px;
+            margin-bottom: 22px;
+            font-size: 13px;
+            line-height: 1.6;
         }
 
         .form-group {
-            margin-bottom: 20px;
+            margin-bottom: 21px;
         }
 
         label {
             display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
+            color: var(--text);
+            font-size: 12px;
+            font-weight: 700;
+            margin-bottom: 9px;
         }
 
-        input,
-        select {
+        .optional {
+            color: var(--muted);
+            font-weight: 400;
+        }
+
+        input, select {
             width: 100%;
-            box-sizing: border-box;
-            padding: 13px 14px;
-            border-radius: 10px;
-            border: 1px solid #334155;
-            background: #0b1120;
-            color: white;
-            font-size: 15px;
+            min-height: 47px;
+            padding: 12px 14px;
+            border: 1px solid var(--border);
+            border-radius: 11px;
+            background: var(--input-bg);
+            color: var(--text);
             outline: none;
-        }
-
-        input:focus,
-        select:focus {
-            border-color: #2563eb;
-        }
-
-        .password-note {
-            margin-top: 7px;
-            color: #64748b;
             font-size: 13px;
+            transition: border-color .2s, box-shadow .2s;
         }
 
-        .error {
-            background: #451a1a;
-            border: 1px solid #7f1d1d;
-            color: #fecaca;
-            padding: 12px;
-            border-radius: 10px;
-            margin-bottom: 20px;
+        input::placeholder {
+            color: var(--muted);
+            opacity: .8;
         }
 
-        .buttons {
+        input:focus, select:focus {
+            border-color: #9bc44c;
+            box-shadow: 0 0 0 3px rgba(200,241,105,.2);
+        }
+
+        select option {
+            background: var(--panel);
+            color: var(--text);
+        }
+
+        .hint {
+            margin-top: 8px;
+            color: var(--muted);
+            font-size: 11px;
+            line-height: 1.6;
+        }
+
+        .form-divider {
+            border: 0;
+            border-top: 1px solid var(--border);
+            margin: 26px 0;
+        }
+
+        .form-actions {
             display: flex;
-            gap: 12px;
+            justify-content: flex-end;
+            align-items: center;
+            gap: 10px;
+            margin-top: 28px;
+        }
+
+        .btn {
+            min-height: 44px;
+            padding: 12px 17px;
+            border-radius: 11px;
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            border: 1px solid var(--border);
+            font-size: 12px;
+            font-weight: 800;
+            cursor: pointer;
+            transition: transform .15s, filter .15s;
+        }
+
+        .btn:hover {
+            transform: translateY(-1px);
+            filter: brightness(.97);
+        }
+
+        .btn-cancel {
+            color: var(--text);
+            background: var(--panel);
+        }
+
+        .btn-save {
+            background: var(--accent);
+            border-color: var(--accent);
+            color: var(--accent-text);
+        }
+
+        .footer {
+            text-align: center;
+            color: var(--muted);
+            font-size: 11px;
             margin-top: 25px;
         }
 
-        .button {
-            flex: 1;
-            text-align: center;
-            text-decoration: none;
-            border: none;
-            padding: 13px;
-            border-radius: 10px;
-            font-weight: bold;
-            cursor: pointer;
-            font-size: 15px;
-        }
-
-        .save-button {
-            background: #2563eb;
-            color: white;
-        }
-
-        .back-button {
-            background: #1e293b;
-            color: white;
-        }
-
-        .button:hover {
-            opacity: 0.9;
-        }
-
         @media (max-width: 600px) {
-
-            .page {
-                margin: 20px auto;
+            .navbar {
+                padding: 13px 4%;
             }
 
-            .card {
-                padding: 22px;
+            .brand p {
+                display: none;
             }
 
-            .buttons {
-                flex-direction: column;
+            .brand h2 {
+                font-size: 14px;
             }
 
+            .brand-icon {
+                width: 36px;
+                height: 36px;
+            }
+
+            .nav-btn, .theme-btn {
+                padding: 10px;
+                font-size: 11px;
+            }
+
+            .container {
+                width: 92%;
+                margin: 27px auto;
+            }
+
+            .form-card {
+                padding: 20px;
+                border-radius: 15px;
+            }
+
+            .form-actions {
+                flex-direction: column-reverse;
+            }
+
+            .form-actions .btn {
+                width: 100%;
+            }
         }
-
     </style>
-
 </head>
 
-
 <body>
-
     <nav class="navbar">
-
-        <div class="logo">
-            ☁️ <span>EduCloud</span>
-        </div>
-
-        <a href="/logout"
-           class="nav-button">
-
-            Logout
-
+        <a href="/admin" class="brand">
+            <div class="brand-icon">E</div>
+            <div>
+                <h2>EduCloud Portal</h2>
+                <p>Smart Campus Resource Management</p>
+            </div>
         </a>
 
+        <div class="nav-actions">
+            <button type="button" class="theme-btn" id="themeToggle"
+                    aria-label="Toggle dark mode">☾</button>
+            <a href="/logout" class="nav-btn">Logout ↗</a>
+        </div>
     </nav>
 
+    <main class="container">
+        <a href="/admin" class="back-link">← Back to Admin Dashboard</a>
 
-    <main class="page">
-
-        <div class="card">
-
-            <h1>
-                ✏️ Edit Teacher
-            </h1>
-
+        <header class="page-heading">
+            <div class="eyebrow">Administration / Teachers</div>
+            <h1>Edit Teacher <span aria-hidden="true">✎</span></h1>
             <p class="subtitle">
-                Update teacher account details and branch.
+                Update teacher details, login credentials or assigned branch.
             </p>
+        </header>
 
-
-            {% if error %}
-
-            <div class="error">
-                {{ error }}
+        <section class="form-card">
+            <div class="card-heading">
+                <div class="card-icon">♙</div>
+                <div>
+                    <h2>Teacher Account Details</h2>
+                    <p>Make changes to the teacher account below.</p>
+                </div>
             </div>
 
+            {% if error %}
+            <div class="error" role="alert">
+                ⚠️ {{ error }}
+            </div>
             {% endif %}
 
-
             <form method="POST">
-
-
                 <div class="form-group">
-
-                    <label>
-                        Teacher Name
-                    </label>
-
+                    <label for="name">Teacher Name</label>
                     <input
                         type="text"
+                        id="name"
                         name="name"
                         value="{{ teacher['name'] }}"
-                        required>
-
+                        placeholder="Enter teacher name"
+                        autocomplete="name"
+                        required
+                    >
                 </div>
 
-
                 <div class="form-group">
-
-                    <label>
-                        Username
-                    </label>
-
+                    <label for="username">Username</label>
                     <input
                         type="text"
+                        id="username"
                         name="username"
                         value="{{ teacher['username'] }}"
-                        required>
-
+                        placeholder="Enter username"
+                        autocomplete="username"
+                        required
+                    >
                 </div>
 
-
                 <div class="form-group">
-
-                    <label>
-                        New Password
+                    <label for="password">
+                        New Password <span class="optional">(optional)</span>
                     </label>
-
                     <input
                         type="password"
+                        id="password"
                         name="password"
-                        placeholder="Leave blank to keep current password">
-
-                    <div class="password-note">
-                        Leave this empty if you don't want to change the password.
-                    </div>
-
+                        placeholder="Leave blank to keep current password"
+                        autocomplete="new-password"
+                    >
+                    <p class="hint">
+                        Leave this field empty if you don't want to change the password.
+                    </p>
                 </div>
 
+                <hr class="form-divider">
 
                 <div class="form-group">
-
-                    <label>
-                        Assigned Branch
-                    </label>
-
-                    <select
-                        name="branch_id"
-                        required>
-
+                    <label for="branch_id">Assigned Branch</label>
+                    <select id="branch_id" name="branch_id" required>
                         {% for branch in branches %}
-
                         <option
                             value="{{ branch['id'] }}"
-                            {% if branch['id'] == teacher['branch_id'] %}
-                            selected
-                            {% endif %}>
-
+                            {% if branch['id'] == teacher['branch_id'] %}selected{% endif %}
+                        >
                             {{ branch['name'] }}
-
                         </option>
-
                         {% endfor %}
-
                     </select>
-
                 </div>
 
-
-                <div class="buttons">
-
-                    <button
-                        type="submit"
-                        class="button save-button">
-
-                        💾 Save Changes
-
+                <div class="form-actions">
+                    <a href="/admin" class="btn btn-cancel">Cancel</a>
+                    <button type="submit" class="btn btn-save">
+                        Save Changes →
                     </button>
-
-
-                    <a
-                        href="/admin"
-                        class="button back-button">
-
-                        ← Back
-
-                    </a>
-
                 </div>
-
             </form>
+        </section>
 
-        </div>
-
+        <footer class="footer">
+            EduCloud Portal · Smart Campus Resource Management
+        </footer>
     </main>
 
-</body>
+    <script>
+        const themeToggle = document.getElementById("themeToggle");
 
+        function setTheme(theme) {
+            document.body.classList.toggle("dark", theme === "dark");
+            themeToggle.textContent = theme === "dark" ? "☀" : "☾";
+        }
+
+        themeToggle.addEventListener("click", function () {
+            const nextTheme = document.body.classList.contains("dark")
+                ? "light"
+                : "dark";
+
+            setTheme(nextTheme);
+
+            try {
+                localStorage.setItem("educloud-admin-theme", nextTheme);
+            } catch (error) {
+                // Theme switching still works without local storage.
+            }
+        });
+
+        try {
+            setTheme(
+                localStorage.getItem("educloud-admin-theme") || "light"
+            );
+        } catch (error) {
+            setTheme("light");
+        }
+    </script>
+</body>
 </html>

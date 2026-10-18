@@ -2,457 +2,949 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="color-scheme" content="light dark">
-<title>Admin Dashboard | EduCloud</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard | EduCloud Portal</title>
 
-<style>
-:root {
-  --bg:#f4f6f1;
-  --surface:#ffffff;
-  --surface-2:#f8faf6;
-  --text:#20251f;
-  --muted:#777f73;
-  --border:#e3e8df;
-  --accent:#c8f169;
-  --accent-dark:#26351c;
-  --danger:#c33d48;
-  --shadow:0 12px 35px rgba(31,42,25,.055);
-}
-html[data-theme="dark"] {
-  --bg:#111510;
-  --surface:#1a2018;
-  --surface-2:#20271e;
-  --text:#edf2e8;
-  --muted:#a0aa98;
-  --border:#30392c;
-  --accent:#c8f169;
-  --accent-dark:#20291a;
-  --danger:#ff7b83;
-  --shadow:0 12px 35px rgba(0,0,0,.15);
-}
-* {box-sizing:border-box}
-html {scroll-behavior:smooth}
-body {
-  margin:0;background:var(--bg);color:var(--text);
-  font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;
-  font-size:14px;line-height:1.5;transition:background .2s,color .2s
-}
-a {color:inherit;text-decoration:none}
-button,input,select {font:inherit}
-button,a,input,select { -webkit-tap-highlight-color:transparent }
-button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible {
-  outline:3px solid #91bd41;outline-offset:2px
-}
-.layout {min-height:100vh}
-.sidebar {
-  width:248px;position:fixed;inset:0 auto 0 0;z-index:20;
-  padding:26px 18px;background:var(--surface);
-  border-right:1px solid var(--border);display:flex;flex-direction:column;
-  transition:transform .25s ease
-}
-.brand {display:flex;align-items:center;gap:11px;padding:0 8px 30px;font-weight:850;font-size:20px;letter-spacing:-.7px}
-.brand-mark {
-  width:39px;height:39px;border-radius:13px;background:var(--accent);
-  color:#20271a;display:grid;place-items:center;font-size:23px;font-weight:900
-}
-.brand small {display:block;color:var(--muted);font-size:10px;letter-spacing:1.6px;text-transform:uppercase}
-.nav-label {font-size:10px;font-weight:800;letter-spacing:1.4px;color:var(--muted);padding:0 11px 10px;text-transform:uppercase}
-.nav {display:grid;gap:5px}
-.nav a {
-  display:flex;align-items:center;gap:12px;padding:12px 13px;
-  color:var(--muted);border-radius:12px;font-weight:650;transition:.18s
-}
-.nav a:hover {background:var(--surface-2);color:var(--text)}
-.nav a.active {background:var(--accent);color:#20271a}
-.nav-icon {width:22px;text-align:center;font-size:17px}
-.side-bottom {margin-top:auto}
-.status-card {padding:15px;background:var(--surface-2);border:1px solid var(--border);border-radius:15px;margin-bottom:14px}
-.status-line {display:flex;align-items:center;gap:8px;font-size:12px;font-weight:750}
-.status-dot {width:8px;height:8px;border-radius:50%;background:#76bb3d;box-shadow:0 0 0 4px rgba(118,187,61,.13)}
-.status-card p {color:var(--muted);font-size:11px;margin:8px 0 0}
-.logout {display:block;padding:11px 13px;border:1px solid var(--border);border-radius:11px;font-weight:700}
-.logout:hover {border-color:var(--danger);color:var(--danger)}
-.main {margin-left:248px;padding:28px clamp(16px,3vw,42px) 45px;max-width:1700px}
-.topbar {display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:31px}
-.crumb {color:var(--muted);font-size:12px}
-.crumb strong {color:var(--text)}
-.top-actions {display:flex;align-items:center;gap:10px}
-.icon-button,.menu-button {
-  display:inline-flex;align-items:center;justify-content:center;gap:8px;
-  min-height:40px;padding:0 13px;border:1px solid var(--border);
-  border-radius:11px;background:var(--surface);color:var(--text);cursor:pointer;font-weight:700
-}
-.icon-button:hover,.menu-button:hover {border-color:var(--muted)}
-.menu-button {display:none}
-.page-heading {display:flex;align-items:flex-end;justify-content:space-between;gap:18px;margin-bottom:24px}
-.eyebrow {font-size:10px;letter-spacing:1.7px;text-transform:uppercase;color:var(--muted);font-weight:850}
-h1 {font-size:clamp(27px,3vw,38px);line-height:1.12;letter-spacing:-1.3px;margin:8px 0 10px}
-.page-heading p {margin:0;color:var(--muted);max-width:600px}
-.heading-pill {padding:9px 13px;border-radius:100px;background:var(--surface);border:1px solid var(--border);font-size:11px;font-weight:750;white-space:nowrap}
-.heading-pill span {color:#6b9d30}
-.stats {display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-bottom:24px}
-.stat {
-  min-width:0;padding:19px;background:var(--surface);border:1px solid var(--border);
-  border-radius:17px;box-shadow:var(--shadow)
-}
-.stat-top {display:flex;align-items:center;justify-content:space-between;gap:8px}
-.stat-label {font-size:12px;color:var(--muted);font-weight:650}
-.stat-icon {width:34px;height:34px;border-radius:11px;background:var(--surface-2);display:grid;place-items:center;font-size:17px}
-.stat-value {font-size:30px;font-weight:850;letter-spacing:-1px;margin-top:13px;line-height:1.1;overflow-wrap:anywhere}
-.stat-foot {font-size:11px;color:var(--muted);margin-top:7px}
-.panel {background:var(--surface);border:1px solid var(--border);border-radius:18px;box-shadow:var(--shadow);margin-bottom:22px;min-width:0;overflow:hidden}
-.panel-head {display:flex;align-items:center;justify-content:space-between;gap:15px;padding:20px 22px;border-bottom:1px solid var(--border)}
-.panel-head h2 {margin:0;font-size:16px;letter-spacing:-.3px}
-.panel-head p {margin:4px 0 0;font-size:12px;color:var(--muted)}
-.panel-body {padding:21px 22px}
-.analytics-link {
-  display:inline-flex;align-items:center;justify-content:center;gap:8px;
-  background:var(--accent);color:#20271a;font-weight:800;padding:10px 14px;
-  border-radius:11px;font-size:12px
-}
-.analytics-link:hover {filter:brightness(.96)}
-.filter-bar {display:grid;grid-template-columns:minmax(180px,1fr) minmax(140px,190px) minmax(140px,190px) auto;gap:10px}
-.control {
-  width:100%;min-width:0;min-height:42px;padding:10px 12px;
-  border:1px solid var(--border);border-radius:10px;background:var(--surface-2);
-  color:var(--text);outline:none
-}
-.control::placeholder {color:var(--muted)}
-.btn {
-  display:inline-flex;align-items:center;justify-content:center;gap:7px;
-  min-height:40px;padding:9px 13px;border:1px solid var(--border);
-  border-radius:10px;background:var(--surface-2);color:var(--text);
-  cursor:pointer;font-weight:750;font-size:12px
-}
-.btn:hover {border-color:var(--muted)}
-.btn-primary {background:var(--accent);color:#20271a;border-color:var(--accent)}
-.table-wrap {width:100%;overflow-x:auto}
-table {width:100%;border-collapse:collapse;min-width:760px}
-th,td {padding:14px 18px;text-align:left;border-bottom:1px solid var(--border);vertical-align:middle}
-th {background:var(--surface-2);font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--muted);font-weight:850;white-space:nowrap}
-td {font-size:12px}
-tbody tr:last-child td {border-bottom:0}
-tbody tr:hover {background:var(--surface-2)}
-.primary-text {font-weight:800;color:var(--text)}
-.secondary-text {display:block;color:var(--muted);font-size:11px;margin-top:3px;overflow-wrap:anywhere}
-.tag {display:inline-flex;align-items:center;gap:6px;padding:5px 9px;border-radius:100px;background:var(--surface-2);border:1px solid var(--border);font-size:10px;font-weight:750;white-space:nowrap}
-.tag::before {content:"";width:6px;height:6px;border-radius:50%;background:#88b947}
-.resource-title {max-width:240px;overflow-wrap:anywhere}
-.empty {padding:35px 16px;text-align:center;color:var(--muted)}
-.empty strong {display:block;color:var(--text);font-size:14px;margin-bottom:4px}
-.footer-note {font-size:11px;color:var(--muted);text-align:center;padding:12px}
-.mobile-overlay {display:none}
+    <style>
+        :root {
+            --bg: #f5f7f2;
+            --panel: #ffffff;
+            --text: #20251f;
+            --muted: #7b8278;
+            --border: #e6e9e1;
+            --accent: #c8f169;
+            --accent-dark: #26331b;
+            --danger: #d94747;
+            --shadow: 0 8px 28px rgba(30, 40, 20, .05);
+        }
 
-@media(max-width:1150px) {
-  .sidebar {width:220px}
-  .main {margin-left:220px;padding-left:22px;padding-right:22px}
-  .stats {grid-template-columns:repeat(2,minmax(0,1fr))}
-  .filter-bar {grid-template-columns:1fr 1fr}
-}
-@media(max-width:760px) {
-  .sidebar {width:260px;transform:translateX(-105%);box-shadow:none}
-  body.menu-open .sidebar {transform:translateX(0);box-shadow:20px 0 60px rgba(0,0,0,.15)}
-  .mobile-overlay {position:fixed;inset:0;background:rgba(10,15,9,.45);z-index:19}
-  body.menu-open .mobile-overlay {display:block}
-  .main {margin-left:0;padding:18px 14px 30px}
-  .topbar {margin-bottom:24px}
-  .menu-button {display:inline-flex}
-  .crumb {display:none}
-  .page-heading {align-items:flex-start;flex-direction:column}
-  .heading-pill {white-space:normal}
-  .panel-head {padding:17px 16px;align-items:flex-start}
-  .panel-body {padding:16px}
-  .filter-bar {grid-template-columns:1fr}
-  .stats {gap:10px}
-  .stat {padding:15px}
-  .stat-value {font-size:26px}
-  .table-wrap {overflow:visible}
-  table,tbody,tr,td {display:block;width:100%;min-width:0}
-  thead {display:none}
-  tbody {padding:4px 13px}
-  tbody tr {padding:12px 0;border-bottom:1px solid var(--border)}
-  tbody tr:last-child {border-bottom:0}
-  td {display:flex;align-items:flex-start;justify-content:space-between;gap:16px;padding:7px 0;border:0;text-align:right;overflow-wrap:anywhere}
-  td::before {content:attr(data-label);color:var(--muted);font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;text-align:left;flex:0 0 92px}
-  td > * {max-width:calc(100% - 108px)}
-  .resource-title {max-width:100%}
-}
-@media(max-width:420px) {
-  .stats {grid-template-columns:1fr 1fr}
-  .stat-value {font-size:23px}
-  .stat-label {font-size:11px}
-  .stat-icon {width:29px;height:29px}
-  .top-actions {gap:6px}
-  .icon-button {padding:0 10px;font-size:11px}
-  .menu-button {padding:0 10px}
-  .panel-head {flex-wrap:wrap}
-  .analytics-link {width:100%}
-}
-@media(prefers-reduced-motion:reduce) {
-  *,*::before,*::after {scroll-behavior:auto!important;transition:none!important}
-}
-</style>
+        body.dark {
+            --bg: #171a16;
+            --panel: #222720;
+            --text: #f0f3eb;
+            --muted: #a1a99a;
+            --border: #353b32;
+            --accent: #c8f169;
+            --accent-dark: #26331b;
+            --shadow: 0 8px 28px rgba(0, 0, 0, .14);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Inter, "Segoe UI", Arial, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            transition: background .2s, color .2s;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        button, input, select {
+            font: inherit;
+        }
+
+        button, .btn {
+            cursor: pointer;
+        }
+
+        .layout {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 245px;
+            background: var(--panel);
+            border-right: 1px solid var(--border);
+            padding: 28px 18px;
+            display: flex;
+            flex-direction: column;
+            flex-shrink: 0;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 11px;
+            padding: 0 10px;
+            margin-bottom: 40px;
+        }
+
+        .brand-icon {
+            width: 42px;
+            height: 42px;
+            display: grid;
+            place-items: center;
+            border-radius: 14px;
+            background: var(--accent);
+            color: #26331b;
+            font-size: 22px;
+            font-weight: 900;
+        }
+
+        .brand h2 {
+            font-size: 18px;
+            letter-spacing: -.5px;
+        }
+
+        .brand p {
+            color: var(--muted);
+            font-size: 11px;
+            margin-top: 3px;
+        }
+
+        .nav-label {
+            padding: 0 12px;
+            margin: 15px 0 10px;
+            color: var(--muted);
+            font-size: 10px;
+            font-weight: 800;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 13px;
+            margin-bottom: 5px;
+            border-radius: 11px;
+            color: var(--muted);
+            font-size: 13px;
+            font-weight: 600;
+            transition: .2s;
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            background: var(--accent);
+            color: #26331b;
+        }
+
+        .nav-icon {
+            width: 21px;
+            text-align: center;
+            font-size: 17px;
+        }
+
+        .sidebar-bottom {
+            margin-top: auto;
+        }
+
+        .sidebar-note {
+            margin-top: 25px;
+            padding: 15px;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+        }
+
+        .sidebar-note strong {
+            font-size: 12px;
+        }
+
+        .sidebar-note p {
+            color: var(--muted);
+            font-size: 11px;
+            line-height: 1.6;
+            margin-top: 6px;
+        }
+
+        .main {
+            min-width: 0;
+            flex: 1;
+            padding: 30px;
+        }
+
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .eyebrow {
+            color: var(--muted);
+            font-size: 11px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 8px;
+        }
+
+        h1 {
+            font-size: clamp(24px, 3vw, 32px);
+            letter-spacing: -1.2px;
+        }
+
+        .subtitle {
+            color: var(--muted);
+            font-size: 13px;
+            margin-top: 8px;
+            line-height: 1.6;
+        }
+
+        .top-actions {
+            display: flex;
+            gap: 9px;
+            align-items: center;
+        }
+
+        .icon-button {
+            height: 42px;
+            width: 42px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            background: var(--panel);
+            color: var(--text);
+            font-size: 18px;
+        }
+
+        .logout {
+            padding: 12px 17px;
+            background: var(--text);
+            color: var(--panel);
+            border-radius: 11px;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 18px;
+            margin-bottom: 28px;
+        }
+
+        .stat-card {
+            background: var(--panel);
+            border: 1px solid var(--border);
+            border-radius: 17px;
+            padding: 23px;
+            box-shadow: var(--shadow);
+        }
+
+        .stat-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+        }
+
+        .stat-label {
+            color: var(--muted);
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .stat-icon {
+            width: 39px;
+            height: 39px;
+            border-radius: 12px;
+            display: grid;
+            place-items: center;
+            background: var(--bg);
+            font-size: 18px;
+        }
+
+        .stat-number {
+            font-size: 34px;
+            font-weight: 800;
+            margin-top: 19px;
+            letter-spacing: -1px;
+        }
+
+        .stat-caption {
+            color: var(--muted);
+            font-size: 11px;
+            margin-top: 7px;
+        }
+
+        .panel {
+            background: var(--panel);
+            border: 1px solid var(--border);
+            border-radius: 17px;
+            padding: 23px;
+            margin-bottom: 24px;
+            box-shadow: var(--shadow);
+            scroll-margin-top: 20px;
+        }
+
+        .panel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .panel-header h2 {
+            font-size: 17px;
+            letter-spacing: -.4px;
+        }
+
+        .panel-header p {
+            color: var(--muted);
+            font-size: 12px;
+            margin-top: 6px;
+            line-height: 1.5;
+        }
+
+        .btn {
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            gap: 7px;
+            padding: 10px 14px;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            background: var(--panel);
+            color: var(--text);
+            font-size: 12px;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            color: #26331b;
+            border-color: var(--accent);
+        }
+
+        .btn:hover {
+            filter: brightness(.97);
+            transform: translateY(-1px);
+        }
+
+        .btn-danger {
+            color: var(--danger);
+            border-color: #e7bcbc;
+        }
+
+        .filters {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 19px;
+        }
+
+        .field {
+            min-width: 150px;
+            padding: 11px 12px;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            background: var(--bg);
+            color: var(--text);
+            outline: none;
+            font-size: 12px;
+        }
+
+        .field:focus {
+            border-color: #94b94a;
+            box-shadow: 0 0 0 3px rgba(200, 241, 105, .17);
+        }
+
+        .search-field {
+            flex: 1;
+            min-width: 180px;
+        }
+
+        .table-wrap {
+            width: 100%;
+            overflow-x: auto;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            text-align: left;
+            white-space: nowrap;
+        }
+
+        th {
+            padding: 13px 12px;
+            color: var(--muted);
+            font-size: 10px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: .8px;
+            background: var(--bg);
+        }
+
+        th:first-child {
+            border-radius: 9px 0 0 9px;
+        }
+
+        th:last-child {
+            border-radius: 0 9px 9px 0;
+        }
+
+        td {
+            padding: 15px 12px;
+            border-bottom: 1px solid var(--border);
+            font-size: 12px;
+            vertical-align: middle;
+        }
+
+        tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        tbody tr:hover {
+            background: rgba(128, 128, 128, .035);
+        }
+
+        .person {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .avatar {
+            width: 34px;
+            height: 34px;
+            border-radius: 11px;
+            display: grid;
+            place-items: center;
+            background: var(--accent);
+            color: #26331b;
+            font-size: 12px;
+            font-weight: 800;
+            flex-shrink: 0;
+        }
+
+        .person strong {
+            font-size: 12px;
+        }
+
+        .person small {
+            display: block;
+            margin-top: 4px;
+            color: var(--muted);
+            font-size: 10px;
+        }
+
+        .pill {
+            display: inline-block;
+            padding: 6px 9px;
+            border-radius: 7px;
+            background: var(--bg);
+            color: var(--muted);
+            font-size: 10px;
+            font-weight: 700;
+        }
+
+        .actions {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .action-link {
+            padding: 7px 9px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 10px;
+            font-weight: 700;
+        }
+
+        .action-link:hover {
+            border-color: #a8cb60;
+        }
+
+        .delete-form {
+            display: inline;
+        }
+
+        .delete-button {
+            padding: 7px 9px;
+            border: 1px solid #e7bcbc;
+            border-radius: 8px;
+            background: transparent;
+            color: var(--danger);
+            font-size: 10px;
+            font-weight: 700;
+        }
+
+        .empty {
+            padding: 30px 15px;
+            text-align: center;
+            color: var(--muted);
+            font-size: 12px;
+        }
+
+        .footer {
+            padding: 10px 0 5px;
+            color: var(--muted);
+            font-size: 11px;
+            text-align: center;
+        }
+
+        @media (max-width: 1050px) {
+            .sidebar {
+                width: 205px;
+            }
+
+            .main {
+                padding: 23px;
+            }
+
+            .stats {
+                gap: 12px;
+            }
+
+            .stat-card {
+                padding: 18px;
+            }
+        }
+
+        @media (max-width: 760px) {
+            .layout {
+                display: block;
+            }
+
+            .sidebar {
+                width: 100%;
+                padding: 14px;
+                border-right: none;
+                border-bottom: 1px solid var(--border);
+            }
+
+            .brand {
+                margin-bottom: 15px;
+            }
+
+            .nav-label,
+            .sidebar-bottom {
+                display: none;
+            }
+
+            .sidebar nav {
+                display: flex;
+                gap: 6px;
+                overflow-x: auto;
+            }
+
+            .nav-link {
+                flex-shrink: 0;
+                margin: 0;
+                padding: 10px;
+                font-size: 11px;
+            }
+
+            .main {
+                padding: 18px 13px;
+            }
+
+            .topbar {
+                align-items: flex-start;
+            }
+
+            .stats {
+                grid-template-columns: 1fr;
+                gap: 12px;
+            }
+
+            .stat-card {
+                padding: 17px;
+            }
+
+            .stat-number {
+                font-size: 28px;
+                margin-top: 12px;
+            }
+
+            .panel {
+                padding: 15px;
+            }
+
+            .panel-header {
+                flex-wrap: wrap;
+            }
+
+            .panel-header .btn {
+                white-space: normal;
+            }
+
+            .logout {
+                padding: 11px;
+            }
+        }
+    </style>
 </head>
 
 <body>
-<div class="layout" id="top">
-  <aside class="sidebar" aria-label="Admin navigation">
-    <a class="brand" href="/admin">
-      <span class="brand-mark">e</span>
-      <span>EduCloud<small>Admin workspace</small></span>
-    </a>
+<div class="layout">
 
-    <div class="nav-label">Management</div>
-    <nav class="nav">
-      <a class="active" href="#top"><span class="nav-icon">⌂</span> Overview</a>
-      <a href="#teachers"><span class="nav-icon">♙</span> Teachers</a>
-      <a href="#students"><span class="nav-icon">♧</span> Students</a>
-      <a href="#resources"><span class="nav-icon">▤</span> Resources</a>
-      <a href="/admin/analytics"><span class="nav-icon">▥</span> Analytics</a>
-    </nav>
+    <aside class="sidebar">
+        <a href="#dashboard" class="brand">
+            <div class="brand-icon">E</div>
+            <div>
+                <h2>EduCloud</h2>
+                <p>Smart Campus Portal</p>
+            </div>
+        </a>
 
-    <div class="side-bottom">
-      <div class="status-card">
-        <div class="status-line"><span class="status-dot"></span> Admin workspace</div>
-        <p>Manage campus accounts and academic resources from one place.</p>
-      </div>
-      <a class="logout" href="/logout">↪ &nbsp; Log out securely</a>
-    </div>
-  </aside>
+        <div class="nav-label">Workspace</div>
 
-  <div class="mobile-overlay" id="mobileOverlay"></div>
+        <nav>
+            <a class="nav-link active" href="#dashboard">
+                <span class="nav-icon">⌂</span> Dashboard
+            </a>
+            <a class="nav-link" href="#teachers">
+                <span class="nav-icon">♙</span> Teachers
+            </a>
+            <a class="nav-link" href="#students">
+                <span class="nav-icon">♧</span> Students
+            </a>
+            <a class="nav-link" href="#resources">
+                <span class="nav-icon">▤</span> Resources
+            </a>
+            <a class="nav-link" href="/admin/analytics">
+                <span class="nav-icon">▥</span> Analytics
+            </a>
+        </nav>
 
-  <main class="main">
-    <header class="topbar">
-      <div class="crumb">EduCloud / <strong>Admin overview</strong></div>
-      <div class="top-actions">
-        <button class="menu-button" id="menuToggle" type="button" aria-label="Open navigation">☰ Menu</button>
-        <button class="icon-button" id="themeToggle" type="button">◐ <span>Theme</span></button>
-      </div>
-    </header>
+        <div class="sidebar-bottom">
+            <div class="sidebar-note">
+                <strong>Campus resources, simplified.</strong>
+                <p>Manage teachers, students and learning materials from one place.</p>
+            </div>
 
-    <section class="page-heading">
-      <div>
-        <div class="eyebrow">Campus operations</div>
-        <h1>Admin dashboard.</h1>
-        <p>Monitor accounts, keep academic resources organised, and manage your EduCloud workspace.</p>
-      </div>
-      <div class="heading-pill"><span>●</span> Management overview</div>
-    </section>
+            <a href="/logout" class="nav-link" style="margin-top:14px">
+                <span class="nav-icon">↪</span> Logout
+            </a>
+        </div>
+    </aside>
 
-    <section class="stats" aria-label="Dashboard totals">
-      <article class="stat">
-        <div class="stat-top"><span class="stat-label">Teachers</span><span class="stat-icon">♙</span></div>
-        <div class="stat-value">{{ teachers|length if teachers is defined else 0 }}</div>
-        <div class="stat-foot">Teacher accounts</div>
-      </article>
-      <article class="stat">
-        <div class="stat-top"><span class="stat-label">Students</span><span class="stat-icon">♧</span></div>
-        <div class="stat-value">{{ students|length if students is defined else 0 }}</div>
-        <div class="stat-foot">Student accounts</div>
-      </article>
-      <article class="stat">
-        <div class="stat-top"><span class="stat-label">Resources</span><span class="stat-icon">▤</span></div>
-        <div class="stat-value">{{ resources|length if resources is defined else 0 }}</div>
-        <div class="stat-foot">Academic materials</div>
-      </article>
-      <article class="stat">
-        <div class="stat-top"><span class="stat-label">Branches</span><span class="stat-icon">⌘</span></div>
-        <div class="stat-value">{{ branches|length if branches is defined else 0 }}</div>
-        <div class="stat-foot">Academic branches</div>
-      </article>
-    </section>
+    <main class="main" id="dashboard">
 
-    <section class="panel" id="teachers">
-      <div class="panel-head">
-        <div><h2>Teacher accounts</h2><p>Current teacher records</p></div>
-        <span class="tag">{{ teachers|length if teachers is defined else 0 }} accounts</span>
-      </div>
-      {% if teachers is defined and teachers %}
-      <div class="table-wrap">
-        <table>
-          <thead><tr><th>Teacher</th><th>Username</th><th>Branch</th><th>Account</th></tr></thead>
-          <tbody>
-          {% for teacher in teachers %}
-            <tr>
-              <td data-label="Teacher"><span class="primary-text">{{ teacher["name"] if teacher["name"] is defined else teacher["username"] if teacher["username"] is defined else "Teacher" }}</span></td>
-              <td data-label="Username">{{ teacher["username"] if teacher["username"] is defined else "—" }}</td>
-              <td data-label="Branch">{{ teacher["branch_name"] if teacher["branch_name"] is defined else teacher["branch"] if teacher["branch"] is defined else "—" }}</td>
-              <td data-label="Account"><span class="tag">Teacher</span></td>
-            </tr>
-          {% endfor %}
-          </tbody>
-        </table>
-      </div>
-      {% else %}
-      <div class="empty"><strong>No teacher records to display</strong>Teacher accounts will appear here when available.</div>
-      {% endif %}
-    </section>
+        <header class="topbar">
+            <div>
+                <div class="eyebrow">Administration / Overview</div>
+                <h1>Welcome, {{ name }} 👋</h1>
+                <p class="subtitle">
+                    Here's what's happening across your campus today.
+                </p>
+            </div>
 
-    <section class="panel" id="students">
-      <div class="panel-head">
-        <div><h2>Student accounts</h2><p>Current student records</p></div>
-        <span class="tag">{{ students|length if students is defined else 0 }} accounts</span>
-      </div>
-      {% if students is defined and students %}
-      <div class="table-wrap">
-        <table>
-          <thead><tr><th>Student</th><th>Username</th><th>Branch</th><th>Year</th></tr></thead>
-          <tbody>
-          {% for student in students %}
-            <tr>
-              <td data-label="Student"><span class="primary-text">{{ student["name"] if student["name"] is defined else student["username"] if student["username"] is defined else "Student" }}</span></td>
-              <td data-label="Username">{{ student["username"] if student["username"] is defined else "—" }}</td>
-              <td data-label="Branch">{{ student["branch_name"] if student["branch_name"] is defined else student["branch"] if student["branch"] is defined else "—" }}</td>
-              <td data-label="Year">{{ student["year_name"] if student["year_name"] is defined else student["year"] if student["year"] is defined else "—" }}</td>
-            </tr>
-          {% endfor %}
-          </tbody>
-        </table>
-      </div>
-      {% else %}
-      <div class="empty"><strong>No student records to display</strong>Student accounts will appear here when available.</div>
-      {% endif %}
-    </section>
+            <div class="top-actions">
+                <button class="icon-button" id="themeToggle"
+                        type="button" aria-label="Toggle dark mode">☾</button>
+                <a href="/logout" class="logout">Log out ↗</a>
+            </div>
+        </header>
 
-    <section class="panel" id="resources">
-      <div class="panel-head">
-        <div><h2>Academic resources</h2><p>Search and filter resources across the portal</p></div>
-        <a class="analytics-link" href="/admin/analytics">View analytics ↗</a>
-      </div>
-      <div class="panel-body">
-        <form class="filter-bar" method="GET" action="/admin" id="resourceFilters">
-          <input class="control" type="search" name="resource_search" id="resourceSearch"
-                 placeholder="Search title, teacher, subject..."
-                 value="{{ resource_search|default('', true) }}">
-          <select class="control" name="resource_branch" id="resourceBranch">
-            <option value="">All branches</option>
-            {% if branches is defined %}
-              {% for branch in branches %}
-                <option value="{{ branch['id'] }}"
-                  {% if resource_branch is defined and resource_branch|string == branch['id']|string %}selected{% endif %}>
-                  {{ branch['name'] }}
-                </option>
-              {% endfor %}
-            {% endif %}
-          </select>
-          <select class="control" name="resource_year" id="resourceYear">
-            <option value="">All years</option>
-            {% if years is defined %}
-              {% for year in years %}
-                <option value="{{ year['id'] }}"
-                  {% if resource_year is defined and resource_year|string == year['id']|string %}selected{% endif %}>
-                  {{ year['name'] }}
-                </option>
-              {% endfor %}
-            {% endif %}
-          </select>
-          <button class="btn btn-primary" type="submit">Apply filters ↗</button>
-        </form>
-      </div>
+        <section class="stats">
+            <article class="stat-card">
+                <div class="stat-top">
+                    <span class="stat-label">Total Teachers</span>
+                    <span class="stat-icon">♙</span>
+                </div>
+                <div class="stat-number">{{ teacher_count }}</div>
+                <div class="stat-caption">Registered teaching staff</div>
+            </article>
 
-      {% if resources is defined and resources %}
-      <div class="table-wrap">
-        <table>
-          <thead><tr><th>Resource</th><th>Branch / Year</th><th>Subject</th><th>Uploaded by</th><th>Added</th><th>Action</th></tr></thead>
-          <tbody>
-          {% for resource in resources %}
-            <tr>
-              <td data-label="Resource">
-                <span class="primary-text resource-title">{{ resource["title"] if resource["title"] is defined else "Untitled resource" }}</span>
-                <span class="secondary-text">{{ resource["filename"] if resource["filename"] is defined else "" }}</span>
-              </td>
-              <td data-label="Branch / Year">
-                {{ resource["branch_name"] if resource["branch_name"] is defined else "—" }}
-                <span class="secondary-text">{{ resource["year_name"] if resource["year_name"] is defined else "—" }}</span>
-              </td>
-              <td data-label="Subject">{{ resource["subject_name"] if resource["subject_name"] is defined else "—" }}</td>
-              <td data-label="Uploaded by">
-                {{ resource["teacher_name"] if resource["teacher_name"] is defined else resource["teacher_username"] if resource["teacher_username"] is defined else "—" }}
-              </td>
-              <td data-label="Added">{{ resource["created_at"] if resource["created_at"] is defined else "—" }}</td>
-              <td data-label="Action">
-                {% if resource["id"] is defined %}
-                  <form method="POST" action="/admin/delete-resource/{{ resource['id'] }}"
-                        onsubmit="return confirm('Delete this resource? This action cannot be undone.');">
-                    <button class="btn" type="submit" style="color:var(--danger)">Delete</button>
-                  </form>
-                {% else %}
-                  <span class="secondary-text">No action available</span>
-                {% endif %}
-              </td>
-            </tr>
-          {% endfor %}
-          </tbody>
-        </table>
-      </div>
-      {% else %}
-      <div class="empty"><strong>No resources found</strong>Try changing the filters, or upload academic material first.</div>
-      {% endif %}
-    </section>
+            <article class="stat-card">
+                <div class="stat-top">
+                    <span class="stat-label">Total Students</span>
+                    <span class="stat-icon">♧</span>
+                </div>
+                <div class="stat-number">{{ student_count }}</div>
+                <div class="stat-caption">Registered campus students</div>
+            </article>
 
-    <div class="footer-note">EduCloud Portal · Academic resources, organised.</div>
-  </main>
+            <article class="stat-card">
+                <div class="stat-top">
+                    <span class="stat-label">Total Resources</span>
+                    <span class="stat-icon">▤</span>
+                </div>
+                <div class="stat-number">{{ resource_count }}</div>
+                <div class="stat-caption">Learning materials available</div>
+            </article>
+        </section>
+
+        <!-- TEACHERS -->
+        <section class="panel" id="teachers">
+            <div class="panel-header">
+                <div>
+                    <h2>Teacher Management</h2>
+                    <p>Manage teaching staff and their branch details.</p>
+                </div>
+                <a href="/admin/add-teacher" class="btn btn-primary">
+                    + Add Teacher
+                </a>
+            </div>
+
+            <form method="GET" action="/admin" class="filters">
+                <input class="field search-field" type="search"
+                       name="search" placeholder="Search teachers..."
+                       value="{{ request.args.get('search', '') }}">
+
+                <input class="field" type="text" name="branch"
+                       placeholder="Filter by branch"
+                       value="{{ request.args.get('branch', '') }}">
+
+                <button class="btn btn-primary" type="submit">Search</button>
+                <a href="/admin#teachers" class="btn">Reset</a>
+            </form>
+
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                    <tr>
+                        <th>Teacher</th>
+                        <th>Branch</th>
+                        <th>Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for teacher in teachers %}
+                    <tr>
+                        <td>
+                            <div class="person">
+                                <div class="avatar">
+                                    {{ teacher.get('name', 'T')[:1]|upper }}
+                                </div>
+                                <div>
+                                    <strong>{{ teacher['name'] }}</strong>
+                                    <small>Teacher account</small>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <span class="pill">
+                                {{ teacher.get('branch_name', teacher.get('branch', '—')) }}
+                            </span>
+                        </td>
+                        <td>
+                            <div class="actions">
+                                <a class="action-link"
+                                   href="/admin/edit-teacher/{{ teacher['id'] }}">Edit</a>
+
+                                <form class="delete-form" method="POST"
+                                      action="/admin/delete-teacher/{{ teacher['id'] }}"
+                                      onsubmit="return confirm('Delete this teacher?')">
+                                    <button class="delete-button" type="submit">
+                                        Delete
+                                    </button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr><td colspan="3" class="empty">No teachers found.</td></tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- STUDENTS -->
+        <section class="panel" id="students">
+            <div class="panel-header">
+                <div>
+                    <h2>Student Management</h2>
+                    <p>Manage student accounts and branch assignments.</p>
+                </div>
+                <a href="/admin/add-student" class="btn btn-primary">
+                    + Add Student
+                </a>
+            </div>
+
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                    <tr>
+                        <th>Student</th>
+                        <th>Branch</th>
+                        <th>Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for student in students %}
+                    <tr>
+                        <td>
+                            <div class="person">
+                                <div class="avatar">
+                                    {{ student.get('name', 'S')[:1]|upper }}
+                                </div>
+                                <div>
+                                    <strong>{{ student['name'] }}</strong>
+                                    <small>Student account</small>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <span class="pill">
+                                {{ student.get('branch_name', student.get('branch', '—')) }}
+                            </span>
+                        </td>
+                        <td>
+                            <div class="actions">
+                                <a class="action-link"
+                                   href="/admin/edit-student/{{ student['id'] }}">Edit</a>
+
+                                <form class="delete-form" method="POST"
+                                      action="/admin/delete-student/{{ student['id'] }}"
+                                      onsubmit="return confirm('Delete this student?')">
+                                    <button class="delete-button" type="submit">
+                                        Delete
+                                    </button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr><td colspan="3" class="empty">No students found.</td></tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- RESOURCES -->
+        <section class="panel" id="resources">
+            <div class="panel-header">
+                <div>
+                    <h2>Learning Resources</h2>
+                    <p>Review, download and manage uploaded campus materials.</p>
+                </div>
+                <a href="/admin/analytics" class="btn">View Analytics ↗</a>
+            </div>
+
+            <form method="GET" action="/admin" class="filters">
+                <input class="field search-field" type="search"
+                       name="resource_search"
+                       placeholder="Search resources..."
+                       value="{{ resource_search|default(request.args.get('resource_search', '')) }}">
+
+                <select class="field" name="resource_branch">
+                    <option value="">All Branches</option>
+                    {% for branch in branches %}
+                    <option value="{{ branch }}"
+                        {% if resource_branch|default(request.args.get('resource_branch', '')) == branch %}selected{% endif %}>
+                        {{ branch }}
+                    </option>
+                    {% endfor %}
+                </select>
+
+                <select class="field" name="resource_year">
+                    <option value="">All Years</option>
+                    {% for year in years %}
+                    <option value="{{ year }}"
+                        {% if resource_year|default(request.args.get('resource_year', '')) == year %}selected{% endif %}>
+                        {{ year }}
+                    </option>
+                    {% endfor %}
+                </select>
+
+                <button class="btn btn-primary" type="submit">Filter</button>
+                <a href="/admin#resources" class="btn">Reset</a>
+            </form>
+
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                    <tr>
+                        <th>Resource</th>
+                        <th>Branch / Year</th>
+                        <th>Subject</th>
+                        <th>Uploaded By</th>
+                        <th>Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for resource in resources %}
+                    <tr>
+                        <td>
+                            <div class="person">
+                                <div class="avatar">▤</div>
+                                <div>
+                                    <strong>{{ resource['title'] }}</strong>
+                                    <small>
+                                        {{ resource.get('filename', '') }}
+                                    </small>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <span class="pill">{{ resource['branch_name'] }}</span>
+                            <br><br>
+                            <span class="pill">{{ resource['year_name'] }}</span>
+                        </td>
+                        <td>{{ resource['subject_name'] }}</td>
+                        <td>{{ resource['teacher_name'] }}</td>
+                        <td>
+                            <div class="actions">
+                                <a class="action-link"
+                                   href="/resource/{{ resource['id'] }}">View</a>
+
+                                <a class="action-link"
+                                   href="/download/{{ resource['id'] }}">Download</a>
+
+                                <form class="delete-form" method="POST"
+                                      action="/admin/delete-resource/{{ resource['id'] }}"
+                                      onsubmit="return confirm('Delete this resource?')">
+                                    <button class="delete-button" type="submit">
+                                        Delete
+                                    </button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="5" class="empty">No resources found.</td>
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <footer class="footer">
+            EduCloud Portal · Smart Campus Resource Management
+        </footer>
+    </main>
 </div>
 
 <script>
-(function () {
-  const root = document.documentElement;
-  const themeButton = document.getElementById("themeToggle");
-  const menuButton = document.getElementById("menuToggle");
-  const overlay = document.getElementById("mobileOverlay");
+    const themeToggle = document.getElementById("themeToggle");
 
-  function applyTheme(theme) {
-    const safeTheme = theme === "dark" ? "dark" : "light";
-    root.setAttribute("data-theme", safeTheme);
-    themeButton.innerHTML = safeTheme === "dark"
-      ? "☀ <span>Light mode</span>"
-      : "◐ <span>Dark mode</span>";
-  }
+    themeToggle.addEventListener("click", function () {
+        document.body.classList.toggle("dark");
 
-  let savedTheme = "light";
-  try {
-    savedTheme = localStorage.getItem("educloud-theme") || "light";
-  } catch (error) {}
-  applyTheme(savedTheme);
+        const darkMode = document.body.classList.contains("dark");
+        themeToggle.textContent = darkMode ? "☀" : "☾";
 
-  themeButton.addEventListener("click", function () {
-    const next = root.getAttribute("data-theme") === "dark" ? "light" : "dark";
-    applyTheme(next);
-    try { localStorage.setItem("educloud-theme", next); } catch (error) {}
-  });
-
-  function closeMenu() {
-    document.body.classList.remove("menu-open");
-    menuButton.setAttribute("aria-expanded", "false");
-  }
-  menuButton.addEventListener("click", function () {
-    const isOpen = document.body.classList.toggle("menu-open");
-    menuButton.setAttribute("aria-expanded", String(isOpen));
-  });
-  overlay.addEventListener("click", closeMenu);
-
-  document.querySelectorAll(".nav a").forEach(function (link) {
-    link.addEventListener("click", closeMenu);
-  });
-
-  document.addEventListener("keydown", function (event) {
-    if (event.key === "Escape") closeMenu();
-  });
-
-  const search = document.getElementById("resourceSearch");
-  const branch = document.getElementById("resourceBranch");
-  const year = document.getElementById("resourceYear");
-  [search, branch, year].forEach(function (control) {
-    control.addEventListener("keydown", function (event) {
-      if (event.key === "Enter" && control !== search) {
-        document.getElementById("resourceFilters").requestSubmit();
-      }
+        try {
+            localStorage.setItem("educloud-admin-theme", darkMode ? "dark" : "light");
+        } catch (error) {
+            // Theme still works when browser storage is unavailable.
+        }
     });
-  });
-})();
+
+    try {
+        if (localStorage.getItem("educloud-admin-theme") === "dark") {
+            document.body.classList.add("dark");
+            themeToggle.textContent = "☀";
+        }
+    } catch (error) {
+        // Ignore unavailable browser storage.
+    }
 </script>
 </body>
 </html>

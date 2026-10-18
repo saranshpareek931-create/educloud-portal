@@ -1,786 +1,601 @@
+
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-
     <meta charset="UTF-8">
-
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
-
-    <title>Admin Analytics - EduCloud Portal</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analytics | EduCloud Portal</title>
 
     <style>
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+        :root {
+            --bg: #f5f7f2;
+            --panel: #fff;
+            --text: #20251f;
+            --muted: #7b8278;
+            --border: #e6e9e1;
+            --accent: #c8f169;
+            --accent-text: #26331b;
+            --track: #e8ebdf;
+            --shadow: 0 8px 28px rgba(30,40,20,.05);
         }
+
+        body.dark {
+            --bg: #171a16;
+            --panel: #222720;
+            --text: #f0f3eb;
+            --muted: #a1a99a;
+            --border: #353b32;
+            --accent: #c8f169;
+            --accent-text: #26331b;
+            --track: #353b32;
+            --shadow: 0 8px 28px rgba(0,0,0,.14);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
 
         body {
-            font-family: Arial, Helvetica, sans-serif;
-            background: #f5f7fb;
-            color: #1f2937;
+            font-family: Inter, "Segoe UI", Arial, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            transition: background .2s, color .2s;
         }
 
-        /* =========================
-           NAVBAR
-        ========================= */
+        a { color: inherit; text-decoration: none; }
 
         .navbar {
-            background: #111827;
-            color: white;
-            padding: 16px 30px;
-
+            background: var(--panel);
+            border-bottom: 1px solid var(--border);
+            padding: 18px 5%;
             display: flex;
-            justify-content: space-between;
             align-items: center;
-
-            box-shadow: 0 3px 15px rgba(0, 0, 0, 0.12);
+            justify-content: space-between;
+            gap: 15px;
         }
 
         .brand {
-            font-size: 22px;
-            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 12px;
         }
+
+        .brand-icon {
+            width: 42px;
+            height: 42px;
+            display: grid;
+            place-items: center;
+            border-radius: 13px;
+            background: var(--accent);
+            color: var(--accent-text);
+            font-size: 23px;
+            font-weight: 900;
+        }
+
+        .brand h2 { font-size: 17px; letter-spacing: -.4px; }
+        .brand p { font-size: 11px; color: var(--muted); margin-top: 4px; }
 
         .nav-right {
             display: flex;
-            gap: 10px;
             align-items: center;
+            gap: 9px;
         }
 
-        .nav-btn {
-            text-decoration: none;
-            color: white;
-
-            background: #374151;
-
-            padding: 9px 15px;
-
-            border-radius: 8px;
-
-            font-size: 14px;
-
-            transition: 0.2s;
+        .nav-btn, .theme-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 11px 14px;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            background: var(--panel);
+            color: var(--text);
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
         }
 
-        .nav-btn:hover {
-            background: #4b5563;
-        }
+        .nav-btn:hover, .theme-btn:hover { border-color: #a6c95d; }
 
         .logout-btn {
-            background: #dc2626;
+            background: var(--text);
+            color: var(--panel);
+            border-color: var(--text);
         }
-
-        .logout-btn:hover {
-            background: #b91c1c;
-        }
-
-        /* =========================
-           PAGE
-        ========================= */
 
         .container {
             width: 92%;
-            max-width: 1250px;
-
-            margin: 35px auto;
+            max-width: 1400px;
+            margin: 34px auto;
         }
 
         .page-header {
-            margin-bottom: 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            gap: 20px;
+            margin-bottom: 27px;
         }
 
-        .page-header h1 {
-            font-size: 32px;
-            margin-bottom: 8px;
+        .eyebrow {
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1.7px;
+            font-weight: 800;
+            color: var(--muted);
+            margin-bottom: 9px;
         }
 
-        .page-header p {
-            color: #6b7280;
-            font-size: 15px;
+        h1 {
+            font-size: clamp(26px, 3vw, 34px);
+            letter-spacing: -1.2px;
         }
 
-        /* =========================
-           STAT CARDS
-        ========================= */
+        .subtitle {
+            margin-top: 9px;
+            color: var(--muted);
+            font-size: 13px;
+            line-height: 1.6;
+        }
 
         .stats-grid {
             display: grid;
-
-            grid-template-columns:
-                repeat(4, 1fr);
-
-            gap: 18px;
-
-            margin-bottom: 30px;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 17px;
+            margin-bottom: 25px;
         }
 
         .stat-card {
-            background: white;
-
-            border-radius: 14px;
-
-            padding: 24px;
-
-            box-shadow:
-                0 5px 20px rgba(0, 0, 0, 0.07);
-
-            border: 1px solid #e5e7eb;
+            background: var(--panel);
+            border: 1px solid var(--border);
+            border-radius: 17px;
+            padding: 23px;
+            box-shadow: var(--shadow);
         }
 
-        .stat-title {
-            font-size: 14px;
-            color: #6b7280;
+        .stat-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+        }
 
-            margin-bottom: 10px;
+        .stat-title { font-size: 12px; color: var(--muted); font-weight: 600; }
+
+        .stat-icon {
+            width: 39px;
+            height: 39px;
+            border-radius: 12px;
+            background: var(--bg);
+            display: grid;
+            place-items: center;
+            font-size: 18px;
         }
 
         .stat-number {
-            font-size: 32px;
-            font-weight: 700;
-
-            color: #111827;
+            font-size: 34px;
+            font-weight: 800;
+            letter-spacing: -1px;
+            margin-top: 17px;
         }
 
-        /* =========================
-           SECTION
-        ========================= */
+        .stat-caption {
+            margin-top: 6px;
+            color: var(--muted);
+            font-size: 11px;
+        }
 
         .section {
-            background: white;
-
-            border-radius: 14px;
-
+            background: var(--panel);
+            border: 1px solid var(--border);
+            border-radius: 17px;
             padding: 25px;
-
-            margin-bottom: 25px;
-
-            box-shadow:
-                0 5px 20px rgba(0, 0, 0, 0.06);
-
-            border: 1px solid #e5e7eb;
+            margin-bottom: 23px;
+            box-shadow: var(--shadow);
         }
 
-        .section-title {
-            font-size: 21px;
+        .section-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 15px;
+            margin-bottom: 22px;
+        }
+
+        .section-title { font-size: 17px; letter-spacing: -.4px; }
+
+        .section-description {
+            color: var(--muted);
+            font-size: 12px;
+            line-height: 1.6;
+            margin-top: 6px;
+        }
+
+        .section-tag {
+            padding: 7px 10px;
+            border-radius: 8px;
+            background: var(--bg);
+            color: var(--muted);
+            font-size: 10px;
             font-weight: 700;
-
-            margin-bottom: 20px;
+            white-space: nowrap;
         }
-
-        /* =========================
-           BRANCH GRID
-        ========================= */
 
         .branch-grid {
             display: grid;
-
-            grid-template-columns:
-                repeat(4, 1fr);
-
-            gap: 18px;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 15px;
         }
 
         .branch-card {
-            border: 1px solid #e5e7eb;
+            padding: 19px;
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            background: var(--bg);
+            transition: transform .2s, border-color .2s;
+        }
 
-            border-radius: 12px;
-
-            padding: 20px;
-
-            background: #fafafa;
+        .branch-card:hover {
+            transform: translateY(-3px);
+            border-color: #b5d66d;
         }
 
         .branch-name {
-            font-size: 18px;
-
-            font-weight: 700;
-
-            margin-bottom: 4px;
+            font-size: 16px;
+            font-weight: 800;
+            overflow-wrap: anywhere;
         }
 
         .branch-code {
-            color: #6b7280;
-
-            font-size: 13px;
-
-            margin-bottom: 18px;
+            color: var(--muted);
+            font-size: 11px;
+            margin-top: 5px;
+            margin-bottom: 17px;
         }
 
         .branch-stat {
             display: flex;
-
             justify-content: space-between;
-
-            padding: 9px 0;
-
-            border-bottom:
-                1px solid #eeeeee;
-
-            font-size: 14px;
+            align-items: center;
+            gap: 10px;
+            padding: 11px 0;
+            border-bottom: 1px solid var(--border);
+            font-size: 12px;
         }
 
-        .branch-stat:last-child {
-            border-bottom: none;
-        }
-
-        .branch-stat span:last-child {
-            font-weight: 700;
-        }
-
-        /* =========================
-           YEAR CHART
-        ========================= */
+        .branch-stat span:first-child { color: var(--muted); }
+        .branch-stat span:last-child { font-weight: 800; }
+        .branch-stat:last-child { border-bottom: none; }
 
         .year-chart {
             display: flex;
-
             flex-direction: column;
-
-            gap: 20px;
-        }
-
-        .year-row {
-            width: 100%;
+            gap: 23px;
         }
 
         .year-info {
             display: flex;
-
             justify-content: space-between;
-
-            margin-bottom: 8px;
-
-            font-size: 14px;
+            gap: 12px;
+            margin-bottom: 9px;
+            font-size: 12px;
         }
 
-        .year-name {
-            font-weight: 600;
-        }
-
-        .year-count {
-            color: #6b7280;
-        }
+        .year-name { font-weight: 700; }
+        .year-count { color: var(--muted); }
 
         .bar-background {
-            width: 100%;
-
-            height: 18px;
-
-            background: #e5e7eb;
-
+            height: 12px;
+            background: var(--track);
             border-radius: 20px;
-
             overflow: hidden;
         }
 
         .bar-fill {
             height: 100%;
-
             width: 0;
-
-            background: #5b67f1;
-
             border-radius: 20px;
-
-            transition:
-                width 0.7s ease;
+            background: var(--accent);
+            transition: width .8s ease;
         }
 
-        /* =========================
-           SUBJECT TABLE
-        ========================= */
-
-        .table-wrapper {
-            width: 100%;
-
-            overflow-x: auto;
-        }
+        .table-wrapper { width: 100%; overflow-x: auto; }
 
         table {
             width: 100%;
-
             border-collapse: collapse;
+            white-space: nowrap;
         }
 
         th {
             text-align: left;
-
-            background: #f3f4f6;
-
             padding: 13px;
-
-            font-size: 14px;
+            background: var(--bg);
+            color: var(--muted);
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: .8px;
         }
+
+        th:first-child { border-radius: 9px 0 0 9px; }
+        th:last-child { border-radius: 0 9px 9px 0; }
 
         td {
-            padding: 13px;
-
-            border-bottom:
-                1px solid #eeeeee;
-
-            font-size: 14px;
+            padding: 15px 13px;
+            border-bottom: 1px solid var(--border);
+            font-size: 12px;
         }
 
-        tr:hover td {
-            background: #fafafa;
-        }
+        tbody tr:last-child td { border-bottom: none; }
+        tbody tr:hover td { background: var(--bg); }
+
+        .subject-name { font-weight: 700; }
 
         .count-badge {
             display: inline-block;
-
-            padding: 5px 10px;
-
-            background: #eef2ff;
-
-            color: #4338ca;
-
-            border-radius: 20px;
-
-            font-weight: 600;
-
-            font-size: 12px;
+            padding: 6px 10px;
+            border-radius: 8px;
+            background: var(--accent);
+            color: var(--accent-text);
+            font-weight: 800;
+            font-size: 11px;
         }
 
         .empty {
             text-align: center;
-
-            color: #6b7280;
-
-            padding: 25px;
+            color: var(--muted);
+            padding: 28px 12px;
+            font-size: 12px;
         }
 
-        /* =========================
-           RESPONSIVE
-        ========================= */
+        .footer {
+            text-align: center;
+            padding: 7px 0 18px;
+            color: var(--muted);
+            font-size: 11px;
+        }
 
-        @media (max-width: 1000px) {
-
-            .stats-grid {
-                grid-template-columns:
-                    repeat(2, 1fr);
-            }
-
-            .branch-grid {
-                grid-template-columns:
-                    repeat(2, 1fr);
-            }
-
+        @media (max-width: 1050px) {
+            .stats-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+            .branch-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
         }
 
         @media (max-width: 650px) {
-
-            .navbar {
-                padding: 14px 18px;
-
-                flex-direction: column;
-
-                gap: 12px;
-
-                align-items: flex-start;
-            }
-
-            .container {
-                width: 94%;
-
-                margin: 25px auto;
-            }
-
-            .page-header h1 {
-                font-size: 26px;
-            }
-
-            .stats-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .branch-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .section {
-                padding: 18px;
-            }
-
+            .navbar { padding: 14px 4%; }
+            .brand p { display: none; }
+            .brand h2 { font-size: 14px; }
+            .brand-icon { width: 36px; height: 36px; }
+            .nav-right { gap: 6px; }
+            .nav-btn, .theme-btn { padding: 10px; font-size: 11px; }
+            .container { width: 94%; margin: 24px auto; }
+            .page-header { align-items: flex-start; flex-direction: column; }
+            .stats-grid, .branch-grid { grid-template-columns: 1fr; }
+            .stat-card { padding: 18px; }
+            .stat-number { font-size: 29px; }
+            .section { padding: 17px; }
+            .section-header { flex-direction: column; }
         }
-
     </style>
-
 </head>
 
-
 <body>
-
-
-<!-- =========================
-     NAVBAR
-========================= -->
-
 <nav class="navbar">
-
-    <div class="brand">
-        EduCloud Portal
-    </div>
+    <a href="/admin" class="brand">
+        <div class="brand-icon">E</div>
+        <div>
+            <h2>EduCloud Portal</h2>
+            <p>Smart Campus Resource Management</p>
+        </div>
+    </a>
 
     <div class="nav-right">
-
-        <a
-            href="/admin"
-            class="nav-btn">
-            Admin Dashboard
-        </a>
-
-        <a
-            href="/logout"
-            class="nav-btn logout-btn">
-            Logout
-        </a>
-
+        <a href="/admin" class="nav-btn">← Admin Dashboard</a>
+        <button type="button" class="theme-btn" id="themeToggle"
+                aria-label="Toggle dark mode">☾</button>
+        <a href="/logout" class="nav-btn logout-btn">Logout ↗</a>
     </div>
-
 </nav>
 
-
-<!-- =========================
-     MAIN CONTAINER
-========================= -->
-
-<div class="container">
-
-
-    <!-- HEADER -->
-
-    <div class="page-header">
-
-        <h1>
-            Analytics Dashboard
-        </h1>
-
-        <p>
-            Overview of your EduCloud Portal activity.
-        </p>
-
-    </div>
-
-
-    <!-- =========================
-         OVERALL STATS
-    ========================= -->
-
-    <div class="stats-grid">
-
-
-        <div class="stat-card">
-
-            <div class="stat-title">
-                Total Students
-            </div>
-
-            <div class="stat-number">
-                {{ total_students }}
-            </div>
-
+<main class="container">
+    <header class="page-header">
+        <div>
+            <div class="eyebrow">Administration / Reports</div>
+            <h1>Analytics Dashboard</h1>
+            <p class="subtitle">
+                A clear overview of activity across your EduCloud campus.
+            </p>
         </div>
+        <span class="section-tag">Campus Overview</span>
+    </header>
 
-
-        <div class="stat-card">
-
-            <div class="stat-title">
-                Total Teachers
+    <section class="stats-grid">
+        <article class="stat-card">
+            <div class="stat-top">
+                <span class="stat-title">Total Students</span>
+                <span class="stat-icon">♧</span>
             </div>
+            <div class="stat-number">{{ total_students }}</div>
+            <p class="stat-caption">Registered student accounts</p>
+        </article>
 
-            <div class="stat-number">
-                {{ total_teachers }}
+        <article class="stat-card">
+            <div class="stat-top">
+                <span class="stat-title">Total Teachers</span>
+                <span class="stat-icon">♙</span>
             </div>
+            <div class="stat-number">{{ total_teachers }}</div>
+            <p class="stat-caption">Teaching staff accounts</p>
+        </article>
 
+        <article class="stat-card">
+            <div class="stat-top">
+                <span class="stat-title">Total Resources</span>
+                <span class="stat-icon">▤</span>
+            </div>
+            <div class="stat-number">{{ total_resources }}</div>
+            <p class="stat-caption">Learning materials available</p>
+        </article>
+
+        <article class="stat-card">
+            <div class="stat-top">
+                <span class="stat-title">Total Branches</span>
+                <span class="stat-icon">⌘</span>
+            </div>
+            <div class="stat-number">{{ total_branches }}</div>
+            <p class="stat-caption">Academic branches</p>
+        </article>
+    </section>
+
+    <section class="section">
+        <div class="section-header">
+            <div>
+                <h2 class="section-title">Branch-wise Statistics</h2>
+                <p class="section-description">
+                    Student, teacher and resource distribution by branch.
+                </p>
+            </div>
+            <span class="section-tag">By Branch</span>
         </div>
-
-
-        <div class="stat-card">
-
-            <div class="stat-title">
-                Total Resources
-            </div>
-
-            <div class="stat-number">
-                {{ total_resources }}
-            </div>
-
-        </div>
-
-
-        <div class="stat-card">
-
-            <div class="stat-title">
-                Total Branches
-            </div>
-
-            <div class="stat-number">
-                {{ total_branches }}
-            </div>
-
-        </div>
-
-
-    </div>
-
-
-    <!-- =========================
-         BRANCH STATISTICS
-    ========================= -->
-
-    <div class="section">
-
-        <div class="section-title">
-            Branch-wise Statistics
-        </div>
-
 
         <div class="branch-grid">
-
-
             {% for branch in branch_stats %}
-
-            <div class="branch-card">
-
-
-                <div class="branch-name">
-                    {{ branch["name"] }}
-                </div>
-
-
-                <div class="branch-code">
-                    {{ branch["code"] }}
-                </div>
-
+            <article class="branch-card">
+                <div class="branch-name">{{ branch["name"] }}</div>
+                <div class="branch-code">{{ branch["code"] }}</div>
 
                 <div class="branch-stat">
-
-                    <span>
-                        Students
-                    </span>
-
-                    <span>
-                        {{ branch["students"] }}
-                    </span>
-
+                    <span>Students</span>
+                    <span>{{ branch["students"] }}</span>
                 </div>
-
-
                 <div class="branch-stat">
-
-                    <span>
-                        Teachers
-                    </span>
-
-                    <span>
-                        {{ branch["teachers"] }}
-                    </span>
-
+                    <span>Teachers</span>
+                    <span>{{ branch["teachers"] }}</span>
                 </div>
-
-
                 <div class="branch-stat">
-
-                    <span>
-                        Resources
-                    </span>
-
-                    <span>
-                        {{ branch["resources"] }}
-                    </span>
-
+                    <span>Resources</span>
+                    <span>{{ branch["resources"] }}</span>
                 </div>
-
-
-            </div>
-
+            </article>
+            {% else %}
+            <div class="empty">No branch statistics available.</div>
             {% endfor %}
-
-
         </div>
+    </section>
 
-    </div>
-
-
-    <!-- =========================
-         YEAR-WISE RESOURCES
-    ========================= -->
-
-    <div class="section">
-
-        <div class="section-title">
-            Year-wise Resources
+    <section class="section">
+        <div class="section-header">
+            <div>
+                <h2 class="section-title">Year-wise Resources</h2>
+                <p class="section-description">
+                    Compare the number of resources available for each year.
+                </p>
+            </div>
+            <span class="section-tag">Resource Distribution</span>
         </div>
-
 
         {% if year_stats %}
-
         <div class="year-chart">
-
-
             {% for item in year_stats %}
-
             <div class="year-row">
-
-
                 <div class="year-info">
-
-                    <span class="year-name">
-                        {{ item["name"] }}
-                    </span>
-
-                    <span class="year-count">
-                        {{ item["resources"] }} resources
-                    </span>
-
+                    <span class="year-name">{{ item["name"] }}</span>
+                    <span class="year-count">{{ item["resources"] }} resources</span>
                 </div>
-
-
                 <div class="bar-background">
-
-                    <div
-                        class="bar-fill"
-                        data-width="{{ item['percentage'] }}">
-                    </div>
-
+                    <div class="bar-fill"
+                         data-width="{{ item['percentage'] }}"></div>
                 </div>
-
-
             </div>
-
             {% endfor %}
-
-
         </div>
-
         {% else %}
-
-        <div class="empty">
-            No year data available.
-        </div>
-
+        <div class="empty">No year data available.</div>
         {% endif %}
+    </section>
 
-
-    </div>
-
-
-    <!-- =========================
-         SUBJECT-WISE RESOURCES
-    ========================= -->
-
-    <div class="section">
-
-        <div class="section-title">
-            Subject-wise Resources
+    <section class="section">
+        <div class="section-header">
+            <div>
+                <h2 class="section-title">Subject-wise Resources</h2>
+                <p class="section-description">
+                    View learning material counts for each subject and branch.
+                </p>
+            </div>
+            <span class="section-tag">By Subject</span>
         </div>
-
 
         {% if subject_stats %}
-
         <div class="table-wrapper">
-
             <table>
-
                 <thead>
-
                     <tr>
-
-                        <th>
-                            Subject
-                        </th>
-
-                        <th>
-                            Branch
-                        </th>
-
-                        <th>
-                            Resources
-                        </th>
-
+                        <th>Subject</th>
+                        <th>Branch</th>
+                        <th>Resources</th>
                     </tr>
-
                 </thead>
-
-
                 <tbody>
-
-
                     {% for subject in subject_stats %}
-
                     <tr>
-
+                        <td class="subject-name">{{ subject["name"] }}</td>
+                        <td>{{ subject["branch_name"] }}</td>
                         <td>
-                            {{ subject["name"] }}
-                        </td>
-
-                        <td>
-                            {{ subject["branch_name"] }}
-                        </td>
-
-                        <td>
-
                             <span class="count-badge">
                                 {{ subject["resources"] }}
                             </span>
-
                         </td>
-
                     </tr>
-
                     {% endfor %}
-
-
                 </tbody>
-
             </table>
-
         </div>
-
         {% else %}
-
-        <div class="empty">
-            No subject data available.
-        </div>
-
+        <div class="empty">No subject data available.</div>
         {% endif %}
+    </section>
 
-
-    </div>
-
-
-</div>
-
-
-<!-- =========================
-     BAR CHART JAVASCRIPT
-========================= -->
+    <footer class="footer">
+        EduCloud Portal · Smart Campus Resource Management
+    </footer>
+</main>
 
 <script>
+    const themeToggle = document.getElementById("themeToggle");
 
-    document
-        .querySelectorAll(".bar-fill")
-        .forEach(function(bar) {
+    function applyTheme(theme) {
+        document.body.classList.toggle("dark", theme === "dark");
+        themeToggle.textContent = theme === "dark" ? "☀" : "☾";
+    }
 
-            var width =
-                bar.getAttribute("data-width");
+    themeToggle.addEventListener("click", function () {
+        const nextTheme = document.body.classList.contains("dark")
+            ? "light"
+            : "dark";
 
-            if (!width) {
-                width = 0;
-            }
+        applyTheme(nextTheme);
 
-            bar.style.width =
-                width + "%";
+        try {
+            localStorage.setItem("educloud-admin-theme", nextTheme);
+        } catch (error) {
+            // Theme switching still works without local storage.
+        }
+    });
 
-        });
+    try {
+        applyTheme(
+            localStorage.getItem("educloud-admin-theme") || "light"
+        );
+    } catch (error) {
+        applyTheme("light");
+    }
 
+    document.querySelectorAll(".bar-fill").forEach(function (bar) {
+        const rawWidth = Number(bar.dataset.width);
+        const width = Number.isFinite(rawWidth)
+            ? Math.min(100, Math.max(0, rawWidth))
+            : 0;
+
+        bar.style.width = width + "%";
+    });
 </script>
-
-
 </body>
-
 </html>

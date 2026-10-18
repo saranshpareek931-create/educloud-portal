@@ -535,197 +535,265 @@ h1 {
   border-bottom:1px solid var(--line);
 }
 
-.subject-heading h3 { font-size:14px; margin:0; }
-.subject-heading span { font-size:10px; color:var(--muted); }
+.subject-heading h3 { font-size:16px; margin:0; }
+.subject-heading span { font-size:11px; color:var(--muted); }
 
 .resource-grid {
   display:grid;
   grid-template-columns:repeat(2,minmax(0,1fr));
-  gap:12px;
+  gap:13px;
 }
 
 .resource-card {
-  border:1px solid var(--line);
-  background:var(--surface2);
-  border-radius:16px;
-  padding:15px;
   min-width:0;
+  padding:17px;
+  border:1px solid var(--line);
+  border-radius:16px;
+  background:var(--surface2);
   transition:transform .18s,border-color .18s;
 }
 
-.resource-card:hover { transform:translateY(-2px); border-color:#b8d99b; }
-.resource-card[hidden],.subject-group[hidden] { display:none !important; }
+.resource-card:hover {
+  transform:translateY(-2px);
+  border-color:#b8d995;
+}
 
-.resource-top { display:flex; align-items:flex-start; gap:11px; }
-.resource-icon { height:41px; width:41px; font-size:18px; }
+.resource-top {
+  display:flex;
+  align-items:flex-start;
+  gap:12px;
+}
 
-.resource-main { flex:1; min-width:0; }
-.resource-main h4 { font-size:13px; line-height:1.45; margin:1px 0 6px; overflow-wrap:anywhere; }
-.resource-desc { font-size:11px; line-height:1.6; color:var(--muted); overflow-wrap:anywhere; }
+.resource-main { min-width:0; }
 
-.resource-meta { display:flex; gap:6px; flex-wrap:wrap; margin-top:11px; }
+.resource-main h4 {
+  margin:2px 0 7px;
+  font-size:14px;
+  overflow-wrap:anywhere;
+}
+
+.resource-desc {
+  font-size:12px;
+  line-height:1.6;
+  color:var(--muted);
+  overflow-wrap:anywhere;
+}
+
+.resource-meta {
+  display:flex;
+  flex-wrap:wrap;
+  gap:7px;
+  margin:16px 0;
+}
 
 .tag {
-  font-size:9px;
-  font-weight:800;
+  padding:6px 9px;
   border-radius:99px;
-  background:var(--surface);
-  border:1px solid var(--line);
-  padding:5px 8px;
-  color:var(--muted);
+  background:var(--soft);
+  font-size:10px;
+  font-weight:800;
 }
 
 .resource-actions {
   display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  margin-top:13px;
+}
+
+.resource-actions a {
+  display:inline-flex;
   align-items:center;
-  justify-content:space-between;
-  gap:10px;
-  margin-top:14px;
-  padding-top:12px;
+  justify-content:center;
+  padding:10px 12px;
+  border-radius:10px;
+  background:var(--dark);
+  color:#f4f7f1;
+  font-size:11px;
+  font-weight:800;
+}
+
+.resource-actions a.download-link {
+  background:var(--accent);
+  color:#172318;
+}
+
+.qr-details {
+  display:flex;
+  align-items:center;
+  gap:12px;
+  margin-top:16px;
+  padding-top:14px;
   border-top:1px solid var(--line);
 }
 
-.resource-actions a { font-size:11px; font-weight:800; }
-.resource-actions .download-link { background:var(--accent); color:#172318; padding:8px 11px; border-radius:9px; }
-
-.qr-details { margin-top:11px; display:flex; align-items:center; gap:9px; }
-.qr-details img { width:55px; height:55px; object-fit:contain; border:1px solid var(--line); border-radius:8px; background:#fff; padding:3px; }
-.qr-details span { font-size:10px; color:var(--muted); line-height:1.5; }
-
-.empty-state,.no-match {
-  padding:30px 15px;
-  text-align:center;
-  border:1px dashed var(--line);
-  border-radius:15px;
-  color:var(--muted);
-  font-size:12px;
-  line-height:1.8;
+.qr-details img {
+  width:78px;
+  height:78px;
+  object-fit:contain;
+  border:1px solid var(--line);
+  border-radius:10px;
+  background:white;
+  padding:5px;
 }
 
-.empty-state strong { display:block; font:800 15px Manrope; color:var(--ink); margin-bottom:6px; }
-.no-match { display:none; border:0; }
+.qr-details span {
+  color:var(--muted);
+  font-size:10px;
+  line-height:1.6;
+}
+
+.empty-state,.no-match {
+  padding:24px;
+  border:1px dashed var(--line);
+  border-radius:15px;
+  text-align:center;
+  color:var(--muted);
+  font-size:13px;
+  line-height:1.7;
+}
+
+.empty-state strong {
+  display:block;
+  color:var(--ink);
+  margin-bottom:7px;
+}
+
+.no-match { display:none; }
 
 .lower-grid {
   display:grid;
-  grid-template-columns:minmax(0,1.15fr) minmax(250px,.85fr);
+  grid-template-columns:1fr 1fr;
   gap:14px;
-  margin-top:15px;
+  margin-top:20px;
 }
 
 .panel {
+  padding:21px;
   border:1px solid var(--line);
-  background:var(--surface);
   border-radius:18px;
-  padding:20px;
+  background:var(--surface);
   box-shadow:var(--shadow);
+  min-width:0;
 }
 
-.panel h3 { font-size:15px; margin:0 0 8px; }
-.panel p { font-size:12px; line-height:1.7; color:var(--muted); margin:0 0 14px; }
+.panel h3 { font-size:17px; margin:0 0 7px; }
+.panel>p { font-size:12px; line-height:1.7; color:var(--muted); margin:0 0 17px; }
 
 .tip-row {
   display:flex;
   align-items:flex-start;
   gap:11px;
-  padding:12px 0;
-  border-top:1px solid var(--line);
+  margin-top:15px;
 }
 
-.tip-row .resource-icon { width:34px; height:34px; }
-.tip-row strong { display:block; font-size:12px; margin:1px 0 4px; }
-.tip-row span { display:block; font-size:11px; color:var(--muted); line-height:1.55; }
+.tip-row strong { display:block; font-size:12px; margin:2px 0 5px; }
+.tip-row span { display:block; font-size:11px; color:var(--muted); line-height:1.6; }
 
 .branch-banner {
   display:flex;
   align-items:center;
-  gap:11px;
-  background:var(--surface2);
-  border:1px solid var(--line);
+  gap:12px;
+  padding:14px;
+  background:var(--soft);
   border-radius:13px;
-  padding:13px;
-  margin:12px 0;
+  margin:15px 0;
 }
 
-.branch-banner strong { display:block; font-size:12px; margin-bottom:4px; }
-.branch-banner span { font-size:10px; color:var(--muted); }
+.branch-banner strong { display:block; font-size:12px; }
+.branch-banner span { display:block; color:var(--muted); font-size:11px; margin-top:4px; }
 
 .footer {
   display:flex;
   justify-content:space-between;
-  gap:12px;
   flex-wrap:wrap;
-  margin-top:27px;
+  gap:10px;
   color:var(--muted);
   font-size:10px;
+  padding:25px 2px 0;
 }
 
-@media(max-width:1100px) {
+[hidden] { display:none !important; }
+
+@media (max-width:1100px) {
   .sidebar { width:210px; }
-  .main { margin-left:210px; padding-inline:24px; }
-  .hero { grid-template-columns:1fr 150px; }
-  .orbit { width:135px; height:135px; }
-  .resource-grid { grid-template-columns:1fr; }
+  .main { margin-left:210px; }
+  .filters { grid-template-columns:1fr 1fr; }
+  .filter-reset { grid-column:1/-1; }
 }
 
-@media(max-width:760px) {
-  .sidebar { position:relative; inset:auto; width:auto; padding:14px 15px; border-right:0; border-bottom:1px solid var(--line); }
-  .brand { margin:0 0 13px; }
-  .nav-label,.sidebar-bottom { display:none; }
-  .nav { display:flex; overflow:auto; gap:5px; }
-  .nav a { white-space:nowrap; padding:10px; font-size:11px; }
+@media (max-width:760px) {
+  .sidebar {
+    position:static;
+    width:auto;
+    padding:15px;
+    border-right:0;
+    border-bottom:1px solid var(--line);
+  }
+
+  .brand { margin:0 5px 15px; }
+  .sidebar .nav-label,.sidebar-bottom { display:none; }
+  .nav { grid-template-columns:repeat(3,minmax(0,1fr)); }
+  .nav a { justify-content:center; padding:10px 5px; font-size:11px; }
   .nav-icon { width:auto; }
-  .main { margin:0; padding:20px 14px 30px; }
-  .topbar { margin-bottom:24px; }
-  .profile-meta { display:none; }
+  .main { margin-left:0; padding:20px 15px 30px; }
+  .topbar { align-items:flex-start; flex-wrap:wrap; margin-bottom:22px; }
+  .top-actions { flex-wrap:wrap; }
   .welcome { align-items:flex-start; flex-direction:column; }
-  .hero { grid-template-columns:1fr; padding:24px; }
+  .hero { grid-template-columns:1fr; }
   .hero-art { display:none; }
-  .hero h2 { font-size:29px; }
   .stats { grid-template-columns:1fr; }
-  .stat { padding:15px; }
+  .resource-grid { grid-template-columns:1fr; }
+  .lower-grid { grid-template-columns:1fr; }
   .library-panel { padding:15px; }
-  .filters { grid-template-columns:1fr; }
-  .resource-grid,.lower-grid { grid-template-columns:1fr; }
-  .section-head { margin-top:25px; }
 }
 
-@media(prefers-reduced-motion:reduce) {
-  *,*:before,*:after { scroll-behavior:auto!important; transition:none!important; }
+@media (max-width:420px) {
+  .filters { grid-template-columns:1fr; }
+  .filter-reset { grid-column:auto; }
+  .profile { max-width:100%; }
+  .top-actions { width:100%; justify-content:space-between; }
 }
 </style>
 </head>
-
 <body>
-<aside class="sidebar">
-  <a class="brand" href="#overview">
-    <span class="brand-icon">e</span>
-    <span>EduCloud <small>portal</small></span>
-  </a>
 
-  <div class="nav-label">Student workspace</div>
-  <nav class="nav" aria-label="Student navigation">
-    <a class="active" href="#overview"><span class="nav-icon">⌂</span> Overview</a>
-    <a href="#resourceLibrary"><span class="nav-icon">▤</span> Resource library</a>
-    <a href="#resourceSearch"><span class="nav-icon">⌕</span> Search material</a>
+<aside class="sidebar">
+  <div class="brand">
+    <span class="brand-icon">↗</span>
+    <span>EduCloud <small>Student</small></span>
+  </div>
+
+  <div class="nav-label">Workspace</div>
+  <nav class="nav">
+    <a class="active" href="#overview">
+      <span class="nav-icon">⌂</span> Overview
+    </a>
+    <a href="#resourceLibrary">
+      <span class="nav-icon">▤</span> Resources
+    </a>
+    <a href="#resourceSearch">
+      <span class="nav-icon">⌕</span> Search material
+    </a>
   </nav>
 
   <div class="sidebar-bottom">
     <div class="help-card">
-      <strong>Study smarter</strong>
-      <p>Branch-specific notes, manuals and class files, organised in one place.</p>
+      <strong>Need help?</strong>
+      <p>Find your study material using the search and subject filters.</p>
       <a href="#resourceLibrary">Explore library ↗</a>
     </div>
-    <a class="logout" href="{{ url_for('logout') }}">↪ &nbsp; Log out securely</a>
+    <a class="logout" href="{{ url_for('logout') }}">↪ Log out</a>
   </div>
 </aside>
 
 <main class="main" id="overview">
   <header class="topbar">
-    <div class="crumb">EduCloud / <strong>Student workspace</strong></div>
+    <div class="crumb">Workspace / <strong>Student dashboard</strong></div>
     <div class="top-actions">
       <button class="theme-toggle" id="themeToggle" type="button">☾ Dark mode</button>
       <div class="profile">
-        <div class="avatar">{{ (name or 'S')[:1]|upper }}</div>
+        <div class="avatar">{{ name[0]|upper if name else "S" }}</div>
         <div>
           <div class="profile-name">{{ name }}</div>
           <div class="profile-meta">Student account</div>
@@ -736,18 +804,21 @@ h1 {
 
   <section class="welcome">
     <div>
-      <div class="eyebrow">Your learning space</div>
+      <div class="eyebrow">Student workspace</div>
       <h1>Welcome back, {{ name }}.</h1>
-      <p class="subline">Your campus resources are ready. Find your material and get back to learning.</p>
+      <p class="subline">Your academic resources, all in one place.</p>
     </div>
-    <div class="access-pill"><span class="dot"></span> Academic access active</div>
+    <div class="access-pill">
+      <span class="dot"></span>
+      Access active
+    </div>
   </section>
 
   <section class="hero">
     <div>
-      <div class="eyebrow">The campus library, reimagined</div>
-      <h2>Less searching.<br>More learning.</h2>
-      <p>Browse your branch and year-specific resources, filter by subject, and open or download the material you need — without the clutter.</p>
+      <div class="eyebrow">Your learning space</div>
+      <h2>Learn more.<br>Find it faster.</h2>
+      <p>Explore your study resources, filter by subject, and open or download the material you need — without the clutter.</p>
       <div class="hero-actions">
         <a class="btn btn-primary" href="#resourceLibrary">Open resource library ↘</a>
         <a class="btn btn-ghost" href="#resourceSearch">Find a document ⌕</a>
@@ -772,17 +843,25 @@ h1 {
 
   <section class="stats">
     <article class="stat">
-      <div class="stat-top"><span>Student profile</span><span class="stat-icon">♙</span></div>
+      <div class="stat-top">
+        <span>Student profile</span><span class="stat-icon">♙</span>
+      </div>
       <div class="stat-value">{{ name }}</div>
       <div class="stat-note">Signed-in student</div>
     </article>
+
     <article class="stat">
-      <div class="stat-top"><span>Department / branch</span><span class="stat-icon">⌘</span></div>
+      <div class="stat-top">
+        <span>Department / branch</span><span class="stat-icon">⌘</span>
+      </div>
       <div class="stat-value">{{ branch["name"] }}</div>
       <div class="stat-note">Your assigned academic branch</div>
     </article>
+
     <article class="stat">
-      <div class="stat-top"><span>Academic year</span><span class="stat-icon">▦</span></div>
+      <div class="stat-top">
+        <span>Academic year</span><span class="stat-icon">▦</span>
+      </div>
       <div class="stat-value">{{ year["name"] }}</div>
       <div class="stat-note">Resources filtered for your year</div>
     </article>
@@ -805,21 +884,29 @@ h1 {
 
     {% if resources %}
     <div class="filters" id="resourceSearch">
-      <input class="field" id="searchInput" type="search" placeholder="⌕  Search notes, manuals, file names…" aria-label="Search resources">
+      <input class="field" id="searchInput" type="search"
+             placeholder="⌕  Search notes, manuals, file names…"
+             aria-label="Search resources">
+
       <select class="field" id="subjectFilter" aria-label="Filter by subject">
         <option value="">All subjects</option>
       </select>
-      <button class="filter-reset" id="clearFilters" type="button">Reset filters ↺</button>
+
+      <button class="filter-reset" id="clearFilters" type="button">
+        Reset filters ↺
+      </button>
     </div>
 
     <div class="eyebrow" id="filterResult" aria-live="polite"></div>
+
     <div id="resourceGroups">
       {% set ns = namespace(current_subject="") %}
       {% for resource in resources %}
         {% if resource["subject_name"] != ns.current_subject %}
           {% if not loop.first %}</div></section>{% endif %}
           {% set ns.current_subject = resource["subject_name"] %}
-          <section class="subject-group" data-subject-group="{{ resource['subject_name']|lower }}">
+          <section class="subject-group"
+                   data-subject-group="{{ resource['subject_name']|lower }}">
             <div class="subject-heading">
               <h3>{{ resource["subject_name"] }}</h3>
               <span>Subject resources</span>
@@ -828,31 +915,38 @@ h1 {
         {% endif %}
 
         <article class="resource-card"
-          data-title="{{ resource['title']|lower }}"
-          data-description="{{ (resource['description'] or '')|lower }}"
-          data-filename="{{ resource['filename']|lower }}"
-          data-subject="{{ resource['subject_name']|lower }}">
+                 data-title="{{ resource['title']|lower }}"
+                 data-description="{{ (resource['description'] or '')|lower }}"
+                 data-filename="{{ resource['filename']|lower }}"
+                 data-subject="{{ resource['subject_name']|lower }}">
 
           <div class="resource-top">
             <div class="resource-icon">▤</div>
             <div class="resource-main">
               <h4>{{ resource["title"] }}</h4>
-              <div class="resource-desc">{{ resource["description"] or "Study material shared by your teacher." }}</div>
+              <div class="resource-desc">
+                {{ resource["description"] or "Study material shared by your teacher." }}
+              </div>
             </div>
           </div>
 
           <div class="resource-meta">
             <span class="tag">{{ year["name"] }}</span>
-            <span class="tag">{{ resource["filename"].rsplit(".", 1)[-1]|upper if "." in resource["filename"] else "FILE" }}</span>
+            <span class="tag">
+              {{ resource["filename"].rsplit(".", 1)[-1]|upper if "." in resource["filename"] else "FILE" }}
+            </span>
           </div>
 
           <div class="resource-actions">
-            <a href="{{ url_for('resource', resource_id=resource['id']) }}" target="_blank" rel="noopener">View resource ↗</a>
-            <a class="download-link" href="{{ url_for('download', resource_id=resource['id']) }}">Download ↓</a>
+            <a href="/resource/{{ resource['id'] }}"
+               target="_blank" rel="noopener">View resource ↗</a>
+            <a class="download-link"
+               href="/download/{{ resource['id'] }}">Download ↓</a>
           </div>
 
           <div class="qr-details">
-            <img src="{{ url_for('static', filename='qr_codes/resource_' ~ resource['id'] ~ '.png') }}" alt="QR code for {{ resource['title'] }}" loading="lazy">
+            <img src="{{ url_for('static', filename='qr_codes/resource_' ~ resource['id'] ~ '.png') }}"
+                 alt="QR code for {{ resource['title'] }}" loading="lazy">
             <span>Scan this QR code to access<br>this resource quickly.</span>
           </div>
         </article>
@@ -860,7 +954,10 @@ h1 {
         {% if loop.last %}</div></section>{% endif %}
       {% endfor %}
     </div>
-    <div class="no-match" id="noMatch">No resources match your search. Try another keyword or reset the filters.</div>
+
+    <div class="no-match" id="noMatch">
+      No resources match your search. Try another keyword or reset the filters.
+    </div>
 
     {% else %}
     <div class="empty-state">
@@ -874,19 +971,52 @@ h1 {
     <article class="panel">
       <h3>Quick study tips</h3>
       <p>A few small habits can make your digital study library easier to use.</p>
-      <div class="tip-row"><div class="resource-icon">⌕</div><div><strong>Search before scrolling</strong><span>Type the topic or subject name to narrow down the list.</span></div></div>
-      <div class="tip-row"><div class="resource-icon">▣</div><div><strong>Use QR codes when handy</strong><span>Scan a resource QR code with your phone camera to open the file quickly.</span></div></div>
-      <div class="tip-row"><div class="resource-icon">↓</div><div><strong>Download for offline study</strong><span>Keep important notes available when your connection is unreliable.</span></div></div>
+
+      <div class="tip-row">
+        <div class="resource-icon">⌕</div>
+        <div>
+          <strong>Search before scrolling</strong>
+          <span>Type the topic or subject name to narrow down the list.</span>
+        </div>
+      </div>
+
+      <div class="tip-row">
+        <div class="resource-icon">▣</div>
+        <div>
+          <strong>Use QR codes when handy</strong>
+          <span>Scan a resource QR code with your phone camera to open the file quickly.</span>
+        </div>
+      </div>
+
+      <div class="tip-row">
+        <div class="resource-icon">↓</div>
+        <div>
+          <strong>Download for offline study</strong>
+          <span>Keep important notes available when your connection is unreliable.</span>
+        </div>
+      </div>
     </article>
 
     <aside class="panel">
       <h3>Your academic access</h3>
       <p>Your student account is intended to show only the material assigned to your group.</p>
+
       <div class="branch-banner">
         <div class="resource-icon">✓</div>
-        <div><strong>{{ branch["name"] }}</strong><span>{{ year["name"] }} · Branch-specific library</span></div>
+        <div>
+          <strong>{{ branch["name"] }}</strong>
+          <span>{{ year["name"] }} · Branch-specific library</span>
+        </div>
       </div>
-      <div class="tip-row"><div class="resource-icon">↪</div><div><strong>Finished studying?</strong><span>Log out when you are using a shared computer.</span></div></div>
+
+      <div class="tip-row">
+        <div class="resource-icon">↪</div>
+        <div>
+          <strong>Finished studying?</strong>
+          <span>Log out when you are using a shared computer.</span>
+        </div>
+      </div>
+
       <a class="btn btn-primary" href="{{ url_for('logout') }}">Log out securely ↗</a>
     </aside>
   </section>
@@ -896,7 +1026,6 @@ h1 {
     <span>Built for focused learning</span>
   </footer>
 </main>
-
 <script>
 (() => {
   const root = document.documentElement;
@@ -905,12 +1034,17 @@ h1 {
   function applyTheme(theme) {
     const chosen = theme === "dark" ? "dark" : "light";
     root.dataset.theme = chosen;
-    try { localStorage.setItem("educloud-theme", chosen); } catch (e) {}
+
+    try {
+      localStorage.setItem("educloud-theme", chosen);
+    } catch (e) {}
+
     toggle.textContent = chosen === "dark" ? "☀ Light mode" : "☾ Dark mode";
     toggle.setAttribute("aria-pressed", String(chosen === "dark"));
   }
 
   applyTheme(root.dataset.theme);
+
   toggle.addEventListener("click", () => {
     applyTheme(root.dataset.theme === "dark" ? "light" : "dark");
   });
@@ -926,24 +1060,35 @@ h1 {
 
   if (subject) {
     const options = new Map();
+
     cards.forEach(card => {
       const value = card.dataset.subject;
-      const group = groups.find(item => item.dataset.subjectGroup === value);
-      const label = group?.querySelector("h3")?.textContent?.trim() || value;
-      if (value && !options.has(value)) options.set(value, label);
+      const group = groups.find(
+        item => item.dataset.subjectGroup === value
+      );
+
+      const label =
+        group?.querySelector("h3")?.textContent?.trim() || value;
+
+      if (value && !options.has(value)) {
+        options.set(value, label);
+      }
     });
 
-    [...options.entries()].sort((a,b) => a[1].localeCompare(b[1])).forEach(([value,label]) => {
-      const option = document.createElement("option");
-      option.value = value;
-      option.textContent = label;
-      subject.appendChild(option);
-    });
+    [...options.entries()]
+      .sort((a, b) => a[1].localeCompare(b[1]))
+      .forEach(([value, label]) => {
+        const option = document.createElement("option");
+        option.value = value;
+        option.textContent = label;
+        subject.appendChild(option);
+      });
   }
 
   function applyFilters() {
     const query = (search?.value || "").trim().toLowerCase();
     const selected = (subject?.value || "").toLowerCase();
+
     let visible = 0;
 
     cards.forEach(card => {
@@ -953,24 +1098,41 @@ h1 {
         card.dataset.filename,
         card.dataset.subject
       ].join(" ");
-      const matches = text.includes(query) &&
+
+      const matches =
+        text.includes(query) &&
         (!selected || card.dataset.subject === selected);
+
       card.hidden = !matches;
+
       if (matches) visible++;
     });
 
     groups.forEach(group => {
-      group.hidden = !Array.from(group.querySelectorAll(".resource-card"))
-        .some(card => !card.hidden);
+      group.hidden = !Array.from(
+        group.querySelectorAll(".resource-card")
+      ).some(card => !card.hidden);
     });
 
-    if (result) result.textContent = `${visible} of ${cards.length} resources shown`;
-    if (noMatch) noMatch.style.display = cards.length && visible === 0 ? "block" : "none";
-    if (count) count.textContent = `${visible} resource${visible === 1 ? "" : "s"}`;
+    if (result) {
+      result.textContent =
+        `${visible} of ${cards.length} resources shown`;
+    }
+
+    if (noMatch) {
+      noMatch.style.display =
+        cards.length && visible === 0 ? "block" : "none";
+    }
+
+    if (count) {
+      count.textContent =
+        `${visible} resource${visible === 1 ? "" : "s"}`;
+    }
   }
 
   search?.addEventListener("input", applyFilters);
   subject?.addEventListener("change", applyFilters);
+
   reset?.addEventListener("click", () => {
     if (search) search.value = "";
     if (subject) subject.value = "";
@@ -980,5 +1142,6 @@ h1 {
   applyFilters();
 })();
 </script>
+
 </body>
 </html>
