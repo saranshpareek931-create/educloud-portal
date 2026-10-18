@@ -1,653 +1,984 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>EduCloud — Student Workspace</title>
-<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<script>
+(() => {
+  try {
+    document.documentElement.dataset.theme =
+      localStorage.getItem("educloud-theme") === "dark" ? "dark" : "light";
+  } catch (e) {}
+})();
+</script>
+
 <style>
-:root{
-  --bg:#f4f6fb;
-  --panel:#ffffff;
-  --panel2:#f8f9fc;
-  --ink:#10131a;
-  --muted:#707887;
-  --line:#e7e9ef;
-  --accent:#5b4cf0;
-  --accent2:#7c6cff;
-  --accentSoft:#eeecff;
-  --green:#1c9a72;
-  --shadow:0 18px 55px rgba(27,31,45,.08);
-  --shadow2:0 8px 25px rgba(27,31,45,.06);
+:root {
+  color-scheme: light;
+  --bg:#f4f5ef;
+  --surface:#ffffff;
+  --surface2:#f8f9f4;
+  --ink:#17201c;
+  --muted:#737c75;
+  --line:#e3e7df;
+  --accent:#b8f36b;
+  --soft:#eff9e3;
+  --dark:#17231e;
+  --shadow:0 15px 45px rgba(24,39,29,.06);
 }
-*{box-sizing:border-box}
-html{scroll-behavior:smooth}
-body{
+
+html[data-theme="dark"] {
+  color-scheme:dark;
+  --bg:#101713;
+  --surface:#18221c;
+  --surface2:#202c24;
+  --ink:#f1f5ef;
+  --muted:#a2ada4;
+  --line:#2b3a30;
+  --accent:#b8f36b;
+  --soft:#283b24;
+  --dark:#0d130f;
+  --shadow:0 15px 45px rgba(0,0,0,.2);
+}
+
+* { box-sizing:border-box; }
+
+html {
+  scroll-behavior:smooth;
+  scroll-padding-top:25px;
+}
+
+body {
   margin:0;
-  background:
-    radial-gradient(circle at 85% 0%,rgba(104,91,246,.10),transparent 28%),
-    radial-gradient(circle at 10% 30%,rgba(61,185,157,.06),transparent 24%),
-    var(--bg);
+  background:var(--bg);
   color:var(--ink);
-  font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-}
-a{text-decoration:none;color:inherit}
-button,input,select{font:inherit}
-
-.app{
-  min-height:100vh;
-  display:grid;
-  grid-template-columns:248px minmax(0,1fr);
+  font-family:"DM Sans",sans-serif;
+  transition:background .2s,color .2s;
 }
 
-/* ---------- RAIL ---------- */
-.rail{
-  position:sticky;
-  top:0;
-  height:100vh;
-  padding:24px 16px;
+a { color:inherit; text-decoration:none; }
+button,input,select { font:inherit; }
+button { cursor:pointer; }
+
+.sidebar {
+  position:fixed;
+  inset:0 auto 0 0;
+  width:240px;
+  padding:25px 17px;
+  background:var(--surface);
   border-right:1px solid var(--line);
-  background:rgba(255,255,255,.76);
-  backdrop-filter:blur(22px);
   display:flex;
   flex-direction:column;
-  z-index:20;
-}
-.brand{
-  display:flex;align-items:center;gap:11px;
-  padding:5px 10px 28px;
-}
-.brand-mark{
-  width:36px;height:36px;border-radius:12px;
-  display:grid;place-items:center;
-  background:linear-gradient(145deg,#17152b,#6b5af4);
-  color:#fff;font-size:17px;
-  box-shadow:0 8px 18px rgba(91,76,240,.22);
-}
-.brand strong{font-size:17px;letter-spacing:-.5px}
-.brand small{display:block;color:#9298a5;font-size:10px;margin-top:2px}
-.rail-label{
-  color:#a0a5af;font-size:10px;font-weight:800;
-  letter-spacing:.13em;text-transform:uppercase;
-  padding:0 11px 9px;
-}
-.rail-nav{display:grid;gap:4px}
-.rail-link{
-  display:flex;align-items:center;gap:11px;
-  padding:11px 12px;border-radius:12px;
-  color:#737986;font-size:13px;font-weight:650;
-  transition:.2s ease;
-}
-.rail-link span:first-child{width:20px;text-align:center;font-size:15px}
-.rail-link:hover{background:#f2f1ff;color:var(--accent)}
-.rail-link.active{
-  background:#eeecff;color:#4f42dc;
-  box-shadow:inset 3px 0 0 var(--accent);
-}
-.rail-bottom{margin-top:auto}
-.identity{
-  margin-top:12px;padding:13px;
-  border:1px solid var(--line);border-radius:15px;
-  background:#fff;
-}
-.identity-row{display:flex;align-items:center;gap:10px}
-.avatar{
-  width:34px;height:34px;border-radius:11px;
-  display:grid;place-items:center;
-  background:#e9e7ff;color:#5144dd;font-weight:800;font-size:13px;
-}
-.identity b{display:block;font-size:12px;max-width:130px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.identity small{color:#989eaa;font-size:10px}
-.logout{
-  display:block;margin-top:10px;text-align:center;
-  padding:9px;border-radius:10px;
-  color:#8a5d64;background:#fff7f8;
-  font-size:11px;font-weight:750;
+  z-index:10;
 }
 
-/* ---------- MAIN ---------- */
-.main{min-width:0;padding:0 34px 60px}
-.topbar{
-  height:78px;display:flex;align-items:center;justify-content:space-between;
-  max-width:1400px;margin:auto;
+.brand {
+  display:flex;
+  align-items:center;
+  gap:10px;
+  margin:0 9px 38px;
+  font:800 21px Manrope,sans-serif;
+  letter-spacing:-.8px;
 }
-.breadcrumb{font-size:11px;color:#a0a5af;font-weight:700;letter-spacing:.03em}
-.breadcrumb b{color:#646b78}
-.top-actions{display:flex;align-items:center;gap:10px}
-.pill{
-  padding:8px 11px;border:1px solid var(--line);
-  background:rgba(255,255,255,.75);border-radius:999px;
-  color:#737986;font-size:11px;font-weight:700;
+
+.brand-icon {
+  width:36px;
+  height:36px;
+  display:grid;
+  place-items:center;
+  border-radius:12px;
+  background:var(--accent);
+  color:#172318;
+  font-size:21px;
 }
-.hero{
-  max-width:1400px;margin:0 auto 22px;
-  min-height:270px;
-  border-radius:28px;
-  padding:38px 42px;
-  position:relative;overflow:hidden;
-  color:#fff;
-  background:
-    radial-gradient(circle at 80% 20%,rgba(169,160,255,.55),transparent 26%),
-    radial-gradient(circle at 95% 100%,rgba(40,196,163,.30),transparent 30%),
-    linear-gradient(125deg,#15142b 0%,#282151 48%,#5144b8 100%);
-  box-shadow:0 22px 65px rgba(44,36,104,.18);
+
+.brand small {
+  color:var(--muted);
+  font-weight:600;
 }
-.hero:before{
-  content:"";position:absolute;right:-90px;top:-130px;
-  width:420px;height:420px;border:1px solid rgba(255,255,255,.13);
+
+.nav-label {
+  padding:0 12px;
+  margin-bottom:10px;
+  color:var(--muted);
+  font-size:10px;
+  font-weight:800;
+  letter-spacing:1.7px;
+  text-transform:uppercase;
+}
+
+.nav { display:grid; gap:5px; }
+
+.nav a {
+  display:flex;
+  align-items:center;
+  gap:12px;
+  padding:12px;
+  border-radius:12px;
+  color:var(--muted);
+  font-size:13px;
+  font-weight:700;
+  transition:.18s;
+}
+
+.nav a:hover,.nav a.active {
+  background:var(--soft);
+  color:var(--ink);
+}
+
+.nav a.active { box-shadow:inset 3px 0 var(--accent); }
+
+.nav-icon {
+  width:22px;
+  text-align:center;
+  font-size:17px;
+}
+
+.sidebar-bottom { margin-top:auto; }
+
+.help-card {
+  margin-bottom:14px;
+  padding:16px;
+  border-radius:16px;
+  background:var(--dark);
+  color:#f4f7f1;
+}
+
+.help-card strong {
+  color:var(--accent);
+  font-size:10px;
+  letter-spacing:1.4px;
+  text-transform:uppercase;
+}
+
+.help-card p {
+  font-size:12px;
+  line-height:1.7;
+  color:#c0cbc2;
+  margin:9px 0 12px;
+}
+
+.help-card a {
+  color:var(--accent);
+  font-size:12px;
+  font-weight:800;
+}
+
+.logout {
+  display:block;
+  padding:12px;
+  color:#d66d65;
+  font-size:13px;
+  font-weight:700;
+  border-radius:12px;
+}
+
+.logout:hover { background:#d66d6515; }
+
+.main {
+  margin-left:240px;
+  padding:28px clamp(18px,4vw,54px) 42px;
+  max-width:1700px;
+}
+
+.topbar {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:14px;
+  margin-bottom:30px;
+}
+
+.crumb { color:var(--muted); font-size:12px; }
+.crumb strong { color:var(--ink); }
+
+.top-actions {
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.theme-toggle {
+  border:1px solid var(--line);
+  background:var(--surface);
+  color:var(--ink);
+  border-radius:11px;
+  padding:10px 12px;
+  font-size:12px;
+  font-weight:800;
+}
+
+.theme-toggle:hover { border-color:var(--accent); }
+
+.profile {
+  display:flex;
+  align-items:center;
+  gap:9px;
+  padding:6px 11px 6px 6px;
+  border:1px solid var(--line);
+  border-radius:13px;
+  background:var(--surface);
+}
+
+.avatar {
+  width:34px;
+  height:34px;
+  border-radius:11px;
+  background:var(--accent);
+  color:#172318;
+  display:grid;
+  place-items:center;
+  font-weight:800;
+}
+
+.profile-name { font-size:12px; font-weight:800; }
+.profile-meta { font-size:10px; color:var(--muted); margin-top:2px; }
+
+.eyebrow {
+  font-size:10px;
+  letter-spacing:1.9px;
+  text-transform:uppercase;
+  font-weight:800;
+  color:var(--muted);
+}
+
+h1,h2,h3,h4 {
+  font-family:Manrope,sans-serif;
+  letter-spacing:-.6px;
+}
+
+.welcome {
+  display:flex;
+  align-items:flex-end;
+  justify-content:space-between;
+  gap:20px;
+  margin-bottom:22px;
+}
+
+h1 {
+  font-size:clamp(28px,3vw,39px);
+  line-height:1.12;
+  margin:8px 0;
+}
+
+.subline {
+  font-size:13px;
+  line-height:1.7;
+  color:var(--muted);
+  margin:0;
+}
+
+.access-pill {
+  display:flex;
+  align-items:center;
+  gap:8px;
+  white-space:nowrap;
+  padding:10px 13px;
+  border:1px solid var(--line);
+  border-radius:99px;
+  background:var(--surface);
+  font-size:11px;
+  font-weight:800;
+}
+
+.dot {
+  height:7px;
+  width:7px;
   border-radius:50%;
+  background:#7dc957;
+  box-shadow:0 0 0 4px #7dc95720;
 }
-.hero:after{
-  content:"";position:absolute;right:70px;top:-55px;
-  width:270px;height:270px;border:1px solid rgba(255,255,255,.08);
+
+.hero {
+  position:relative;
+  isolation:isolate;
+  overflow:hidden;
+  display:grid;
+  grid-template-columns:minmax(0,1.25fr) minmax(180px,.75fr);
+  align-items:center;
+  gap:20px;
+  padding:clamp(24px,4vw,42px);
+  border-radius:24px;
+  background:var(--dark);
+  color:#f4f7f1;
+  box-shadow:var(--shadow);
+}
+
+.hero:after {
+  content:"";
+  position:absolute;
+  z-index:-1;
+  right:7%;
+  top:-155px;
+  width:320px;
+  height:320px;
+  border:1px solid #b8f36b35;
   border-radius:50%;
+  box-shadow:0 0 0 30px #b8f36b08,0 0 0 64px #b8f36b06;
 }
-.hero-copy{position:relative;z-index:2;max-width:680px}
-.eyebrow{
-  display:inline-flex;align-items:center;gap:7px;
-  color:#c7c2ff;font-size:10px;font-weight:800;
-  letter-spacing:.14em;text-transform:uppercase;margin-bottom:17px;
-}
-.live-dot{width:6px;height:6px;border-radius:50%;background:#63dfb6;box-shadow:0 0 0 5px rgba(99,223,182,.1)}
-.hero h1{
-  font-size:clamp(34px,4vw,57px);
-  line-height:.98;letter-spacing:-.055em;margin:0 0 16px;
-}
-.hero h1 em{font-style:normal;color:#aaa2ff}
-.hero p{margin:0;color:#d3d1e3;font-size:14px;line-height:1.65;max-width:570px}
-.hero-side{
-  position:absolute;right:35px;bottom:28px;z-index:3;
-  width:205px;padding:15px;border:1px solid rgba(255,255,255,.14);
-  background:rgba(255,255,255,.08);backdrop-filter:blur(18px);
-  border-radius:18px;
-}
-.hero-side label{display:block;color:#a9a5ba;font-size:9px;text-transform:uppercase;letter-spacing:.12em;font-weight:800}
-.hero-side strong{display:block;margin-top:6px;font-size:16px}
-.hero-side span{display:block;margin-top:4px;color:#b8b5c8;font-size:10px}
 
-/* ---------- OVERVIEW ---------- */
-.overview{
-  max-width:1400px;margin:0 auto 22px;
-  display:grid;grid-template-columns:1.35fr .8fr .8fr .8fr;gap:12px;
-}
-.over-card{
-  min-height:105px;padding:18px;
-  background:rgba(255,255,255,.9);
-  border:1px solid var(--line);border-radius:18px;
-  box-shadow:var(--shadow2);
-  position:relative;overflow:hidden;
-}
-.over-card.primary{background:#18162d;color:#fff;border-color:#18162d}
-.over-card .label{font-size:9px;color:#9a9eaa;text-transform:uppercase;letter-spacing:.12em;font-weight:800}
-.primary .label{color:#9c97bd}
-.over-card .value{font-size:22px;font-weight:800;letter-spacing:-.04em;margin-top:9px}
-.over-card .sub{font-size:10px;color:#9298a5;margin-top:5px}
-.primary .sub{color:#aaa6bd}
-.over-card .mini-mark{
-  position:absolute;right:15px;top:15px;width:27px;height:27px;border-radius:9px;
-  display:grid;place-items:center;background:#f1efff;color:var(--accent);font-size:12px;
-}
-.primary .mini-mark{background:rgba(255,255,255,.10);color:#b9b3ff}
+.hero .eyebrow { color:var(--accent); }
 
-/* ---------- LIBRARY ---------- */
-.workspace{
-  max-width:1400px;margin:auto;
-  display:grid;grid-template-columns:minmax(0,1fr) 255px;gap:18px;
+.hero h2 {
+  font-size:clamp(27px,3vw,38px);
+  line-height:1.13;
+  margin:12px 0;
 }
-.library{
-  background:rgba(255,255,255,.88);border:1px solid var(--line);
-  border-radius:24px;box-shadow:var(--shadow);overflow:hidden;
-}
-.library-head{
-  padding:24px 26px 18px;border-bottom:1px solid var(--line);
-  display:flex;align-items:flex-end;justify-content:space-between;gap:18px;
-}
-.kicker{font-size:9px;text-transform:uppercase;letter-spacing:.13em;color:#a0a5af;font-weight:800}
-.library-head h2{font-size:25px;letter-spacing:-.045em;margin:5px 0 0}
-.library-head p{margin:5px 0 0;color:#858b97;font-size:11px}
-.tool-row{
-  padding:13px 18px;background:#fbfbfd;border-bottom:1px solid var(--line);
-  display:grid;grid-template-columns:minmax(0,1fr) 180px auto;gap:8px;
-}
-.field{
-  height:40px;border:1px solid var(--line);border-radius:11px;
-  background:#fff;outline:none;padding:0 12px;color:var(--ink);font-size:12px;
-}
-.field:focus{border-color:#b9b2ff;box-shadow:0 0 0 3px rgba(91,76,240,.08)}
-.clear{
-  height:40px;padding:0 14px;border:1px solid var(--line);
-  border-radius:11px;background:#fff;color:#6e7480;font-size:11px;font-weight:750;cursor:pointer;
-}
-.clear:hover{background:#f3f1ff;color:var(--accent)}
-.filter-result{padding:10px 20px 0;color:#a0a5af;font-size:10px}
 
-.resource-container{padding:0 18px 20px}
-.subject-group{padding-top:19px}
-.subject-heading{
-  display:flex;align-items:center;gap:9px;
-  padding:0 7px 9px;border-bottom:1px solid var(--line);
+.hero p {
+  max-width:550px;
+  color:#c2cdc4;
+  font-size:13px;
+  line-height:1.8;
+  margin:0 0 21px;
 }
-.subject-icon{
-  width:25px;height:25px;border-radius:8px;background:var(--accentSoft);
-  display:grid;place-items:center;color:var(--accent);font-size:11px;
-}
-.subject-heading h3{font-size:12px;margin:0;letter-spacing:-.01em}
-.subject-heading:after{content:"";margin-left:auto;width:6px;height:6px;border-radius:50%;background:#d6d3ff}
 
-.resource-card{
-  display:grid;grid-template-columns:34px minmax(0,1fr) auto;
-  gap:12px;align-items:center;padding:15px 7px;
-  border-bottom:1px solid #f0f1f4;
-  transition:.18s ease;
+.hero-actions { display:flex; gap:10px; flex-wrap:wrap; }
+
+.btn {
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  padding:12px 15px;
+  border-radius:11px;
+  font-size:12px;
+  font-weight:800;
+  border:0;
+  transition:transform .18s;
 }
-.resource-card:hover{
-  margin:0 -7px;padding-left:14px;padding-right:14px;
-  border-radius:14px;background:#faf9ff;
+
+.btn:hover { transform:translateY(-2px); }
+
+.btn-primary { background:var(--accent); color:#172318; }
+.btn-ghost { border:1px solid #46564b; color:#f4f7f1; }
+
+.hero-art {
+  position:relative;
+  display:grid;
+  place-items:center;
+  min-height:175px;
 }
-.doc-icon{
-  width:34px;height:40px;border-radius:8px;
-  display:grid;place-items:center;
-  background:#f0efff;color:#5b4cf0;font-size:15px;
+
+.orbit {
+  width:164px;
+  height:164px;
+  border:1px solid #b8f36b55;
+  border-radius:50%;
+  display:grid;
+  place-items:center;
   position:relative;
 }
-.doc-icon:after{
-  content:"";position:absolute;right:5px;top:5px;width:6px;height:6px;
-  border-top:1px solid #9d95ff;border-right:1px solid #9d95ff;
-}
-.resource-info{min-width:0}
-.resource-info h4{
-  margin:0 0 5px;font-size:13px;letter-spacing:-.01em;
-  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
-}
-.resource-info p{
-  margin:0;color:#969ba6;font-size:10px;line-height:1.45;
-  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
-}
-.meta{display:flex;gap:6px;flex-wrap:wrap;margin-top:7px}
-.meta span{
-  padding:3px 7px;border-radius:999px;background:#f4f5f8;
-  color:#7d838e;font-size:8px;font-weight:750;
-}
-.resource-right{display:flex;align-items:center;gap:9px}
-.qr{
-  width:55px;height:55px;padding:4px;border:1px solid #e2e4ea;
-  border-radius:9px;background:#fff;
-}
-.qr img{width:100%;height:100%;display:block}
-.actions{display:flex;gap:5px}
-.btn{
-  border:1px solid var(--line);background:#fff;color:#646a76;
-  border-radius:9px;padding:8px 10px;font-size:9px;font-weight:800;
-  white-space:nowrap;transition:.18s;
-}
-.btn:hover{border-color:#c9c4ff;color:var(--accent);background:#f8f7ff}
-.btn.download{background:#17152b;color:#fff;border-color:#17152b}
-.btn.download:hover{background:var(--accent);border-color:var(--accent)}
 
-.empty,.no-filter{
-  padding:60px 20px;text-align:center;color:#969ba6;
+.orbit:before,.orbit:after {
+  content:"";
+  position:absolute;
+  border:1px solid #b8f36b30;
+  border-radius:50%;
 }
-.empty .big,.no-filter .big{font-size:38px;margin-bottom:10px}
-.empty h3{margin:0 0 6px;color:#444a55;font-size:15px}
-.empty p{margin:0;font-size:11px}
 
-/* ---------- SIDE PANEL ---------- */
-.side-panel{display:grid;gap:12px;align-content:start}
-.side-box{
-  background:rgba(255,255,255,.9);border:1px solid var(--line);
-  border-radius:20px;padding:18px;box-shadow:var(--shadow2);
-}
-.side-box.dark{
-  color:#fff;background:#18162d;border-color:#18162d;
-  min-height:235px;position:relative;overflow:hidden;
-}
-.side-box.dark:before{
-  content:"";position:absolute;width:150px;height:150px;border-radius:50%;
-  right:-60px;top:-55px;border:1px solid rgba(255,255,255,.12);
-}
-.side-title{font-size:10px;font-weight:800;letter-spacing:.02em}
-.side-muted{font-size:9px;color:#9298a5;line-height:1.55;margin-top:7px}
-.dark .side-muted{color:#aaa6bd}
-.study-orbit{
-  width:108px;height:108px;border-radius:50%;
-  border:1px dashed #aaa5d0;margin:18px auto 12px;
-  display:grid;place-items:center;position:relative;
-}
-.study-orbit:before{content:"✦";font-size:23px;color:#aaa2ff}
-.orbit-dot{position:absolute;width:9px;height:9px;border-radius:50%;background:#6c5ef1;top:2px;left:49px;box-shadow:0 0 0 5px rgba(108,94,241,.12)}
-.side-stat{display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px solid var(--line);font-size:10px}
-.side-stat:last-child{border-bottom:0}
-.side-stat span{color:#959ba7}
-.side-stat b{font-size:10px}
-.tip{
-  padding:12px;border-radius:12px;background:#f8f7ff;
-  border:1px solid #ebe9ff;color:#686080;font-size:9px;line-height:1.55;
-}
-.tip b{color:#4f42dc}
+.orbit:before { inset:17px; }
+.orbit:after { inset:35px; }
 
-/* ---------- MOBILE ---------- */
-.mobile-top{display:none}
-@media(max-width:1000px){
-  .app{grid-template-columns:76px minmax(0,1fr)}
-  .rail{padding:18px 10px}
-  .brand{justify-content:center;padding:5px 0 25px}
-  .brand>div:not(.brand-mark),.rail-label,.rail-link b,.identity{display:none}
-  .rail-link{justify-content:center;padding:12px}
-  .rail-link.active{box-shadow:inset 3px 0 0 var(--accent)}
-  .main{padding:0 20px 45px}
-  .overview{grid-template-columns:repeat(2,1fr)}
-  .workspace{grid-template-columns:1fr}
-  .side-panel{grid-template-columns:1fr 1fr}
+.orbit-core {
+  height:68px;
+  width:68px;
+  border-radius:22px;
+  background:var(--accent);
+  display:grid;
+  place-items:center;
+  color:#172318;
+  font-size:30px;
+  transform:rotate(-8deg);
 }
-@media(max-width:680px){
-  .app{display:block}
-  .rail{display:none}
-  .main{padding:0 11px 35px}
-  .topbar{height:62px;padding:0 4px}
-  .breadcrumb{font-size:10px}
-  .top-actions .pill:first-child{display:none}
-  .hero{min-height:330px;padding:28px 24px;border-radius:23px}
-  .hero h1{font-size:39px}
-  .hero p{font-size:12px}
-  .hero-side{left:24px;right:auto;bottom:24px;width:190px}
-  .overview{grid-template-columns:1fr 1fr;gap:8px}
-  .over-card{min-height:94px;padding:14px}
-  .over-card.primary{grid-column:1/-1}
-  .workspace{display:block}
-  .library{border-radius:20px}
-  .library-head{display:block;padding:20px}
-  .library-head h2{font-size:22px}
-  .tool-row{grid-template-columns:1fr;padding:11px}
-  .resource-card{grid-template-columns:32px minmax(0,1fr);align-items:start}
-  .resource-right{grid-column:1/-1;padding-left:44px}
-  .qr{width:52px;height:52px}
-  .actions{flex:1}
-  .btn{flex:1;text-align:center}
-  .side-panel{display:grid;grid-template-columns:1fr;margin-top:12px}
+
+.float-chip {
+  position:absolute;
+  padding:9px 11px;
+  border:1px solid #3a4b3d;
+  border-radius:11px;
+  background:#26382c;
+  color:#eaf3e8;
+  font-size:10px;
+  font-weight:700;
+  white-space:nowrap;
 }
-@media(max-width:390px){
-  .hero h1{font-size:34px}
-  .hero-side{width:calc(100% - 48px)}
-  .overview{grid-template-columns:1fr}
-  .over-card.primary{grid-column:auto}
-  .resource-right{padding-left:0}
-  .actions{display:grid;grid-template-columns:1fr 1fr}
+
+.float-chip b { color:var(--accent); }
+.chip-one { top:7px; right:-9px; }
+.chip-two { bottom:8px; left:-17px; }
+
+.section-head {
+  display:flex;
+  align-items:flex-end;
+  justify-content:space-between;
+  gap:14px;
+  margin:30px 0 14px;
+}
+
+.section-head h2 { font-size:19px; margin:5px 0 0; }
+.section-head p { font-size:12px; color:var(--muted); margin:5px 0 0; }
+
+.stats {
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:13px;
+}
+
+.stat {
+  padding:18px;
+  border:1px solid var(--line);
+  border-radius:17px;
+  background:var(--surface);
+  box-shadow:var(--shadow);
+  min-width:0;
+}
+
+.stat-top {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  color:var(--muted);
+  font-size:11px;
+  font-weight:700;
+}
+
+.stat-icon,.resource-icon {
+  height:36px;
+  width:36px;
+  border-radius:12px;
+  background:var(--soft);
+  display:grid;
+  place-items:center;
+  font-size:16px;
+  flex:none;
+}
+
+.stat-value {
+  font:800 17px Manrope;
+  margin:13px 0 4px;
+  overflow-wrap:anywhere;
+}
+
+.stat-note { font-size:11px; color:var(--muted); }
+
+.library-head { margin-top:34px; }
+
+.library-panel {
+  border:1px solid var(--line);
+  background:var(--surface);
+  border-radius:20px;
+  padding:22px;
+  box-shadow:var(--shadow);
+}
+
+.library-intro { margin-bottom:17px; }
+.library-intro h2 { font-size:20px; margin:5px 0 6px; }
+.library-intro p { font-size:12px; line-height:1.7; color:var(--muted); margin:0; }
+
+.count-pill {
+  display:inline-block;
+  border-radius:99px;
+  padding:8px 11px;
+  background:var(--soft);
+  font-size:11px;
+  font-weight:800;
+}
+
+.filters {
+  display:grid;
+  grid-template-columns:minmax(180px,1fr) minmax(150px,.45fr) auto;
+  gap:9px;
+  margin:17px 0 19px;
+}
+
+.field {
+  width:100%;
+  min-width:0;
+  border:1px solid var(--line);
+  border-radius:11px;
+  background:var(--surface2);
+  color:var(--ink);
+  padding:12px 13px;
+  outline:none;
+  font-size:12px;
+}
+
+.field:focus {
+  border-color:#8bcf4b;
+  box-shadow:0 0 0 3px #b8f36b25;
+}
+
+.filter-reset {
+  border:1px solid var(--line);
+  background:var(--surface);
+  color:var(--ink);
+  border-radius:11px;
+  padding:10px 12px;
+  font-size:12px;
+  font-weight:800;
+}
+
+.subject-heading {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  margin:23px 0 11px;
+  padding-bottom:10px;
+  border-bottom:1px solid var(--line);
+}
+
+.subject-heading h3 { font-size:14px; margin:0; }
+.subject-heading span { font-size:10px; color:var(--muted); }
+
+.resource-grid {
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:12px;
+}
+
+.resource-card {
+  border:1px solid var(--line);
+  background:var(--surface2);
+  border-radius:16px;
+  padding:15px;
+  min-width:0;
+  transition:transform .18s,border-color .18s;
+}
+
+.resource-card:hover { transform:translateY(-2px); border-color:#b8d99b; }
+.resource-card[hidden],.subject-group[hidden] { display:none !important; }
+
+.resource-top { display:flex; align-items:flex-start; gap:11px; }
+.resource-icon { height:41px; width:41px; font-size:18px; }
+
+.resource-main { flex:1; min-width:0; }
+.resource-main h4 { font-size:13px; line-height:1.45; margin:1px 0 6px; overflow-wrap:anywhere; }
+.resource-desc { font-size:11px; line-height:1.6; color:var(--muted); overflow-wrap:anywhere; }
+
+.resource-meta { display:flex; gap:6px; flex-wrap:wrap; margin-top:11px; }
+
+.tag {
+  font-size:9px;
+  font-weight:800;
+  border-radius:99px;
+  background:var(--surface);
+  border:1px solid var(--line);
+  padding:5px 8px;
+  color:var(--muted);
+}
+
+.resource-actions {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  margin-top:14px;
+  padding-top:12px;
+  border-top:1px solid var(--line);
+}
+
+.resource-actions a { font-size:11px; font-weight:800; }
+.resource-actions .download-link { background:var(--accent); color:#172318; padding:8px 11px; border-radius:9px; }
+
+.qr-details { margin-top:11px; display:flex; align-items:center; gap:9px; }
+.qr-details img { width:55px; height:55px; object-fit:contain; border:1px solid var(--line); border-radius:8px; background:#fff; padding:3px; }
+.qr-details span { font-size:10px; color:var(--muted); line-height:1.5; }
+
+.empty-state,.no-match {
+  padding:30px 15px;
+  text-align:center;
+  border:1px dashed var(--line);
+  border-radius:15px;
+  color:var(--muted);
+  font-size:12px;
+  line-height:1.8;
+}
+
+.empty-state strong { display:block; font:800 15px Manrope; color:var(--ink); margin-bottom:6px; }
+.no-match { display:none; border:0; }
+
+.lower-grid {
+  display:grid;
+  grid-template-columns:minmax(0,1.15fr) minmax(250px,.85fr);
+  gap:14px;
+  margin-top:15px;
+}
+
+.panel {
+  border:1px solid var(--line);
+  background:var(--surface);
+  border-radius:18px;
+  padding:20px;
+  box-shadow:var(--shadow);
+}
+
+.panel h3 { font-size:15px; margin:0 0 8px; }
+.panel p { font-size:12px; line-height:1.7; color:var(--muted); margin:0 0 14px; }
+
+.tip-row {
+  display:flex;
+  align-items:flex-start;
+  gap:11px;
+  padding:12px 0;
+  border-top:1px solid var(--line);
+}
+
+.tip-row .resource-icon { width:34px; height:34px; }
+.tip-row strong { display:block; font-size:12px; margin:1px 0 4px; }
+.tip-row span { display:block; font-size:11px; color:var(--muted); line-height:1.55; }
+
+.branch-banner {
+  display:flex;
+  align-items:center;
+  gap:11px;
+  background:var(--surface2);
+  border:1px solid var(--line);
+  border-radius:13px;
+  padding:13px;
+  margin:12px 0;
+}
+
+.branch-banner strong { display:block; font-size:12px; margin-bottom:4px; }
+.branch-banner span { font-size:10px; color:var(--muted); }
+
+.footer {
+  display:flex;
+  justify-content:space-between;
+  gap:12px;
+  flex-wrap:wrap;
+  margin-top:27px;
+  color:var(--muted);
+  font-size:10px;
+}
+
+@media(max-width:1100px) {
+  .sidebar { width:210px; }
+  .main { margin-left:210px; padding-inline:24px; }
+  .hero { grid-template-columns:1fr 150px; }
+  .orbit { width:135px; height:135px; }
+  .resource-grid { grid-template-columns:1fr; }
+}
+
+@media(max-width:760px) {
+  .sidebar { position:relative; inset:auto; width:auto; padding:14px 15px; border-right:0; border-bottom:1px solid var(--line); }
+  .brand { margin:0 0 13px; }
+  .nav-label,.sidebar-bottom { display:none; }
+  .nav { display:flex; overflow:auto; gap:5px; }
+  .nav a { white-space:nowrap; padding:10px; font-size:11px; }
+  .nav-icon { width:auto; }
+  .main { margin:0; padding:20px 14px 30px; }
+  .topbar { margin-bottom:24px; }
+  .profile-meta { display:none; }
+  .welcome { align-items:flex-start; flex-direction:column; }
+  .hero { grid-template-columns:1fr; padding:24px; }
+  .hero-art { display:none; }
+  .hero h2 { font-size:29px; }
+  .stats { grid-template-columns:1fr; }
+  .stat { padding:15px; }
+  .library-panel { padding:15px; }
+  .filters { grid-template-columns:1fr; }
+  .resource-grid,.lower-grid { grid-template-columns:1fr; }
+  .section-head { margin-top:25px; }
+}
+
+@media(prefers-reduced-motion:reduce) {
+  *,*:before,*:after { scroll-behavior:auto!important; transition:none!important; }
 }
 </style>
 </head>
 
 <body>
-<div class="app">
+<aside class="sidebar">
+  <a class="brand" href="#overview">
+    <span class="brand-icon">e</span>
+    <span>EduCloud <small>portal</small></span>
+  </a>
 
-  <aside class="rail">
-    <div class="brand">
-      <div class="brand-mark">✦</div>
-      <div>
-        <strong>EduCloud</strong>
-        <small>STUDENT WORKSPACE</small>
+  <div class="nav-label">Student workspace</div>
+  <nav class="nav" aria-label="Student navigation">
+    <a class="active" href="#overview"><span class="nav-icon">⌂</span> Overview</a>
+    <a href="#resourceLibrary"><span class="nav-icon">▤</span> Resource library</a>
+    <a href="#resourceSearch"><span class="nav-icon">⌕</span> Search material</a>
+  </nav>
+
+  <div class="sidebar-bottom">
+    <div class="help-card">
+      <strong>Study smarter</strong>
+      <p>Branch-specific notes, manuals and class files, organised in one place.</p>
+      <a href="#resourceLibrary">Explore library ↗</a>
+    </div>
+    <a class="logout" href="{{ url_for('logout') }}">↪ &nbsp; Log out securely</a>
+  </div>
+</aside>
+
+<main class="main" id="overview">
+  <header class="topbar">
+    <div class="crumb">EduCloud / <strong>Student workspace</strong></div>
+    <div class="top-actions">
+      <button class="theme-toggle" id="themeToggle" type="button">☾ Dark mode</button>
+      <div class="profile">
+        <div class="avatar">{{ (name or 'S')[:1]|upper }}</div>
+        <div>
+          <div class="profile-name">{{ name }}</div>
+          <div class="profile-meta">Student account</div>
+        </div>
       </div>
     </div>
+  </header>
 
-    <div class="rail-label">Workspace</div>
-    <nav class="rail-nav">
-      <a class="rail-link active" href="#top"><span>⌂</span><b>Overview</b></a>
-      <a class="rail-link" href="#library"><span>▤</span><b>Resources</b></a>
-      <a class="rail-link" href="#library"><span>⌕</span><b>Search Library</b></a>
-    </nav>
+  <section class="welcome">
+    <div>
+      <div class="eyebrow">Your learning space</div>
+      <h1>Welcome back, {{ name }}.</h1>
+      <p class="subline">Your campus resources are ready. Find your material and get back to learning.</p>
+    </div>
+    <div class="access-pill"><span class="dot"></span> Academic access active</div>
+  </section>
 
-    <div class="rail-bottom">
-      <div class="rail-label">Account</div>
-      <div class="identity">
-        <div class="identity-row">
-          <div class="avatar">{{ name[:1]|upper if name else "S" }}</div>
-          <div>
-            <b>{{ name }}</b>
-            <small>Student access</small>
-          </div>
-        </div>
-        <a class="logout" href="/logout">Sign out</a>
+  <section class="hero">
+    <div>
+      <div class="eyebrow">The campus library, reimagined</div>
+      <h2>Less searching.<br>More learning.</h2>
+      <p>Browse your branch and year-specific resources, filter by subject, and open or download the material you need — without the clutter.</p>
+      <div class="hero-actions">
+        <a class="btn btn-primary" href="#resourceLibrary">Open resource library ↘</a>
+        <a class="btn btn-ghost" href="#resourceSearch">Find a document ⌕</a>
       </div>
     </div>
-  </aside>
-
-  <main class="main" id="top">
-    <div class="topbar">
-      <div class="breadcrumb">EDUCLOUD <span> / </span> <b>STUDENT WORKSPACE</b></div>
-      <div class="top-actions">
-        <div class="pill">● Academic access active</div>
-        <div class="pill">{{ year["name"] if year else "Academic year" }}</div>
+    <div class="hero-art" aria-hidden="true">
+      <div class="orbit">
+        <div class="orbit-core">↗</div>
+        <div class="float-chip chip-one"><b>✓</b> Ready to learn</div>
+        <div class="float-chip chip-two"><b>QR</b> Quick access</div>
       </div>
     </div>
+  </section>
 
-    <section class="hero">
-      <div class="hero-copy">
-        <div class="eyebrow"><i class="live-dot"></i> Your academic workspace</div>
-        <h1>Study smarter.<br><em>Find everything faster.</em></h1>
-        <p>
-          Notes, PDFs, lab material and course resources — organized around your
-          branch and academic year, ready whenever you need them.
-        </p>
-      </div>
+  <div class="section-head">
+    <div>
+      <div class="eyebrow">Your overview</div>
+      <h2>Academic snapshot</h2>
+      <p>Your login is scoped to the information below.</p>
+    </div>
+  </div>
 
-      <div class="hero-side">
-        <label>Current academic track</label>
-        <strong>{{ branch["name"] if branch else "Not Assigned" }}</strong>
-        <span>{{ year["name"] if year else "Year not assigned" }} · Student access</span>
-      </div>
-    </section>
+  <section class="stats">
+    <article class="stat">
+      <div class="stat-top"><span>Student profile</span><span class="stat-icon">♙</span></div>
+      <div class="stat-value">{{ name }}</div>
+      <div class="stat-note">Signed-in student</div>
+    </article>
+    <article class="stat">
+      <div class="stat-top"><span>Department / branch</span><span class="stat-icon">⌘</span></div>
+      <div class="stat-value">{{ branch["name"] }}</div>
+      <div class="stat-note">Your assigned academic branch</div>
+    </article>
+    <article class="stat">
+      <div class="stat-top"><span>Academic year</span><span class="stat-icon">▦</span></div>
+      <div class="stat-value">{{ year["name"] }}</div>
+      <div class="stat-note">Resources filtered for your year</div>
+    </article>
+  </section>
 
-    <section class="overview">
-      <div class="over-card primary">
-        <div class="label">Your workspace</div>
-        <div class="value">{{ name }}</div>
-        <div class="sub">Personalized resource access</div>
-        <div class="mini-mark">✦</div>
-      </div>
+  <div class="section-head library-head" id="resourceLibrary">
+    <div>
+      <div class="eyebrow">Your study material</div>
+      <h2>Resource library</h2>
+      <p>Search by title, file name, description or subject.</p>
+    </div>
+    <span class="count-pill" id="resourceCount">{{ resources|length }} resources</span>
+  </div>
 
-      <div class="over-card">
-        <div class="label">Branch</div>
-        <div class="value" style="font-size:17px">{{ branch["name"] if branch else "—" }}</div>
-        <div class="sub">Assigned department</div>
-        <div class="mini-mark">⌘</div>
-      </div>
+  <section class="library-panel">
+    <div class="library-intro">
+      <h2>Everything you need, in one place.</h2>
+      <p>Materials are grouped by subject and limited to your academic branch and year.</p>
+    </div>
 
-      <div class="over-card">
-        <div class="label">Academic year</div>
-        <div class="value" style="font-size:17px">{{ year["name"] if year else "—" }}</div>
-        <div class="sub">Current track</div>
-        <div class="mini-mark">◈</div>
-      </div>
+    {% if resources %}
+    <div class="filters" id="resourceSearch">
+      <input class="field" id="searchInput" type="search" placeholder="⌕  Search notes, manuals, file names…" aria-label="Search resources">
+      <select class="field" id="subjectFilter" aria-label="Filter by subject">
+        <option value="">All subjects</option>
+      </select>
+      <button class="filter-reset" id="clearFilters" type="button">Reset filters ↺</button>
+    </div>
 
-      <div class="over-card">
-        <div class="label">Access</div>
-        <div class="value" style="font-size:17px">Student</div>
-        <div class="sub">Verified workspace</div>
-        <div class="mini-mark">✓</div>
-      </div>
-    </section>
-
-    <section class="workspace" id="library">
-
-      <div class="library">
-        <div class="library-head">
-          <div>
-            <div class="kicker">Knowledge library</div>
-            <h2>Your resources</h2>
-            <p>Everything uploaded for your branch and year, in one place.</p>
-          </div>
-        </div>
-
-        {% if resources %}
-        <div class="tool-row">
-          <input class="field" type="search" id="resourceSearch"
-                 placeholder="Search resources, subjects, filenames...">
-          <select class="field" id="subjectFilter">
-            <option value="">All subjects</option>
-          </select>
-          <button class="clear" type="button" id="clearFilters">Reset</button>
-        </div>
-
-        <div id="filterResult" class="filter-result"></div>
-
-        <div class="resource-container" id="resourceContainer">
-          {% set ns = namespace(current_subject="") %}
-
-          {% for resource in resources %}
-            {% if ns.current_subject != resource["subject_name"] %}
-              {% if ns.current_subject != "" %}</div>{% endif %}
-              {% set ns.current_subject = resource["subject_name"] %}
-
-              <div class="subject-group"
-                   data-subject-group="{{ resource['subject_name']|lower }}">
-                <div class="subject-heading">
-                  <div class="subject-icon">▤</div>
-                  <h3>{{ resource["subject_name"] }}</h3>
-                </div>
-            {% endif %}
-
-            <article class="resource-card"
-              data-title="{{ resource['title']|lower }}"
-              data-description="{{ (resource['description'] or '')|lower }}"
-              data-filename="{{ resource['filename']|lower }}"
-              data-subject="{{ resource['subject_name']|lower }}">
-
-              <div class="doc-icon">▱</div>
-
-              <div class="resource-info">
-                <h4>{{ resource["title"] }}</h4>
-                <p>{{ resource["description"] or "No description available." }}</p>
-                <div class="meta">
-                  <span>{{ resource["year_name"] }}</span>
-                  <span>{{ resource["filename"].split(".")[-1]|upper }}</span>
-                </div>
-              </div>
-
-              <div class="resource-right">
-                <div class="qr">
-                  <img src="{{ url_for('static', filename='qr_codes/resource_' ~ resource['id'] ~ '.png') }}"
-                       alt="QR Code">
-                </div>
-                <div class="actions">
-                  <a class="btn" href="/resource/{{ resource['id'] }}">View</a>
-                  <a class="btn download" href="/download/{{ resource['id'] }}">Download</a>
-                </div>
-              </div>
-            </article>
-          {% endfor %}
-
-          {% if ns.current_subject != "" %}</div>{% endif %}
-        </div>
-
-        <div id="noFilterResults" class="no-filter">
-          <div class="big">⌕</div>
-          <div>No resources match your search.</div>
-        </div>
-
-        {% else %}
-        <div class="empty">
-          <div class="big">◌</div>
-          <h3>Your library is waiting for its first resource.</h3>
-          <p>Your teacher has not uploaded resources for this branch and year yet.</p>
-        </div>
+    <div class="eyebrow" id="filterResult" aria-live="polite"></div>
+    <div id="resourceGroups">
+      {% set ns = namespace(current_subject="") %}
+      {% for resource in resources %}
+        {% if resource["subject_name"] != ns.current_subject %}
+          {% if not loop.first %}</div></section>{% endif %}
+          {% set ns.current_subject = resource["subject_name"] %}
+          <section class="subject-group" data-subject-group="{{ resource['subject_name']|lower }}">
+            <div class="subject-heading">
+              <h3>{{ resource["subject_name"] }}</h3>
+              <span>Subject resources</span>
+            </div>
+            <div class="resource-grid">
         {% endif %}
-      </div>
 
-      <aside class="side-panel">
-        <div class="side-box dark">
-          <div class="side-title">Focus mode</div>
-          <div class="side-muted">A quiet little space for your academic workspace.</div>
-          <div class="study-orbit"><span class="orbit-dot"></span></div>
-          <div style="text-align:center;font-size:11px;color:#d5d2e5">Your resources, one workspace.</div>
-        </div>
+        <article class="resource-card"
+          data-title="{{ resource['title']|lower }}"
+          data-description="{{ (resource['description'] or '')|lower }}"
+          data-filename="{{ resource['filename']|lower }}"
+          data-subject="{{ resource['subject_name']|lower }}">
 
-        <div class="side-box">
-          <div class="side-title">Workspace details</div>
-          <div class="side-stat"><span>Branch</span><b>{{ branch["name"] if branch else "—" }}</b></div>
-          <div class="side-stat"><span>Year</span><b>{{ year["name"] if year else "—" }}</b></div>
-          <div class="side-stat"><span>Account</span><b>Student</b></div>
-          <div class="side-stat"><span>Access</span><b style="color:var(--green)">Active</b></div>
-        </div>
-
-        <div class="side-box">
-          <div class="side-title">Pro tip</div>
-          <div class="tip">
-            <b>Scan → View → Download.</b><br>
-            Each resource has its own QR code, so you can quickly open the right material when you need it.
+          <div class="resource-top">
+            <div class="resource-icon">▤</div>
+            <div class="resource-main">
+              <h4>{{ resource["title"] }}</h4>
+              <div class="resource-desc">{{ resource["description"] or "Study material shared by your teacher." }}</div>
+            </div>
           </div>
-        </div>
-      </aside>
 
-    </section>
-  </main>
-</div>
+          <div class="resource-meta">
+            <span class="tag">{{ year["name"] }}</span>
+            <span class="tag">{{ resource["filename"].rsplit(".", 1)[-1]|upper if "." in resource["filename"] else "FILE" }}</span>
+          </div>
+
+          <div class="resource-actions">
+            <a href="{{ url_for('resource', resource_id=resource['id']) }}" target="_blank" rel="noopener">View resource ↗</a>
+            <a class="download-link" href="{{ url_for('download', resource_id=resource['id']) }}">Download ↓</a>
+          </div>
+
+          <div class="qr-details">
+            <img src="{{ url_for('static', filename='qr_codes/resource_' ~ resource['id'] ~ '.png') }}" alt="QR code for {{ resource['title'] }}" loading="lazy">
+            <span>Scan this QR code to access<br>this resource quickly.</span>
+          </div>
+        </article>
+
+        {% if loop.last %}</div></section>{% endif %}
+      {% endfor %}
+    </div>
+    <div class="no-match" id="noMatch">No resources match your search. Try another keyword or reset the filters.</div>
+
+    {% else %}
+    <div class="empty-state">
+      <strong>Your library is getting ready.</strong>
+      No resources have been added for your branch and year yet. Check back after your teacher uploads study material.
+    </div>
+    {% endif %}
+  </section>
+
+  <section class="lower-grid">
+    <article class="panel">
+      <h3>Quick study tips</h3>
+      <p>A few small habits can make your digital study library easier to use.</p>
+      <div class="tip-row"><div class="resource-icon">⌕</div><div><strong>Search before scrolling</strong><span>Type the topic or subject name to narrow down the list.</span></div></div>
+      <div class="tip-row"><div class="resource-icon">▣</div><div><strong>Use QR codes when handy</strong><span>Scan a resource QR code with your phone camera to open the file quickly.</span></div></div>
+      <div class="tip-row"><div class="resource-icon">↓</div><div><strong>Download for offline study</strong><span>Keep important notes available when your connection is unreliable.</span></div></div>
+    </article>
+
+    <aside class="panel">
+      <h3>Your academic access</h3>
+      <p>Your student account is intended to show only the material assigned to your group.</p>
+      <div class="branch-banner">
+        <div class="resource-icon">✓</div>
+        <div><strong>{{ branch["name"] }}</strong><span>{{ year["name"] }} · Branch-specific library</span></div>
+      </div>
+      <div class="tip-row"><div class="resource-icon">↪</div><div><strong>Finished studying?</strong><span>Log out when you are using a shared computer.</span></div></div>
+      <a class="btn btn-primary" href="{{ url_for('logout') }}">Log out securely ↗</a>
+    </aside>
+  </section>
+
+  <footer class="footer">
+    <span>© EduCloud Portal · Smart campus resources</span>
+    <span>Built for focused learning</span>
+  </footer>
+</main>
 
 <script>
-const searchInput = document.getElementById("resourceSearch");
-const subjectFilter = document.getElementById("subjectFilter");
-const clearFilters = document.getElementById("clearFilters");
-const filterResult = document.getElementById("filterResult");
-const noFilterResults = document.getElementById("noFilterResults");
-const cards = document.querySelectorAll(".resource-card");
-const groups = document.querySelectorAll(".subject-group");
+(() => {
+  const root = document.documentElement;
+  const toggle = document.getElementById("themeToggle");
 
-if (searchInput && subjectFilter) {
-  const subjects = new Set();
+  function applyTheme(theme) {
+    const chosen = theme === "dark" ? "dark" : "light";
+    root.dataset.theme = chosen;
+    try { localStorage.setItem("educloud-theme", chosen); } catch (e) {}
+    toggle.textContent = chosen === "dark" ? "☀ Light mode" : "☾ Dark mode";
+    toggle.setAttribute("aria-pressed", String(chosen === "dark"));
+  }
 
-  cards.forEach(card => {
-    if (card.dataset.subject) subjects.add(card.dataset.subject);
+  applyTheme(root.dataset.theme);
+  toggle.addEventListener("click", () => {
+    applyTheme(root.dataset.theme === "dark" ? "light" : "dark");
   });
 
-  [...subjects].sort().forEach(subject => {
-    const option = document.createElement("option");
-    option.value = subject;
-    option.textContent = subject.replace(/\b\w/g, l => l.toUpperCase());
-    subjectFilter.appendChild(option);
-  });
+  const search = document.getElementById("searchInput");
+  const subject = document.getElementById("subjectFilter");
+  const reset = document.getElementById("clearFilters");
+  const cards = Array.from(document.querySelectorAll(".resource-card"));
+  const groups = Array.from(document.querySelectorAll(".subject-group"));
+  const result = document.getElementById("filterResult");
+  const noMatch = document.getElementById("noMatch");
+  const count = document.getElementById("resourceCount");
 
-  function applyFilters(){
-    const query = searchInput.value.trim().toLowerCase();
-    const selected = subjectFilter.value;
+  if (subject) {
+    const options = new Map();
+    cards.forEach(card => {
+      const value = card.dataset.subject;
+      const group = groups.find(item => item.dataset.subjectGroup === value);
+      const label = group?.querySelector("h3")?.textContent?.trim() || value;
+      if (value && !options.has(value)) options.set(value, label);
+    });
+
+    [...options.entries()].sort((a,b) => a[1].localeCompare(b[1])).forEach(([value,label]) => {
+      const option = document.createElement("option");
+      option.value = value;
+      option.textContent = label;
+      subject.appendChild(option);
+    });
+  }
+
+  function applyFilters() {
+    const query = (search?.value || "").trim().toLowerCase();
+    const selected = (subject?.value || "").toLowerCase();
     let visible = 0;
 
     cards.forEach(card => {
-      const searchable =
-        card.dataset.title + " " +
-        card.dataset.description + " " +
-        card.dataset.filename + " " +
-        card.dataset.subject;
-
-      const matchSearch = !query || searchable.includes(query);
-      const matchSubject = !selected || card.dataset.subject === selected;
-      const show = matchSearch && matchSubject;
-
-      card.style.display = show ? "grid" : "none";
-      if(show) visible++;
+      const text = [
+        card.dataset.title,
+        card.dataset.description,
+        card.dataset.filename,
+        card.dataset.subject
+      ].join(" ");
+      const matches = text.includes(query) &&
+        (!selected || card.dataset.subject === selected);
+      card.hidden = !matches;
+      if (matches) visible++;
     });
 
     groups.forEach(group => {
-      const groupCards = group.querySelectorAll(".resource-card");
-      const anyVisible = [...groupCards].some(c => c.style.display !== "none");
-      group.style.display = anyVisible ? "" : "none";
+      group.hidden = !Array.from(group.querySelectorAll(".resource-card"))
+        .some(card => !card.hidden);
     });
 
-    if(filterResult){
-      filterResult.textContent =
-        (query || selected) ? `${visible} resource${visible === 1 ? "" : "s"} found` : "";
-    }
-    if(noFilterResults) noFilterResults.style.display = visible ? "none" : "block";
+    if (result) result.textContent = `${visible} of ${cards.length} resources shown`;
+    if (noMatch) noMatch.style.display = cards.length && visible === 0 ? "block" : "none";
+    if (count) count.textContent = `${visible} resource${visible === 1 ? "" : "s"}`;
   }
 
-  searchInput.addEventListener("input", applyFilters);
-  subjectFilter.addEventListener("change", applyFilters);
-  clearFilters.addEventListener("click", () => {
-    searchInput.value = "";
-    subjectFilter.value = "";
+  search?.addEventListener("input", applyFilters);
+  subject?.addEventListener("change", applyFilters);
+  reset?.addEventListener("click", () => {
+    if (search) search.value = "";
+    if (subject) subject.value = "";
     applyFilters();
-    searchInput.focus();
   });
 
   applyFilters();
-}
+})();
 </script>
 </body>
 </html>

@@ -1,173 +1,369 @@
+
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-
     <meta charset="UTF-8">
-
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
-
-    <title>{{ resource["title"] }} - EduCloud</title>
-
-    <link rel="stylesheet"
-          href="{{ url_for('static', filename='style.css') }}">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resource Details | EduCloud</title>
 
     <style>
-
-        .resource-page {
-            max-width: 800px;
-            margin: 70px auto;
-            padding: 20px;
+        :root {
+            --bg: #f4f6f1;
+            --surface: #ffffff;
+            --text: #20251f;
+            --muted: #737b70;
+            --border: #e4e8df;
+            --accent: #b9f36b;
+            --accent-dark: #24351b;
+            --shadow: 0 15px 45px rgba(25, 40, 20, .07);
         }
 
-        .resource-box {
-            background: #111827;
-            border: 1px solid #263244;
-            border-radius: 20px;
-            padding: 35px;
+        [data-theme="dark"] {
+            --bg: #141713;
+            --surface: #20251e;
+            --text: #f1f4ed;
+            --muted: #a1aa9a;
+            --border: #343b30;
+            --accent: #b9f36b;
+            --accent-dark: #182112;
+            --shadow: 0 15px 45px rgba(0, 0, 0, .2);
         }
 
-        .resource-icon {
-            font-size: 50px;
-            margin-bottom: 15px;
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            background: var(--bg);
+            color: var(--text);
+            font-family: Inter, "Segoe UI", Arial, sans-serif;
+            transition: background .2s, color .2s;
         }
 
-        .resource-box h1 {
-            margin-bottom: 10px;
+        a { color: inherit; text-decoration: none; }
+
+        .navbar {
+            min-height: 76px;
+            padding: 16px 6%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 16px;
+            border-bottom: 1px solid var(--border);
+            background: var(--surface);
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 11px;
+            font-size: 19px;
+            font-weight: 800;
+            letter-spacing: -.6px;
+        }
+
+        .brand-icon {
+            display: grid;
+            place-items: center;
+            width: 39px;
+            height: 39px;
+            border-radius: 13px;
+            background: var(--accent);
+            color: #20291a;
+            font-size: 21px;
+        }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn {
+            min-height: 42px;
+            padding: 11px 16px;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            background: var(--surface);
+            color: var(--text);
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            color: #20291a;
+            border-color: var(--accent);
+        }
+
+        main {
+            width: min(1050px, 90%);
+            margin: 38px auto 70px;
+        }
+
+        .back {
+            display: inline-flex;
+            color: var(--muted);
+            font-size: 14px;
+            margin-bottom: 23px;
+        }
+
+        .heading {
+            margin-bottom: 24px;
+        }
+
+        .eyebrow {
+            display: inline-block;
+            padding: 7px 11px;
+            background: var(--accent);
+            color: #26341c;
+            border-radius: 100px;
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: .6px;
+            text-transform: uppercase;
+        }
+
+        h1 {
+            font-size: clamp(28px, 5vw, 43px);
+            letter-spacing: -1.5px;
+            line-height: 1.12;
+            margin: 17px 0 10px;
+            overflow-wrap: anywhere;
+        }
+
+        .subtitle {
+            color: var(--muted);
+            line-height: 1.7;
+            font-size: 15px;
+            margin: 0;
+        }
+
+        .layout {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) 300px;
+            gap: 22px;
+            align-items: start;
+        }
+
+        .card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 22px;
+            padding: 25px;
+            box-shadow: var(--shadow);
+            min-width: 0;
+        }
+
+        .section-title {
+            font-size: 17px;
+            font-weight: 800;
+            margin: 0 0 19px;
         }
 
         .description {
-            color: #94a3b8;
-            line-height: 1.7;
-            margin: 20px 0;
+            color: var(--muted);
+            font-size: 14px;
+            line-height: 1.85;
+            white-space: pre-wrap;
+            overflow-wrap: anywhere;
         }
 
-        .badge {
-            display: inline-block;
-            padding: 7px 10px;
-            margin-right: 6px;
-            margin-bottom: 10px;
-            border-radius: 8px;
-            background: #172554;
-            color: #93c5fd;
-            font-size: 13px;
+        .details {
+            margin-top: 26px;
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 13px;
         }
 
-        .download-button {
-            display: inline-block;
-            margin-top: 25px;
-            padding: 13px 20px;
-            background: #2563eb;
-            color: white;
-            text-decoration: none;
-            border-radius: 10px;
-            font-weight: 600;
+        .detail {
+            padding: 16px;
+            border: 1px solid var(--border);
+            border-radius: 15px;
+            min-width: 0;
         }
 
-        .back-button {
-            display: inline-block;
-            margin-top: 15px;
-            margin-right: 10px;
-            padding: 13px 20px;
-            background: #1e293b;
-            color: white;
-            text-decoration: none;
-            border-radius: 10px;
+        .detail-label {
+            display: block;
+            font-size: 11px;
+            color: var(--muted);
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: .7px;
+        }
+
+        .detail-value {
+            display: block;
+            font-size: 14px;
+            font-weight: 750;
+            overflow-wrap: anywhere;
+        }
+
+        .file-symbol {
+            width: 62px;
+            height: 72px;
+            display: grid;
+            place-items: center;
+            border-radius: 17px;
+            background: var(--accent);
+            color: #24351b;
+            font-size: 30px;
+            margin-bottom: 18px;
         }
 
         .filename {
-            color: #64748b;
-            margin-top: 20px;
             font-size: 13px;
+            color: var(--muted);
+            overflow-wrap: anywhere;
+            line-height: 1.6;
+            margin-bottom: 22px;
         }
 
-    </style>
+        .file-card .btn {
+            width: 100%;
+            margin-top: 10px;
+        }
 
+        .notice {
+            margin-top: 17px;
+            padding: 14px;
+            border-radius: 13px;
+            background: var(--bg);
+            color: var(--muted);
+            font-size: 12px;
+            line-height: 1.7;
+        }
+
+        footer {
+            text-align: center;
+            color: var(--muted);
+            padding: 22px;
+            font-size: 12px;
+        }
+
+        @media (max-width: 760px) {
+            .navbar { padding: 14px 5%; }
+            .brand { font-size: 16px; }
+            main { margin-top: 27px; }
+            .layout { grid-template-columns: 1fr; }
+            .file-card { order: -1; }
+            .card { padding: 21px; border-radius: 18px; }
+        }
+
+        @media (max-width: 420px) {
+            .nav-label { display: none; }
+            .details { grid-template-columns: 1fr; }
+            .navbar { gap: 8px; }
+            .btn { padding: 10px 12px; }
+        }
+    </style>
 </head>
 
-
 <body>
-
-
-<nav class="navbar">
-
-    <div class="logo">
-        ☁️ <span>EduCloud</span>
-    </div>
-
-    <a href="/logout"
-       class="nav-button">
-
-        Logout
-
-    </a>
-
-</nav>
-
-
-<main class="resource-page">
-
-    <div class="resource-box">
-
-        <div class="resource-icon">
-            📄
-        </div>
-
-        <h1>
-            {{ resource["title"] }}
-        </h1>
-
-        <span class="badge">
-            {{ resource["branch_name"] }}
-        </span>
-
-        <span class="badge">
-            {{ resource["year_name"] }}
-        </span>
-
-        <span class="badge">
-            {{ resource["subject_name"] }}
-        </span>
-
-
-        <div class="description">
-
-            {{ resource["description"] or
-               "No description provided." }}
-
-        </div>
-
-
-        <a
-            href="/download/{{ resource['id'] }}"
-            class="download-button">
-
-            ⬇️ Download Resource
-
+    <header class="navbar">
+        <a class="brand" href="/">
+            <span class="brand-icon">✳</span>
+            <span>EduCloud<span style="font-weight:400"> Portal</span></span>
         </a>
 
+        <div class="nav-actions">
+            <button class="btn" id="themeToggle" type="button">
+                <span id="themeIcon">☾</span>
+                <span class="nav-label">Theme</span>
+            </button>
+            <a class="btn" href="/logout">Logout ↗</a>
+        </div>
+    </header>
 
-        <a
-            href="/student"
-            class="back-button">
+    <main>
+        <a class="back" href="javascript:history.back()">← Back to resources</a>
 
-            ← Back to Dashboard
-
-        </a>
-
-
-        <div class="filename">
-
-            📎 {{ resource["filename"] }}
-
+        <div class="heading">
+            <span class="eyebrow">Learning resource</span>
+            <h1>{{ resource['title'] }}</h1>
+            <p class="subtitle">
+                Resource details and file information in one place.
+            </p>
         </div>
 
-    </div>
+        <div class="layout">
+            <section class="card">
+                <h2 class="section-title">About this resource</h2>
 
-</main>
+                <div class="description">{% if resource['description'] %}
+{{ resource['description'] }}
+{% else %}
+No description has been added for this resource yet.
+{% endif %}</div>
 
+                <div class="details">
+                    <div class="detail">
+                        <span class="detail-label">Branch</span>
+                        <span class="detail-value">{{ resource['branch_name'] }}</span>
+                    </div>
 
+                    <div class="detail">
+                        <span class="detail-label">Academic year</span>
+                        <span class="detail-value">{{ resource['year_name'] }}</span>
+                    </div>
+
+                    <div class="detail">
+                        <span class="detail-label">Subject</span>
+                        <span class="detail-value">{{ resource['subject_name'] }}</span>
+                    </div>
+
+                    <div class="detail">
+                        <span class="detail-label">Resource ID</span>
+                        <span class="detail-value">#{{ resource['id'] }}</span>
+                    </div>
+                </div>
+            </section>
+
+            <aside class="card file-card">
+                <div class="file-symbol">▤</div>
+                <h2 class="section-title">Attached file</h2>
+
+                <div class="filename">{{ resource['filename'] }}</div>
+
+                <div class="notice">
+                    Your resource is protected by EduCloud access controls.
+                    Only authorised users should access its contents.
+                </div>
+
+               <a class="btn btn-primary"
+   href="{{ url_for('download_resource', resource_id=resource['id']) }}">
+    ↓ Download resource
+</a>
+
+                <a class="btn" href="/student">Back to dashboard</a>
+            </aside>
+        </div>
+    </main>
+
+    <footer>EduCloud Portal · Smart Campus Resources</footer>
+
+    <script>
+        const root = document.documentElement;
+        const toggle = document.getElementById("themeToggle");
+        const icon = document.getElementById("themeIcon");
+
+        function applyTheme(theme) {
+            root.dataset.theme = theme;
+            icon.textContent = theme === "dark" ? "☀" : "☾";
+            localStorage.setItem("educloud-theme", theme);
+        }
+
+        applyTheme(localStorage.getItem("educloud-theme") || "light");
+
+        toggle.addEventListener("click", () => {
+            applyTheme(
+                root.dataset.theme === "dark" ? "light" : "dark"
+            );
+        });
+    </script>
 </body>
-
 </html>

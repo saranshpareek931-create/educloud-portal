@@ -1,1355 +1,1496 @@
+
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="en" data-theme="light">
 <head>
-
-    <meta charset="UTF-8">
-
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
-
-    <title>Teacher Dashboard - EduCloud</title>
-
-    <link rel="stylesheet"
-          href="{{ url_for('static', filename='style.css') }}">
-
-    <style>
-
-        .dashboard {
-            max-width: 1100px;
-            margin: 40px auto;
-            padding: 20px;
-        }
-
-        .dashboard-header {
-            margin-bottom: 30px;
-        }
-
-        .dashboard-header h1 {
-            font-size: 32px;
-            margin-bottom: 8px;
-        }
-
-        .dashboard-header p {
-            color: #94a3b8;
-        }
-
-        .info-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 20px;
-            margin-bottom: 30px;
-        }
-
-        .info-card {
-            background: #111827;
-            border: 1px solid #263244;
-            border-radius: 16px;
-            padding: 22px;
-        }
-
-        .info-card span {
-            display: block;
-            color: #94a3b8;
-            font-size: 14px;
-            margin-bottom: 8px;
-        }
-
-        .info-card strong {
-            font-size: 20px;
-        }
-
-        .upload-card {
-            background: #111827;
-            border: 1px solid #263244;
-            border-radius: 18px;
-            padding: 30px;
-            margin-bottom: 30px;
-        }
-
-        .upload-card h2 {
-            margin-top: 0;
-            margin-bottom: 8px;
-        }
-
-        .upload-card > p {
-            color: #94a3b8;
-            margin-bottom: 25px;
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
-        }
-
-        .form-group input,
-        .form-group textarea,
-        .form-group select {
-            width: 100%;
-            box-sizing: border-box;
-            padding: 13px 14px;
-            border-radius: 10px;
-            border: 1px solid #334155;
-            background: #0b1120;
-            color: white;
-            outline: none;
-            font-size: 15px;
-        }
-
-        .form-group textarea {
-            min-height: 100px;
-            resize: vertical;
-        }
-
-        .form-group input:focus,
-        .form-group textarea:focus,
-        .form-group select:focus {
-            border-color: #2563eb;
-        }
-
-        .upload-button {
-            width: 100%;
-            border: none;
-            padding: 14px;
-            border-radius: 10px;
-            background: #2563eb;
-            color: white;
-            font-size: 16px;
-            font-weight: bold;
-            cursor: pointer;
-        }
-
-        .upload-button:hover {
-            opacity: 0.9;
-        }
-
-        .resource-section {
-            background: #111827;
-            border: 1px solid #263244;
-            border-radius: 18px;
-            padding: 30px;
-        }
-
-        .resource-section h2 {
-            margin-top: 0;
-        }
-
-        .resource-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 20px;
-            padding: 18px 0;
-            border-bottom: 1px solid #263244;
-        }
-
-        .resource-item:last-child {
-            border-bottom: none;
-        }
-
-        .resource-info h3 {
-            margin: 0 0 7px 0;
-            font-size: 17px;
-        }
-
-        .resource-info p {
-            margin: 0;
-            color: #94a3b8;
-            font-size: 14px;
-        }
-
-        .resource-badge {
-            display: inline-block;
-            margin-top: 8px;
-            padding: 5px 9px;
-            border-radius: 8px;
-            background: #172554;
-            color: #93c5fd;
-            font-size: 12px;
-        }
-
-        .empty-resources {
-            text-align: center;
-            padding: 35px 10px;
-            color: #94a3b8;
-        }
-
-
-        /* =========================
-           RESOURCE SEARCH + FILTER
-        ========================= */
-
-        .resource-tools {
-            display: grid;
-            grid-template-columns: minmax(220px, 1fr) 180px 200px auto;
-            gap: 10px;
-            margin: 0 0 18px;
-            padding: 14px;
-            border: 1px solid #263244;
-            border-radius: 14px;
-            background: #0b1120;
-        }
-
-        .resource-tools input,
-        .resource-tools select {
-            width: 100%;
-            box-sizing: border-box;
-            height: 42px;
-            padding: 0 12px;
-            border: 1px solid #334155;
-            border-radius: 10px;
-            outline: none;
-            background: #111827;
-            color: white;
-            font-size: 14px;
-        }
-
-        .resource-tools input:focus,
-        .resource-tools select:focus {
-            border-color: #2563eb;
-            box-shadow: 0 0 0 3px rgba(37, 99, 235, .12);
-        }
-
-        .clear-filters {
-            height: 42px;
-            padding: 0 16px;
-            border: 1px solid #334155;
-            border-radius: 10px;
-            background: #172554;
-            color: #93c5fd;
-            font-weight: 700;
-            cursor: pointer;
-        }
-
-        .clear-filters:hover {
-            background: #1e3a8a;
-        }
-
-        .filter-result {
-            margin: -6px 0 15px;
-            color: #94a3b8;
-            font-size: 13px;
-        }
-
-        .no-filter-results {
-            display: none;
-            text-align: center;
-            padding: 35px 10px;
-            color: #94a3b8;
-        }
-
-
-        /* =========================
-           RESOURCE BUTTONS
-        ========================= */
-
-        .resource-button {
-            display: inline-block;
-            padding: 7px 11px;
-            margin-right: 5px;
-            border-radius: 7px;
-            background: #2563eb;
-            color: white;
-            text-decoration: none;
-            font-size: 13px;
-            font-weight: 600;
-        }
-
-        .resource-button:hover {
-            opacity: 0.85;
-        }
-
-
-        /* =========================
-           RESPONSIVE
-        ========================= */
-
-        @media (max-width: 800px) {
-
-            .resource-tools {
-                grid-template-columns: 1fr 1fr;
-            }
-
-            .resource-tools input {
-                grid-column: 1 / -1;
-            }
-
-            .clear-filters {
-                width: 100%;
-            }
-
-        }
-
-
-        @media (max-width: 700px) {
-
-            .info-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .dashboard {
-                padding: 15px;
-            }
-
-            .upload-card,
-            .resource-section {
-                padding: 20px;
-            }
-
-            .resource-item {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-
-        }
-
-
-        @media (max-width: 480px) {
-
-            .resource-tools {
-                grid-template-columns: 1fr;
-            }
-
-            .resource-tools input {
-                grid-column: auto;
-            }
-
-        }
-
-    </style>
-
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#f4f5ef">
+<title>Teacher Workspace | EduCloud</title>
+
+<style>
+:root {
+    color-scheme: light;
+    --bg:#f4f5ef;
+    --panel:#ffffff;
+    --panel-soft:#f8f9f4;
+    --ink:#17201c;
+    --muted:#737c75;
+    --line:#e3e7df;
+    --accent:#b8f36b;
+    --accent-dark:#25351d;
+    --soft-green:#eff9e3;
+    --sidebar:#19251f;
+    --sidebar-text:#e8eee8;
+    --input:#fff;
+    --shadow:0 12px 35px rgba(27,39,29,.055);
+    --danger:#c74747;
+}
+
+html[data-theme="dark"] {
+    color-scheme:dark;
+    --bg:#111713;
+    --panel:#1b241e;
+    --panel-soft:#222d25;
+    --ink:#edf3eb;
+    --muted:#a0aca1;
+    --line:#344137;
+    --accent:#b8f36b;
+    --accent-dark:#25351d;
+    --soft-green:#293c27;
+    --sidebar:#0b100d;
+    --sidebar-text:#e8eee8;
+    --input:#202a23;
+    --shadow:0 12px 35px rgba(0,0,0,.14);
+    --danger:#ff8888;
+}
+
+* {box-sizing:border-box}
+
+html {scroll-behavior:smooth}
+
+body {
+    margin:0;
+    background:var(--bg);
+    color:var(--ink);
+    font-family:Inter,ui-sans-serif,system-ui,-apple-system,
+    BlinkMacSystemFont,"Segoe UI",sans-serif;
+    transition:background .2s,color .2s;
+}
+
+button,input,select,textarea {font:inherit}
+button,a {-webkit-tap-highlight-color:transparent}
+a {color:inherit;text-decoration:none}
+button {color:inherit}
+
+.app {
+    min-height:100vh;
+    display:grid;
+    grid-template-columns:245px minmax(0,1fr);
+}
+
+/* SIDEBAR */
+
+.sidebar {
+    background:var(--sidebar);
+    color:var(--sidebar-text);
+    min-height:100vh;
+    height:100vh;
+    position:sticky;
+    top:0;
+    display:flex;
+    flex-direction:column;
+    padding:26px 18px 20px;
+    z-index:20;
+}
+
+.brand {
+    display:flex;
+    align-items:center;
+    gap:11px;
+    padding:0 10px 32px;
+}
+
+.brand-mark {
+    width:39px;
+    height:39px;
+    display:grid;
+    place-items:center;
+    background:var(--accent);
+    color:#17251a;
+    border-radius:13px;
+    font-size:21px;
+    font-weight:900;
+}
+
+.brand-name {
+    font-size:19px;
+    letter-spacing:-.8px;
+    font-weight:800;
+}
+
+.brand-sub {
+    display:block;
+    color:#9ca99f;
+    font-size:10px;
+    margin-top:3px;
+    letter-spacing:1.5px;
+    text-transform:uppercase;
+}
+
+.nav-label {
+    color:#829187;
+    font-size:10px;
+    letter-spacing:1.7px;
+    font-weight:800;
+    padding:0 12px;
+    margin:0 0 12px;
+}
+
+.nav-links {
+    display:grid;
+    gap:6px;
+}
+
+.nav-link {
+    display:flex;
+    align-items:center;
+    gap:12px;
+    padding:12px 13px;
+    color:#b6c2b9;
+    border-radius:11px;
+    font-size:13px;
+    font-weight:650;
+    transition:.18s ease;
+}
+
+.nav-link:hover {
+    color:#fff;
+    background:#29372e;
+}
+
+.nav-link.active {
+    background:var(--accent);
+    color:#1a281b;
+}
+
+.nav-icon {
+    width:22px;
+    text-align:center;
+    font-size:16px;
+}
+
+.sidebar-bottom {
+    margin-top:auto;
+}
+
+.sidebar-note {
+    border:1px solid #344238;
+    background:#222f26;
+    padding:16px;
+    border-radius:15px;
+    margin-bottom:18px;
+}
+
+.note-dot {
+    display:inline-block;
+    width:8px;
+    height:8px;
+    background:var(--accent);
+    border-radius:50%;
+    margin-right:6px;
+}
+
+.sidebar-note strong {
+    font-size:12px;
+}
+
+.sidebar-note p {
+    color:#a7b4aa;
+    font-size:11px;
+    line-height:1.7;
+    margin:9px 0 0;
+}
+
+.profile {
+    display:flex;
+    align-items:center;
+    gap:10px;
+    padding:16px 6px 0;
+    border-top:1px solid #344238;
+}
+
+.avatar {
+    width:36px;
+    height:36px;
+    border-radius:12px;
+    background:#dff8c9;
+    color:#263c27;
+    display:grid;
+    place-items:center;
+    font-weight:850;
+}
+
+.profile-name {
+    font-size:12px;
+    font-weight:750;
+    max-width:135px;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+}
+
+.profile-role {
+    font-size:11px;
+    color:#9eada2;
+    margin-top:4px;
+}
+
+/* MAIN */
+
+.main {
+    min-width:0;
+    padding:0 35px 50px;
+}
+
+.topbar {
+    min-height:79px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:15px;
+    border-bottom:1px solid var(--line);
+}
+
+.breadcrumb {
+    font-size:12px;
+    color:var(--muted);
+}
+
+.breadcrumb strong {color:var(--ink)}
+
+.top-actions {
+    display:flex;
+    align-items:center;
+    gap:10px;
+}
+
+.icon-btn {
+    width:40px;
+    height:40px;
+    display:grid;
+    place-items:center;
+    border:1px solid var(--line);
+    background:var(--panel);
+    border-radius:12px;
+    cursor:pointer;
+    font-size:17px;
+}
+
+.icon-btn:hover {border-color:var(--accent)}
+
+.logout-btn {
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:8px;
+    padding:11px 15px;
+    border-radius:11px;
+    background:var(--sidebar);
+    color:#fff;
+    font-size:12px;
+    font-weight:750;
+}
+
+.logout-btn:hover {opacity:.85}
+
+.mobile-brand,.mobile-menu {display:none}
+
+.page {
+    max-width:1400px;
+    margin:0 auto;
+}
+
+.page-heading {
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-end;
+    gap:20px;
+    padding:32px 0 24px;
+}
+
+.eyebrow {
+    display:flex;
+    align-items:center;
+    gap:8px;
+    color:var(--muted);
+    font-size:10px;
+    text-transform:uppercase;
+    letter-spacing:1.8px;
+    font-weight:850;
+    margin-bottom:12px;
+}
+
+.eyebrow:before {
+    content:"";
+    width:20px;
+    height:2px;
+    background:#86c94c;
+}
+
+h1,h2,h3,p {margin-top:0}
+
+h1 {
+    margin-bottom:9px;
+    font-size:clamp(27px,3vw,38px);
+    line-height:1.12;
+    letter-spacing:-1.6px;
+    font-weight:850;
+}
+
+.heading-desc {
+    color:var(--muted);
+    margin:0;
+    font-size:13px;
+    line-height:1.7;
+}
+
+.branch-pill {
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    background:var(--panel);
+    border:1px solid var(--line);
+    padding:10px 13px;
+    border-radius:12px;
+    font-size:12px;
+    font-weight:750;
+    white-space:nowrap;
+}
+
+.branch-dot {
+    width:8px;
+    height:8px;
+    background:#8ccf51;
+    border-radius:50%;
+}
+
+/* WELCOME BANNER */
+
+.hero {
+    position:relative;
+    overflow:hidden;
+    border-radius:22px;
+    background:var(--sidebar);
+    color:#f3f6ef;
+    padding:30px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:20px;
+    margin-bottom:22px;
+}
+
+.hero:after {
+    content:"";
+    position:absolute;
+    width:260px;
+    height:260px;
+    right:7%;
+    top:-150px;
+    border:1px solid rgba(184,243,107,.22);
+    border-radius:50%;
+    box-shadow:0 0 0 32px rgba(184,243,107,.035),
+               0 0 0 65px rgba(184,243,107,.025);
+    pointer-events:none;
+}
+
+.hero-copy {position:relative;z-index:1}
+
+.hero-label {
+    color:var(--accent);
+    text-transform:uppercase;
+    letter-spacing:1.8px;
+    font-size:10px;
+    font-weight:850;
+    margin-bottom:14px;
+}
+
+.hero h2 {
+    max-width:600px;
+    font-size:clamp(22px,3vw,32px);
+    letter-spacing:-1.1px;
+    line-height:1.22;
+    margin-bottom:11px;
+}
+
+.hero p {
+    max-width:530px;
+    color:#bdc9be;
+    font-size:12px;
+    line-height:1.8;
+    margin-bottom:0;
+}
+
+.hero-art {
+    flex-shrink:0;
+    width:116px;
+    height:116px;
+    border:1px solid rgba(184,243,107,.32);
+    border-radius:30px;
+    display:grid;
+    place-items:center;
+    transform:rotate(-7deg);
+    background:rgba(184,243,107,.07);
+    position:relative;
+    z-index:1;
+}
+
+.hero-art span {
+    font-size:52px;
+    transform:rotate(7deg);
+}
+
+/* STATS */
+
+.stats-grid {
+    display:grid;
+    grid-template-columns:repeat(3,minmax(0,1fr));
+    gap:15px;
+    margin-bottom:30px;
+}
+
+.stat-card {
+    background:var(--panel);
+    border:1px solid var(--line);
+    border-radius:17px;
+    padding:20px;
+    box-shadow:var(--shadow);
+}
+
+.stat-top {
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:10px;
+    margin-bottom:17px;
+}
+
+.stat-label {
+    color:var(--muted);
+    font-size:11px;
+    font-weight:700;
+}
+
+.stat-icon {
+    width:35px;
+    height:35px;
+    border-radius:11px;
+    background:var(--soft-green);
+    display:grid;
+    place-items:center;
+    font-size:16px;
+}
+
+.stat-number {
+    font-size:29px;
+    line-height:1;
+    font-weight:850;
+    letter-spacing:-1px;
+}
+
+.stat-caption {
+    color:var(--muted);
+    font-size:11px;
+    margin-top:9px;
+}
+
+/* SECTIONS */
+
+.section {
+    background:var(--panel);
+    border:1px solid var(--line);
+    border-radius:20px;
+    padding:25px;
+    margin-bottom:23px;
+    box-shadow:var(--shadow);
+    scroll-margin-top:20px;
+}
+
+.section-heading {
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-start;
+    gap:15px;
+    margin-bottom:23px;
+}
+
+.section-kicker {
+    color:#78ae42;
+    font-size:10px;
+    letter-spacing:1.5px;
+    text-transform:uppercase;
+    font-weight:850;
+    margin-bottom:8px;
+}
+
+.section-heading h2 {
+    font-size:21px;
+    letter-spacing:-.7px;
+    margin-bottom:6px;
+}
+
+.section-heading p {
+    font-size:12px;
+    color:var(--muted);
+    line-height:1.6;
+    margin-bottom:0;
+}
+
+.step-tag {
+    background:var(--soft-green);
+    color:var(--ink);
+    border-radius:10px;
+    padding:9px 11px;
+    font-size:11px;
+    font-weight:800;
+    white-space:nowrap;
+}
+
+/* FORM */
+
+.form-grid {
+    display:grid;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:19px;
+}
+
+.form-group {
+    min-width:0;
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+}
+
+.form-group.full {grid-column:1/-1}
+
+.form-group label {
+    font-size:12px;
+    font-weight:750;
+}
+
+.required {color:#8acb4c}
+
+.form-group input,
+.form-group select,
+.form-group textarea,
+.filter-input,
+.filter-select {
+    width:100%;
+    min-width:0;
+    border:1px solid var(--line);
+    border-radius:11px;
+    background:var(--input);
+    color:var(--ink);
+    outline:none;
+    transition:border .15s,box-shadow .15s;
+}
+
+.form-group input,
+.form-group select {
+    height:46px;
+    padding:0 13px;
+}
+
+.form-group textarea {
+    min-height:96px;
+    padding:13px;
+    resize:vertical;
+    line-height:1.6;
+}
+
+.form-group input[type="file"] {
+    padding:7px;
+    font-size:11px;
+}
+
+.form-group input[type="file"]::file-selector-button {
+    background:var(--soft-green);
+    border:0;
+    border-radius:7px;
+    padding:8px 10px;
+    margin-right:10px;
+    color:var(--ink);
+    cursor:pointer;
+    font-weight:700;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus,
+.filter-input:focus,
+.filter-select:focus {
+    border-color:#8bc94f;
+    box-shadow:0 0 0 3px rgba(139,201,79,.13);
+}
+
+.form-group input::placeholder,
+.form-group textarea::placeholder,
+.filter-input::placeholder {color:var(--muted)}
+
+.field-hint {
+    font-size:10px;
+    line-height:1.5;
+    color:var(--muted);
+}
+
+.upload-footer {
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:15px;
+    border-top:1px solid var(--line);
+    padding-top:20px;
+    margin-top:22px;
+}
+
+.upload-footer p {
+    margin:0;
+    color:var(--muted);
+    font-size:11px;
+    line-height:1.6;
+}
+
+.primary-btn {
+    display:inline-flex;
+    justify-content:center;
+    align-items:center;
+    gap:9px;
+    min-height:45px;
+    border:0;
+    border-radius:11px;
+    background:var(--accent);
+    color:#1a291b;
+    padding:0 19px;
+    cursor:pointer;
+    font-size:12px;
+    font-weight:850;
+    transition:transform .15s,filter .15s;
+}
+
+.primary-btn:hover {transform:translateY(-1px);filter:brightness(.97)}
+.primary-btn:disabled {opacity:.55;cursor:not-allowed;transform:none}
+
+/* RESOURCE LIST */
+
+.resources-section {scroll-margin-top:20px}
+
+.resource-toolbar {
+    display:grid;
+    grid-template-columns:minmax(180px,1fr) 170px 180px auto;
+    gap:10px;
+    margin-bottom:15px;
+}
+
+.filter-input,.filter-select {
+    height:43px;
+    padding:0 12px;
+    font-size:12px;
+}
+
+.secondary-btn {
+    border:1px solid var(--line);
+    background:var(--panel-soft);
+    border-radius:10px;
+    padding:0 15px;
+    min-height:43px;
+    font-size:11px;
+    font-weight:800;
+    cursor:pointer;
+}
+
+.secondary-btn:hover {border-color:#8bc94f}
+
+.results-line {
+    display:flex;
+    justify-content:space-between;
+    gap:10px;
+    color:var(--muted);
+    font-size:11px;
+    margin-bottom:15px;
+}
+
+.resource-list {
+    display:grid;
+    gap:12px;
+}
+
+.resource-card {
+    display:grid;
+    grid-template-columns:minmax(0,1fr) auto;
+    gap:18px;
+    padding:19px;
+    border:1px solid var(--line);
+    background:var(--panel);
+    border-radius:15px;
+    transition:border-color .15s,transform .15s;
+}
+
+.resource-card:hover {
+    border-color:#b3d88c;
+    transform:translateY(-1px);
+}
+
+.resource-main {min-width:0}
+
+.resource-meta {
+    display:flex;
+    flex-wrap:wrap;
+    gap:7px;
+    align-items:center;
+    margin-bottom:11px;
+}
+
+.meta-pill {
+    display:inline-flex;
+    align-items:center;
+    border-radius:7px;
+    background:var(--soft-green);
+    color:var(--ink);
+    padding:6px 8px;
+    font-size:10px;
+    font-weight:750;
+}
+
+.meta-type {
+    background:var(--panel-soft);
+    border:1px solid var(--line);
+    color:var(--muted);
+}
+
+.resource-card h3 {
+    font-size:15px;
+    line-height:1.45;
+    letter-spacing:-.25px;
+    margin-bottom:7px;
+    overflow-wrap:anywhere;
+}
+
+.resource-description {
+    color:var(--muted);
+    font-size:12px;
+    line-height:1.7;
+    margin-bottom:12px;
+    overflow-wrap:anywhere;
+}
+
+.file-name {
+    display:flex;
+    align-items:flex-start;
+    gap:8px;
+    color:var(--muted);
+    font-size:10px;
+    line-height:1.6;
+    overflow-wrap:anywhere;
+}
+
+.file-symbol {
+    flex-shrink:0;
+    width:25px;
+    height:25px;
+    display:grid;
+    place-items:center;
+    border-radius:7px;
+    background:var(--panel-soft);
+}
+
+.resource-actions {
+    display:flex;
+    align-items:flex-start;
+    justify-content:flex-end;
+    gap:7px;
+    flex-wrap:wrap;
+    max-width:250px;
+}
+
+.action-btn {
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:5px;
+    min-height:35px;
+    padding:0 10px;
+    border-radius:9px;
+    border:1px solid var(--line);
+    background:var(--panel-soft);
+    color:var(--ink);
+    font-size:10px;
+    font-weight:800;
+    cursor:pointer;
+    white-space:nowrap;
+}
+
+.action-btn:hover {border-color:#9dcd6e}
+
+.action-btn.danger {
+    color:var(--danger);
+}
+
+.delete-form {display:inline-flex;margin:0}
+
+.empty-state {
+    text-align:center;
+    padding:45px 20px;
+    border:1px dashed var(--line);
+    border-radius:15px;
+    background:var(--panel-soft);
+}
+
+.empty-icon {
+    margin:0 auto 14px;
+    width:53px;
+    height:53px;
+    display:grid;
+    place-items:center;
+    border-radius:17px;
+    background:var(--soft-green);
+    font-size:24px;
+}
+
+.empty-state h3 {font-size:15px;margin-bottom:7px}
+.empty-state p {color:var(--muted);font-size:12px;line-height:1.7;margin:0}
+#noFilterResults {display:none}
+
+.footer {
+    display:flex;
+    justify-content:space-between;
+    gap:15px;
+    color:var(--muted);
+    font-size:10px;
+    padding:6px 2px 0;
+}
+
+/* RESPONSIVE */
+
+@media(max-width:1100px) {
+    .app {grid-template-columns:210px minmax(0,1fr)}
+    .main {padding:0 23px 40px}
+    .resource-toolbar {
+        grid-template-columns:minmax(0,1fr) 1fr;
+    }
+    .resource-card {grid-template-columns:1fr}
+    .resource-actions {max-width:none;justify-content:flex-start}
+}
+
+@media(max-width:760px) {
+    .app {display:block}
+    .sidebar {
+        position:fixed;
+        left:0;
+        top:0;
+        bottom:0;
+        width:265px;
+        height:100dvh;
+        transform:translateX(-105%);
+        transition:transform .22s ease;
+        box-shadow:12px 0 35px rgba(0,0,0,.15);
+    }
+    body.menu-open .sidebar {transform:translateX(0)}
+    body.menu-open:after {
+        content:"";
+        position:fixed;
+        inset:0;
+        background:rgba(0,0,0,.4);
+        z-index:15;
+    }
+    .main {padding:0 16px 30px}
+    .topbar {min-height:67px}
+    .mobile-brand {
+        display:flex;
+        align-items:center;
+        gap:8px;
+        font-weight:850;
+        font-size:15px;
+    }
+    .mobile-brand .brand-mark {
+        width:30px;
+        height:30px;
+        border-radius:9px;
+        font-size:16px;
+    }
+    .mobile-menu {display:grid}
+    .breadcrumb {display:none}
+    .top-actions {gap:7px}
+    .logout-btn {padding:10px 11px;font-size:11px}
+    .page-heading {padding:25px 0 20px;align-items:flex-start;flex-direction:column}
+    .hero {padding:24px 21px;border-radius:18px}
+    .hero-art {width:72px;height:72px;border-radius:21px}
+    .hero-art span {font-size:35px}
+    .stats-grid {gap:10px}
+    .stat-card {padding:15px}
+    .stat-number {font-size:24px}
+    .stat-label {font-size:10px}
+    .section {padding:19px;border-radius:17px}
+}
+
+@media(max-width:520px) {
+    .hero-art {display:none}
+    .hero h2 {font-size:24px}
+    .stats-grid {grid-template-columns:1fr}
+    .stat-card {display:flex;align-items:center;gap:13px;padding:14px 16px}
+    .stat-top {margin:0}
+    .stat-icon {order:-1}
+    .stat-number {font-size:23px}
+    .stat-caption {margin-top:5px}
+    .stat-content {flex:1}
+    .form-grid {grid-template-columns:1fr;gap:16px}
+    .form-group.full {grid-column:auto}
+    .section-heading {gap:10px}
+    .section-heading h2 {font-size:19px}
+    .step-tag {font-size:9px;padding:8px}
+    .resource-toolbar {grid-template-columns:1fr}
+    .filter-input,.filter-select,.secondary-btn {width:100%}
+    .resource-card {padding:15px}
+    .resource-actions {display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}
+    .action-btn {width:100%}
+    .delete-form {width:100%}
+    .delete-form .action-btn {width:100%}
+    .upload-footer {align-items:stretch;flex-direction:column}
+    .upload-footer .primary-btn {width:100%}
+    .footer {flex-direction:column}
+}
+
+@media(prefers-reduced-motion:reduce) {
+    *,*:before,*:after {scroll-behavior:auto!important;transition:none!important}
+}
+</style>
 </head>
 
-
 <body>
+<div class="app">
 
-
-<!-- =========================
-     NAVBAR
-========================= -->
-
-<nav class="navbar">
-
-    <div class="logo">
-        ☁️ <span>EduCloud</span>
-    </div>
-
-    <a href="/logout"
-       class="nav-button">
-
-        Logout
-
-    </a>
-
-</nav>
-
-
-
-<!-- =========================
-     DASHBOARD
-========================= -->
-
-<main class="dashboard">
-
-
-    <!-- HEADER -->
-
-    <div class="dashboard-header">
-
-        <h1>
-            👋 Welcome, {{ name }}
-        </h1>
-
-        <p>
-            Teacher Dashboard — Manage your academic resources.
-        </p>
-
-    </div>
-
-
-
-    <!-- =========================
-         INFO
-    ========================= -->
-
-    <div class="info-grid">
-
-
-        <div class="info-card">
-
+    <!-- SIDEBAR -->
+    <aside class="sidebar" id="sidebar">
+        <a class="brand" href="/teacher">
+            <span class="brand-mark">E</span>
             <span>
-                Assigned Branch
+                <span class="brand-name">EduCloud</span>
+                <span class="brand-sub">Campus workspace</span>
             </span>
+        </a>
 
-            <strong>
+        <div class="nav-label">WORKSPACE</div>
 
-                {% if branch %}
+        <nav class="nav-links">
+            <a class="nav-link active" href="#overview">
+                <span class="nav-icon">▦</span> Overview
+            </a>
+            <a class="nav-link" href="#uploadSection">
+                <span class="nav-icon">＋</span> Upload resource
+            </a>
+            <a class="nav-link" href="#resourcesSection">
+                <span class="nav-icon">▤</span> My resources
+            </a>
+        </nav>
 
-                    {{ branch["name"] }}
+        <div class="sidebar-bottom">
+            <div class="sidebar-note">
+                <strong><span class="note-dot"></span> Your campus, connected</strong>
+                <p>Keep study material organised so students can find the resources they need.</p>
+            </div>
+
+            <div class="profile">
+                <div class="avatar">
+                    {{ (name or 'T')[0]|upper }}
+                </div>
+                <div>
+                    <div class="profile-name">{{ name }}</div>
+                    <div class="profile-role">Teacher account</div>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="main">
+
+        <header class="topbar">
+            <div style="display:flex;align-items:center;gap:11px">
+                <button class="icon-btn mobile-menu" id="menuToggle"
+                        type="button" aria-label="Open menu">☰</button>
+
+                <a class="mobile-brand" href="/teacher">
+                    <span class="brand-mark">E</span> EduCloud
+                </a>
+
+                <div class="breadcrumb">
+                    Workspace <span style="padding:0 8px">/</span>
+                    <strong>Teacher dashboard</strong>
+                </div>
+            </div>
+
+            <div class="top-actions">
+                <button class="icon-btn" type="button" id="themeToggle"
+                        aria-label="Switch colour theme" title="Switch theme">☾</button>
+                <a class="logout-btn" href="/logout">
+                    <span>↗</span> Logout
+                </a>
+            </div>
+        </header>
+
+        <div class="page" id="overview">
+
+            <section class="page-heading">
+                <div>
+                    <div class="eyebrow">TEACHER WORKSPACE</div>
+                    <h1>Good to see you, {{ name }}.</h1>
+                    <p class="heading-desc">
+                        Your academic resources, organised in one place.
+                    </p>
+                </div>
+
+                <div class="branch-pill">
+                    <span class="branch-dot"></span>
+                    {% if branch %}
+                        {{ branch["name"] }}
+                    {% else %}
+                        Branch not assigned
+                    {% endif %}
+                </div>
+            </section>
+
+            <!-- WELCOME BANNER -->
+            <section class="hero">
+                <div class="hero-copy">
+                    <div class="hero-label">✳ Smart campus cloud</div>
+                    <h2>Good resources make<br>great learning possible.</h2>
+                    <p>
+                        Upload notes, presentations and lab manuals.
+                        EduCloud keeps your teaching material together
+                        and generates resource QR codes automatically.
+                    </p>
+                </div>
+                <div class="hero-art" aria-hidden="true"><span>↗</span></div>
+            </section>
+
+            <!-- SUMMARY -->
+            <section class="stats-grid" aria-label="Dashboard summary">
+                <article class="stat-card">
+                    <div class="stat-icon">▤</div>
+                    <div class="stat-content">
+                        <div class="stat-top">
+                            <span class="stat-label">My resources</span>
+                        </div>
+                        <div class="stat-number">{{ resources|length }}</div>
+                        <div class="stat-caption">Uploaded by your account</div>
+                    </div>
+                </article>
+
+                <article class="stat-card">
+                    <div class="stat-icon">▦</div>
+                    <div class="stat-content">
+                        <div class="stat-top">
+                            <span class="stat-label">Available years</span>
+                        </div>
+                        <div class="stat-number">{{ years|length }}</div>
+                        <div class="stat-caption">Academic year options</div>
+                    </div>
+                </article>
+
+                <article class="stat-card">
+                    <div class="stat-icon">✳</div>
+                    <div class="stat-content">
+                        <div class="stat-top">
+                            <span class="stat-label">Account status</span>
+                        </div>
+                        <div class="stat-number" style="font-size:23px">Active</div>
+                        <div class="stat-caption">Teacher workspace</div>
+                    </div>
+                </article>
+            </section>
+
+            <!-- UPLOAD -->
+            <section class="section" id="uploadSection">
+                <div class="section-heading">
+                    <div>
+                        <div class="section-kicker">ADD TO YOUR LIBRARY</div>
+                        <h2>Upload a resource</h2>
+                        <p>Choose the academic year, subject and file to share.</p>
+                    </div>
+                    <span class="step-tag">＋ New resource</span>
+                </div>
+
+                <form action="/upload-resource" method="POST"
+                      enctype="multipart/form-data" id="uploadForm">
+
+                    <div class="form-grid">
+                        <div class="form-group full">
+                            <label for="title">Resource title <span class="required">*</span></label>
+                            <input type="text" id="title" name="title"
+                                   placeholder="e.g. Data Structures — Unit 1 Notes"
+                                   maxlength="200" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="yearSelect">Academic year <span class="required">*</span></label>
+                            <select name="year_id" id="yearSelect" required>
+                                <option value="">Select academic year</option>
+                                {% for year in years %}
+                                <option value="{{ year['id'] }}">{{ year['name'] }}</option>
+                                {% endfor %}
+                            </select>
+                            <span class="field-hint">Select a year to load its subjects.</span>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="subjectSelect">Subject <span class="required">*</span></label>
+                            <select name="subject_id" id="subjectSelect" required disabled>
+                                <option value="">Select year first</option>
+                            </select>
+                            <span class="field-hint" id="subjectHint">Subjects depend on your branch and year.</span>
+                        </div>
+
+                        <div class="form-group full">
+                            <label for="description">Description</label>
+                            <textarea name="description" id="description"
+                                      maxlength="1000"
+                                      placeholder="What will students learn from this resource? (Optional)"></textarea>
+                        </div>
+
+                        <div class="form-group full">
+                            <label for="file">Study material <span class="required">*</span></label>
+                            <input type="file" name="file" id="file"
+                                   accept=".pdf,.doc,.docx,.ppt,.pptx" required>
+                            <span class="field-hint">
+                                Supported formats: PDF, DOC, DOCX, PPT and PPTX.
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="upload-footer">
+                        <p>✳ Your resource QR code is generated automatically after upload.</p>
+                        <button class="primary-btn" type="submit" id="uploadButton">
+                            Upload resource <span>↗</span>
+                        </button>
+                    </div>
+                </form>
+            </section>
+
+            <!-- RESOURCE LIBRARY -->
+            <section class="section resources-section" id="resourcesSection">
+                <div class="section-heading">
+                    <div>
+                        <div class="section-kicker">YOUR TEACHING MATERIAL</div>
+                        <h2>My resources</h2>
+                        <p>Search, filter, preview or manage your uploaded files.</p>
+                    </div>
+                    <span class="step-tag">{{ resources|length }} total</span>
+                </div>
+
+                <div class="resource-toolbar">
+                    <input class="filter-input" type="search" id="resourceSearch"
+                           placeholder="⌕  Search title, file or description..."
+                           aria-label="Search resources">
+
+                    <select class="filter-select" id="yearFilter" aria-label="Filter by year">
+                        <option value="">All academic years</option>
+                        {% for year in years %}
+                        <option value="{{ year['name']|lower }}">{{ year['name'] }}</option>
+                        {% endfor %}
+                    </select>
+
+                    <select class="filter-select" id="subjectFilter" aria-label="Filter by subject">
+                        <option value="">All subjects</option>
+                    </select>
+
+                    <button type="button" class="secondary-btn" id="clearFilters">
+                        Reset filters
+                    </button>
+                </div>
+
+                <div class="results-line">
+                    <span id="filterResult" aria-live="polite">Loading resources...</span>
+                    <span>Newest first</span>
+                </div>
+
+                {% if resources %}
+                <div class="resource-list" id="resourceList">
+                    {% for resource in resources %}
+                    <article class="resource-card resource-item"
+                             data-title="{{ resource['title']|lower }}"
+                             data-description="{{ (resource['description'] or '')|lower }}"
+                             data-filename="{{ resource['filename']|lower }}"
+                             data-year="{{ resource['year_name']|lower }}"
+                             data-subject="{{ resource['subject_name']|lower }}">
+
+                        <div class="resource-main">
+                            <div class="resource-meta">
+                                <span class="meta-pill">{{ resource['year_name'] }}</span>
+                                <span class="meta-pill">{{ resource['subject_name'] }}</span>
+                                <span class="meta-pill meta-type">Study material</span>
+                            </div>
+
+                            <h3>{{ resource['title'] }}</h3>
+
+                            <p class="resource-description">
+                                {{ resource['description'] or 'No description provided.' }}
+                            </p>
+
+                            <div class="file-name">
+                                <span class="file-symbol">↳</span>
+                                <span>{{ resource['filename'] }}</span>
+                            </div>
+                        </div>
+
+                        <div class="resource-actions">
+                            <a class="action-btn"
+                               href="{{ url_for('view_resource', resource_id=resource['id']) }}">
+                                ◉ View
+                            </a>
+
+                            <a class="action-btn"
+                               href="{{ url_for('edit_resource', resource_id=resource['id']) }}">
+                                ✎ Edit
+                            </a>
+
+                            <form class="delete-form"
+                                  action="{{ url_for('delete_resource', resource_id=resource['id']) }}"
+                                  method="POST"
+                                  onsubmit="return confirm('Are you sure you want to delete this resource? This cannot be undone.');">
+                                <button class="action-btn danger" type="submit">
+                                    × Delete
+                                </button>
+                            </form>
+                        </div>
+                    </article>
+                    {% endfor %}
+                </div>
+
+                <div class="empty-state" id="noFilterResults">
+                    <div class="empty-icon">⌕</div>
+                    <h3>No matching resources</h3>
+                    <p>Try another search term or reset your filters.</p>
+                </div>
 
                 {% else %}
-
-                    Not Assigned
-
+                <div class="empty-state">
+                    <div class="empty-icon">▤</div>
+                    <h3>Your resource library is ready</h3>
+                    <p>You have not uploaded any resources yet.<br>
+                       Use the upload section above to add your first file.</p>
+                    <br>
+                    <a class="primary-btn" href="#uploadSection">＋ Upload first resource</a>
+                </div>
                 {% endif %}
+            </section>
 
-            </strong>
-
-        </div>
-
-
-
-        <div class="info-card">
-
-            <span>
-                Account Type
-            </span>
-
-            <strong>
-
-                👨‍🏫 Teacher
-
-            </strong>
+            <footer class="footer">
+                <span>© EduCloud Portal · Smart Campus Cloud</span>
+                <span>Built for better learning.</span>
+            </footer>
 
         </div>
-
-
-    </div>
-
-
-
-    <!-- =========================
-         UPLOAD RESOURCE
-    ========================= -->
-
-    <div class="upload-card">
-
-
-        <h2>
-
-            📤 Upload Academic Resource
-
-        </h2>
-
-
-        <p>
-
-            Upload notes, PDFs, lab manuals and study material.
-
-        </p>
-
-
-
-        <form action="/upload-resource"
-              method="POST"
-              enctype="multipart/form-data">
-
-
-
-            <!-- RESOURCE TITLE -->
-
-            <div class="form-group">
-
-                <label>
-
-                    Resource Title
-
-                </label>
-
-
-                <input
-                    type="text"
-                    name="title"
-                    placeholder="e.g. Data Structures Unit 1 Notes"
-                    required>
-
-            </div>
-
-
-
-            <!-- YEAR -->
-
-            <div class="form-group">
-
-                <label>
-
-                    Select Year
-
-                </label>
-
-
-                <select
-                    name="year_id"
-                    id="yearSelect"
-                    required>
-
-
-                    <option value="">
-
-                        Select Year
-
-                    </option>
-
-
-                    {% for year in years %}
-
-                    <option value="{{ year['id'] }}">
-
-                        {{ year['name'] }}
-
-                    </option>
-
-                    {% endfor %}
-
-
-                </select>
-
-            </div>
-
-
-
-            <!-- SUBJECT -->
-
-            <div class="form-group">
-
-                <label>
-
-                    Select Subject
-
-                </label>
-
-
-                <select
-                    name="subject_id"
-                    id="subjectSelect"
-                    required
-                    disabled>
-
-
-                    <option value="">
-
-                        Select year first
-
-                    </option>
-
-
-                </select>
-
-            </div>
-
-
-
-            <!-- DESCRIPTION -->
-
-            <div class="form-group">
-
-                <label>
-
-                    Description
-
-                </label>
-
-
-                <textarea
-                    name="description"
-                    placeholder="Short description of this resource..."></textarea>
-
-            </div>
-
-
-
-            <!-- FILE -->
-
-            <div class="form-group">
-
-                <label>
-
-                    Select File
-
-                </label>
-
-
-                <input
-                    type="file"
-                    name="file"
-                    accept=".pdf,.doc,.docx,.ppt,.pptx"
-                    required>
-
-            </div>
-
-
-
-            <!-- UPLOAD BUTTON -->
-
-            <button
-                type="submit"
-                class="upload-button">
-
-                📤 Upload Resource
-
-            </button>
-
-
-        </form>
-
-    </div>
-
-
-
-    <!-- =========================
-         MY RESOURCES
-    ========================= -->
-
-    <div class="resource-section">
-
-
-        <h2>
-
-            📚 My Uploaded Resources
-
-        </h2>
-
-
-
-        {% if resources %}
-
-
-
-        <!-- =========================
-             SEARCH + FILTER
-        ========================= -->
-
-        <div class="resource-tools">
-
-
-            <input
-                type="search"
-                id="resourceSearch"
-                placeholder="🔍 Search resources...">
-
-
-
-            <select id="yearFilter">
-
-
-                <option value="">
-
-                    All Years
-
-                </option>
-
-
-                {% for year in years %}
-
-                <option value="{{ year['name']|lower }}">
-
-                    {{ year['name'] }}
-
-                </option>
-
-                {% endfor %}
-
-
-            </select>
-
-
-
-            <select id="subjectFilter">
-
-
-                <option value="">
-
-                    All Subjects
-
-                </option>
-
-
-            </select>
-
-
-
-            <button
-                type="button"
-                id="clearFilters"
-                class="clear-filters">
-
-                Clear
-
-            </button>
-
-
-        </div>
-
-
-
-        <!-- FILTER RESULT -->
-
-        <div id="filterResult"
-             class="filter-result">
-
-        </div>
-
-
-
-        <!-- NO FILTER RESULT -->
-
-        <div id="noFilterResults"
-             class="no-filter-results">
-
-
-            <div style="font-size:34px;">
-
-                🔎
-
-            </div>
-
-
-            <div>
-
-                No resources match your search or filters.
-
-            </div>
-
-
-        </div>
-
-
-
-        <!-- =========================
-             RESOURCE LOOP
-        ========================= -->
-
-        {% for resource in resources %}
-
-
-        <div class="resource-item resource-card"
-
-
-             data-title="{{ resource['title']|lower }}"
-
-
-             data-description="{{ (resource['description'] or '')|lower }}"
-
-
-             data-filename="{{ resource['filename']|lower }}"
-
-
-             data-year="{{ resource['year_name']|lower }}"
-
-
-             data-subject="{{ resource['subject_name']|lower }}">
-
-
-
-            <!-- RESOURCE INFORMATION -->
-
-            <div class="resource-info">
-
-
-                <h3>
-
-                    {{ resource["title"] }}
-
-                </h3>
-
-
-
-                <p>
-
-                    {{ resource["description"] or "No description provided." }}
-
-                </p>
-
-
-
-                <span class="resource-badge">
-
-                    {{ resource["year_name"] }}
-
-                    •
-
-                    {{ resource["subject_name"] }}
-
-                </span>
-
-
-            </div>
-
-
-
-            <!-- =========================
-                 ACTIONS
-            ========================= -->
-
-            <div>
-
-
-                📄 {{ resource["filename"] }}
-
-
-                <br>
-                <br>
-
-
-
-                <!-- VIEW -->
-
-                <a
-                    href="{{ url_for('view_resource', resource_id=resource['id']) }}"
-                    class="resource-button">
-
-                    👁️ View
-
-                </a>
-
-
-
-                <!-- EDIT -->
-
-                <a
-                    href="{{ url_for('edit_resource', resource_id=resource['id']) }}"
-                    class="resource-button">
-
-                    ✏️ Edit
-
-                </a>
-
-
-
-                <!-- DELETE -->
-
-                <form
-                    action="{{ url_for('delete_resource', resource_id=resource['id']) }}"
-                    method="POST"
-                    style="display:inline;"
-                    onsubmit="return confirm('Are you sure you want to delete this resource?');">
-
-
-                    <button
-                        type="submit"
-                        class="resource-button"
-                        style="background:#dc2626;color:white;border:none;cursor:pointer;">
-
-                        🗑️ Delete
-
-                    </button>
-
-
-                </form>
-
-
-            </div>
-
-
-        </div>
-
-
-        {% endfor %}
-
-
-
-        {% else %}
-
-
-
-        <!-- =========================
-             EMPTY STATE
-        ========================= -->
-
-        <div class="empty-resources">
-
-
-            📭
-
-
-            <p>
-
-                No resources uploaded yet.
-
-            </p>
-
-
-        </div>
-
-
-
-        {% endif %}
-
-
-    </div>
-
-
-</main>
-
-
-
-<!-- =========================
-     SUBJECT LOADING
-========================= -->
+    </main>
+</div>
 
 <script>
+/* ==============================
+   PERSISTENT LIGHT / DARK MODE
+   Uses the same key as student UI.
+============================== */
+(function () {
+    const root = document.documentElement;
+    const toggle = document.getElementById("themeToggle");
+    const themeMeta = document.querySelector('meta[name="theme-color"]');
 
+    function setTheme(theme) {
+        root.setAttribute("data-theme", theme);
 
-    const yearSelect =
-        document.getElementById("yearSelect");
-
-
-    const subjectSelect =
-        document.getElementById("subjectSelect");
-
-
-
-    yearSelect.addEventListener(
-        "change",
-        async function () {
-
-
-            const yearId =
-                this.value;
-
-
-
-            subjectSelect.innerHTML =
-                '<option value="">Loading subjects...</option>';
-
-
-            subjectSelect.disabled =
-                true;
-
-
-
-            if (!yearId) {
-
-
-                subjectSelect.innerHTML =
-                    '<option value="">Select year first</option>';
-
-
-                return;
-
-            }
-
-
-
-            try {
-
-
-                const response =
-                    await fetch(
-                        "/get-subjects/" + yearId
-                    );
-
-
-
-                const data =
-                    await response.json();
-
-
-
-                subjectSelect.innerHTML =
-                    '<option value="">Select Subject</option>';
-
-
-
-                data.subjects.forEach(
-                    function (subject) {
-
-
-                        const option =
-                            document.createElement("option");
-
-
-                        option.value =
-                            subject.id;
-
-
-                        option.textContent =
-                            subject.name;
-
-
-                        subjectSelect.appendChild(
-                            option
-                        );
-
-
-                    }
-                );
-
-
-
-                subjectSelect.disabled =
-                    false;
-
-
-            }
-
-
-            catch (error) {
-
-
-                subjectSelect.innerHTML =
-                    '<option value="">Unable to load subjects</option>';
-
-
-                console.error(error);
-
-
-            }
-
-
+        if (toggle) {
+            toggle.textContent = theme === "dark" ? "☀" : "☾";
+            toggle.title = theme === "dark" ? "Switch to light mode" : "Switch to dark mode";
+            toggle.setAttribute("aria-label", toggle.title);
         }
-    );
 
-
-
-    /* =========================
-       RESOURCE SEARCH
-    ========================= */
-
-
-    const searchInput =
-        document.getElementById(
-            "resourceSearch"
-        );
-
-
-    const yearFilter =
-        document.getElementById(
-            "yearFilter"
-        );
-
-
-    const subjectFilter =
-        document.getElementById(
-            "subjectFilter"
-        );
-
-
-    const clearFilters =
-        document.getElementById(
-            "clearFilters"
-        );
-
-
-    const filterResult =
-        document.getElementById(
-            "filterResult"
-        );
-
-
-    const noFilterResults =
-        document.getElementById(
-            "noFilterResults"
-        );
-
-
-    const resourceCards =
-        document.querySelectorAll(
-            ".resource-card"
-        );
-
-
-
-    /* =========================
-       SUBJECT FILTER OPTIONS
-    ========================= */
-
-
-    const uniqueSubjects =
-        new Set();
-
-
-
-    resourceCards.forEach(
-        function (card) {
-
-
-            const subject =
-                card.dataset.subject || "";
-
-
-
-            if (subject) {
-
-
-                uniqueSubjects.add(
-                    subject
-                );
-
-
-            }
-
-
+        if (themeMeta) {
+            themeMeta.content = theme === "dark" ? "#111713" : "#f4f5ef";
         }
-    );
 
-
-
-    Array.from(uniqueSubjects)
-        .sort()
-        .forEach(
-            function (subject) {
-
-
-                const option =
-                    document.createElement(
-                        "option"
-                    );
-
-
-
-                option.value =
-                    subject;
-
-
-
-                option.textContent =
-                    subject.replace(
-                        /\b\w/g,
-                        function (letter) {
-
-                            return letter.toUpperCase();
-
-                        }
-                    );
-
-
-
-                subjectFilter.appendChild(
-                    option
-                );
-
-
-            }
-        );
-
-
-
-    /* =========================
-       APPLY FILTERS
-    ========================= */
-
-
-    function applyFilters() {
-
-
-        const search =
-            searchInput.value
-                .trim()
-                .toLowerCase();
-
-
-
-        const selectedYear =
-            yearFilter.value;
-
-
-
-        const selectedSubject =
-            subjectFilter.value;
-
-
-
-        let visibleCount = 0;
-
-
-
-        resourceCards.forEach(
-            function (card) {
-
-
-                const title =
-                    card.dataset.title || "";
-
-
-
-                const description =
-                    card.dataset.description || "";
-
-
-
-                const filename =
-                    card.dataset.filename || "";
-
-
-
-                const year =
-                    card.dataset.year || "";
-
-
-
-                const subject =
-                    card.dataset.subject || "";
-
-
-
-                /* SEARCH */
-
-                const matchesSearch =
-
-                    !search ||
-
-                    title.includes(search) ||
-
-                    description.includes(search) ||
-
-                    filename.includes(search);
-
-
-
-                /* YEAR */
-
-                const matchesYear =
-
-                    !selectedYear ||
-
-                    year === selectedYear;
-
-
-
-                /* SUBJECT */
-
-                const matchesSubject =
-
-                    !selectedSubject ||
-
-                    subject === selectedSubject;
-
-
-
-                /* FINAL */
-
-                const show =
-
-                    matchesSearch &&
-
-                    matchesYear &&
-
-                    matchesSubject;
-
-
-
-                card.style.display =
-                    show ? "" : "none";
-
-
-
-                if (show) {
-
-                    visibleCount++;
-
-                }
-
-
-            }
-        );
-
-
-
-        filterResult.textContent =
-
-            "Showing " +
-
-            visibleCount +
-
-            " of " +
-
-            resourceCards.length +
-
-            " resources";
-
-
-
-        noFilterResults.style.display =
-
-            visibleCount === 0
-
-                ? "block"
-
-                : "none";
-
-
+        try {
+            localStorage.setItem("educloud-theme", theme);
+        } catch (error) {
+            /* Theme still works for this page if storage is unavailable. */
+        }
     }
 
+    let savedTheme = "light";
+    try {
+        savedTheme = localStorage.getItem("educloud-theme") || "light";
+    } catch (error) {}
 
+    setTheme(savedTheme === "dark" ? "dark" : "light");
 
-    /* =========================
-       SEARCH
-    ========================= */
+    toggle.addEventListener("click", function () {
+        const next = root.getAttribute("data-theme") === "dark" ? "light" : "dark";
+        setTheme(next);
+    });
+})();
 
-    searchInput.addEventListener(
-        "input",
-        applyFilters
-    );
+/* ==============================
+   MOBILE SIDEBAR
+============================== */
+const menuToggle = document.getElementById("menuToggle");
 
+if (menuToggle) {
+    menuToggle.addEventListener("click", function () {
+        document.body.classList.toggle("menu-open");
+    });
+}
 
+document.querySelectorAll(".nav-link").forEach(function (link) {
+    link.addEventListener("click", function () {
+        document.body.classList.remove("menu-open");
+    });
+});
 
-    /* =========================
-       YEAR FILTER
-    ========================= */
+document.addEventListener("click", function (event) {
+    if (
+        document.body.classList.contains("menu-open") &&
+        !event.target.closest(".sidebar") &&
+        !event.target.closest("#menuToggle")
+    ) {
+        document.body.classList.remove("menu-open");
+    }
+});
 
-    yearFilter.addEventListener(
-        "change",
-        applyFilters
-    );
+/* ==============================
+   LOAD SUBJECTS BY YEAR
+   Existing Flask route preserved:
+   /get-subjects/<year_id>
+============================== */
+const yearSelect = document.getElementById("yearSelect");
+const subjectSelect = document.getElementById("subjectSelect");
+const subjectHint = document.getElementById("subjectHint");
 
+if (yearSelect && subjectSelect) {
+    yearSelect.addEventListener("change", async function () {
+        const yearId = this.value;
 
+        subjectSelect.innerHTML = '<option value="">Loading subjects...</option>';
+        subjectSelect.disabled = true;
 
-    /* =========================
-       SUBJECT FILTER
-    ========================= */
+        if (subjectHint) subjectHint.textContent = "Loading subjects for this year...";
 
-    subjectFilter.addEventListener(
-        "change",
-        applyFilters
-    );
-
-
-
-    /* =========================
-       CLEAR FILTERS
-    ========================= */
-
-    clearFilters.addEventListener(
-        "click",
-        function () {
-
-
-            searchInput.value =
-                "";
-
-
-            yearFilter.value =
-                "";
-
-
-            subjectFilter.value =
-                "";
-
-
-            applyFilters();
-
-
+        if (!yearId) {
+            subjectSelect.innerHTML = '<option value="">Select year first</option>';
+            if (subjectHint) subjectHint.textContent = "Subjects depend on your branch and year.";
+            return;
         }
-    );
 
+        try {
+            const response = await fetch("/get-subjects/" + encodeURIComponent(yearId));
 
+            if (!response.ok) {
+                throw new Error("Could not load subjects.");
+            }
 
-    /* =========================
-       INITIAL LOAD
-    ========================= */
+            const data = await response.json();
 
-    applyFilters();
+            subjectSelect.innerHTML = '<option value="">Select subject</option>';
 
+            (data.subjects || []).forEach(function (subject) {
+                const option = document.createElement("option");
+                option.value = subject.id;
+                option.textContent = subject.name;
+                subjectSelect.appendChild(option);
+            });
 
+            subjectSelect.disabled = false;
+
+            if (subjectHint) {
+                subjectHint.textContent = data.subjects && data.subjects.length
+                    ? data.subjects.length + " subject(s) available."
+                    : "No subjects found for this year. Contact the administrator.";
+            }
+        } catch (error) {
+            subjectSelect.innerHTML = '<option value="">Unable to load subjects</option>';
+            if (subjectHint) subjectHint.textContent = "Please refresh the page and try again.";
+            console.error(error);
+        }
+    });
+}
+
+/* ==============================
+   SEARCH + YEAR + SUBJECT FILTERS
+============================== */
+const resourceSearch = document.getElementById("resourceSearch");
+const yearFilter = document.getElementById("yearFilter");
+const subjectFilter = document.getElementById("subjectFilter");
+const clearFilters = document.getElementById("clearFilters");
+const filterResult = document.getElementById("filterResult");
+const noFilterResults = document.getElementById("noFilterResults");
+const resourceCards = Array.from(document.querySelectorAll(".resource-card"));
+
+if (subjectFilter) {
+    const uniqueSubjects = new Map();
+
+    resourceCards.forEach(function (card) {
+        const value = card.dataset.subject || "";
+        if (value) uniqueSubjects.set(value, value);
+    });
+
+    Array.from(uniqueSubjects.keys()).sort().forEach(function (subject) {
+        const option = document.createElement("option");
+        option.value = subject;
+        option.textContent = subject.replace(/\b\w/g, function (letter) {
+            return letter.toUpperCase();
+        });
+        subjectFilter.appendChild(option);
+    });
+}
+
+function applyResourceFilters() {
+    const search = resourceSearch ? resourceSearch.value.trim().toLowerCase() : "";
+    const year = yearFilter ? yearFilter.value : "";
+    const subject = subjectFilter ? subjectFilter.value : "";
+    let visible = 0;
+
+    resourceCards.forEach(function (card) {
+        const haystack = [
+            card.dataset.title || "",
+            card.dataset.description || "",
+            card.dataset.filename || "",
+            card.dataset.subject || ""
+        ].join(" ");
+
+        const matchesSearch = !search || haystack.includes(search);
+        const matchesYear = !year || card.dataset.year === year;
+        const matchesSubject = !subject || card.dataset.subject === subject;
+        const show = matchesSearch && matchesYear && matchesSubject;
+
+        card.style.display = show ? "" : "none";
+        if (show) visible++;
+    });
+
+    if (filterResult) {
+        filterResult.textContent = "Showing " + visible + " of " + resourceCards.length + " resources";
+    }
+
+    if (noFilterResults) {
+        noFilterResults.style.display = visible === 0 ? "block" : "none";
+    }
+}
+
+if (resourceSearch) resourceSearch.addEventListener("input", applyResourceFilters);
+if (yearFilter) yearFilter.addEventListener("change", applyResourceFilters);
+if (subjectFilter) subjectFilter.addEventListener("change", applyResourceFilters);
+
+if (clearFilters) {
+    clearFilters.addEventListener("click", function () {
+        if (resourceSearch) resourceSearch.value = "";
+        if (yearFilter) yearFilter.value = "";
+        if (subjectFilter) subjectFilter.value = "";
+        applyResourceFilters();
+    });
+}
+
+applyResourceFilters();
+
+/* Prevent accidental double-click uploads. */
+const uploadForm = document.getElementById("uploadForm");
+const uploadButton = document.getElementById("uploadButton");
+
+if (uploadForm && uploadButton) {
+    uploadForm.addEventListener("submit", function (event) {
+        if (!uploadForm.checkValidity()) {
+            event.preventDefault();
+            uploadForm.reportValidity();
+            return;
+        }
+
+        uploadButton.disabled = true;
+        uploadButton.innerHTML = "Uploading... <span>↗</span>";
+    });
+}
 </script>
-
-
 </body>
-
 </html>

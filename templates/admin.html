@@ -1,1155 +1,458 @@
 
 <!DOCTYPE html>
-
 <html lang="en">
-
 <head>
-
 <meta charset="UTF-8">
-
-<meta name="viewport"
-      content="width=device-width, initial-scale=1.0">
-
-<title>Admin Dashboard - EduCloud</title>
-
-<link rel="stylesheet"
-      href="{{ url_for('static', filename='style.css') }}">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light dark">
+<title>Admin Dashboard | EduCloud</title>
 
 <style>
-.analytics-button {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 7px;
-
-    padding: 9px 15px;
-
-    background: #2563eb;
-    color: white;
-
-    text-decoration: none;
-
-    border-radius: 8px;
-
-    font-size: 13px;
-    font-weight: 700;
-
-    border: 1px solid #3b82f6;
-
-    transition: 0.2s ease;
+:root {
+  --bg:#f4f6f1;
+  --surface:#ffffff;
+  --surface-2:#f8faf6;
+  --text:#20251f;
+  --muted:#777f73;
+  --border:#e3e8df;
+  --accent:#c8f169;
+  --accent-dark:#26351c;
+  --danger:#c33d48;
+  --shadow:0 12px 35px rgba(31,42,25,.055);
 }
-
-.analytics-button:hover {
-    background: #1d4ed8;
-    transform: translateY(-1px);
-    box-shadow: 0 5px 15px rgba(37, 99, 235, 0.25);
+html[data-theme="dark"] {
+  --bg:#111510;
+  --surface:#1a2018;
+  --surface-2:#20271e;
+  --text:#edf2e8;
+  --muted:#a0aa98;
+  --border:#30392c;
+  --accent:#c8f169;
+  --accent-dark:#20291a;
+  --danger:#ff7b83;
+  --shadow:0 12px 35px rgba(0,0,0,.15);
 }
-
-.dashboard-actions {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-top: 15px;
-    flex-wrap: wrap;
+* {box-sizing:border-box}
+html {scroll-behavior:smooth}
+body {
+  margin:0;background:var(--bg);color:var(--text);
+  font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;
+  font-size:14px;line-height:1.5;transition:background .2s,color .2s
 }
-.admin-page {
-    max-width: 1200px;
-    margin: 40px auto;
-    padding: 20px;
+a {color:inherit;text-decoration:none}
+button,input,select {font:inherit}
+button,a,input,select { -webkit-tap-highlight-color:transparent }
+button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible {
+  outline:3px solid #91bd41;outline-offset:2px
 }
-
-.admin-header {
-    margin-bottom: 30px;
+.layout {min-height:100vh}
+.sidebar {
+  width:248px;position:fixed;inset:0 auto 0 0;z-index:20;
+  padding:26px 18px;background:var(--surface);
+  border-right:1px solid var(--border);display:flex;flex-direction:column;
+  transition:transform .25s ease
 }
-
-.admin-header h1 {
-    font-size: 32px;
-    margin-bottom: 8px;
+.brand {display:flex;align-items:center;gap:11px;padding:0 8px 30px;font-weight:850;font-size:20px;letter-spacing:-.7px}
+.brand-mark {
+  width:39px;height:39px;border-radius:13px;background:var(--accent);
+  color:#20271a;display:grid;place-items:center;font-size:23px;font-weight:900
 }
-
-.admin-header p {
-    color: #94a3b8;
+.brand small {display:block;color:var(--muted);font-size:10px;letter-spacing:1.6px;text-transform:uppercase}
+.nav-label {font-size:10px;font-weight:800;letter-spacing:1.4px;color:var(--muted);padding:0 11px 10px;text-transform:uppercase}
+.nav {display:grid;gap:5px}
+.nav a {
+  display:flex;align-items:center;gap:12px;padding:12px 13px;
+  color:var(--muted);border-radius:12px;font-weight:650;transition:.18s
 }
-
-.stats-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 20px;
-    margin-bottom: 30px;
+.nav a:hover {background:var(--surface-2);color:var(--text)}
+.nav a.active {background:var(--accent);color:#20271a}
+.nav-icon {width:22px;text-align:center;font-size:17px}
+.side-bottom {margin-top:auto}
+.status-card {padding:15px;background:var(--surface-2);border:1px solid var(--border);border-radius:15px;margin-bottom:14px}
+.status-line {display:flex;align-items:center;gap:8px;font-size:12px;font-weight:750}
+.status-dot {width:8px;height:8px;border-radius:50%;background:#76bb3d;box-shadow:0 0 0 4px rgba(118,187,61,.13)}
+.status-card p {color:var(--muted);font-size:11px;margin:8px 0 0}
+.logout {display:block;padding:11px 13px;border:1px solid var(--border);border-radius:11px;font-weight:700}
+.logout:hover {border-color:var(--danger);color:var(--danger)}
+.main {margin-left:248px;padding:28px clamp(16px,3vw,42px) 45px;max-width:1700px}
+.topbar {display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:31px}
+.crumb {color:var(--muted);font-size:12px}
+.crumb strong {color:var(--text)}
+.top-actions {display:flex;align-items:center;gap:10px}
+.icon-button,.menu-button {
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  min-height:40px;padding:0 13px;border:1px solid var(--border);
+  border-radius:11px;background:var(--surface);color:var(--text);cursor:pointer;font-weight:700
 }
-
-.stat-card {
-    background: #111827;
-    border: 1px solid #263244;
-    border-radius: 18px;
-    padding: 25px;
+.icon-button:hover,.menu-button:hover {border-color:var(--muted)}
+.menu-button {display:none}
+.page-heading {display:flex;align-items:flex-end;justify-content:space-between;gap:18px;margin-bottom:24px}
+.eyebrow {font-size:10px;letter-spacing:1.7px;text-transform:uppercase;color:var(--muted);font-weight:850}
+h1 {font-size:clamp(27px,3vw,38px);line-height:1.12;letter-spacing:-1.3px;margin:8px 0 10px}
+.page-heading p {margin:0;color:var(--muted);max-width:600px}
+.heading-pill {padding:9px 13px;border-radius:100px;background:var(--surface);border:1px solid var(--border);font-size:11px;font-weight:750;white-space:nowrap}
+.heading-pill span {color:#6b9d30}
+.stats {display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-bottom:24px}
+.stat {
+  min-width:0;padding:19px;background:var(--surface);border:1px solid var(--border);
+  border-radius:17px;box-shadow:var(--shadow)
 }
-
-.stat-card span {
-    display: block;
-    color: #94a3b8;
-    font-size: 14px;
-    margin-bottom: 10px;
+.stat-top {display:flex;align-items:center;justify-content:space-between;gap:8px}
+.stat-label {font-size:12px;color:var(--muted);font-weight:650}
+.stat-icon {width:34px;height:34px;border-radius:11px;background:var(--surface-2);display:grid;place-items:center;font-size:17px}
+.stat-value {font-size:30px;font-weight:850;letter-spacing:-1px;margin-top:13px;line-height:1.1;overflow-wrap:anywhere}
+.stat-foot {font-size:11px;color:var(--muted);margin-top:7px}
+.panel {background:var(--surface);border:1px solid var(--border);border-radius:18px;box-shadow:var(--shadow);margin-bottom:22px;min-width:0;overflow:hidden}
+.panel-head {display:flex;align-items:center;justify-content:space-between;gap:15px;padding:20px 22px;border-bottom:1px solid var(--border)}
+.panel-head h2 {margin:0;font-size:16px;letter-spacing:-.3px}
+.panel-head p {margin:4px 0 0;font-size:12px;color:var(--muted)}
+.panel-body {padding:21px 22px}
+.analytics-link {
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  background:var(--accent);color:#20271a;font-weight:800;padding:10px 14px;
+  border-radius:11px;font-size:12px
 }
-
-.stat-card strong {
-    font-size: 30px;
+.analytics-link:hover {filter:brightness(.96)}
+.filter-bar {display:grid;grid-template-columns:minmax(180px,1fr) minmax(140px,190px) minmax(140px,190px) auto;gap:10px}
+.control {
+  width:100%;min-width:0;min-height:42px;padding:10px 12px;
+  border:1px solid var(--border);border-radius:10px;background:var(--surface-2);
+  color:var(--text);outline:none
 }
-
-.section-card {
-    background: #111827;
-    border: 1px solid #263244;
-    border-radius: 18px;
-    padding: 30px;
-    margin-bottom: 30px;
+.control::placeholder {color:var(--muted)}
+.btn {
+  display:inline-flex;align-items:center;justify-content:center;gap:7px;
+  min-height:40px;padding:9px 13px;border:1px solid var(--border);
+  border-radius:10px;background:var(--surface-2);color:var(--text);
+  cursor:pointer;font-weight:750;font-size:12px
 }
+.btn:hover {border-color:var(--muted)}
+.btn-primary {background:var(--accent);color:#20271a;border-color:var(--accent)}
+.table-wrap {width:100%;overflow-x:auto}
+table {width:100%;border-collapse:collapse;min-width:760px}
+th,td {padding:14px 18px;text-align:left;border-bottom:1px solid var(--border);vertical-align:middle}
+th {background:var(--surface-2);font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--muted);font-weight:850;white-space:nowrap}
+td {font-size:12px}
+tbody tr:last-child td {border-bottom:0}
+tbody tr:hover {background:var(--surface-2)}
+.primary-text {font-weight:800;color:var(--text)}
+.secondary-text {display:block;color:var(--muted);font-size:11px;margin-top:3px;overflow-wrap:anywhere}
+.tag {display:inline-flex;align-items:center;gap:6px;padding:5px 9px;border-radius:100px;background:var(--surface-2);border:1px solid var(--border);font-size:10px;font-weight:750;white-space:nowrap}
+.tag::before {content:"";width:6px;height:6px;border-radius:50%;background:#88b947}
+.resource-title {max-width:240px;overflow-wrap:anywhere}
+.empty {padding:35px 16px;text-align:center;color:var(--muted)}
+.empty strong {display:block;color:var(--text);font-size:14px;margin-bottom:4px}
+.footer-note {font-size:11px;color:var(--muted);text-align:center;padding:12px}
+.mobile-overlay {display:none}
 
-.section-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 20px;
-    margin-bottom: 20px;
+@media(max-width:1150px) {
+  .sidebar {width:220px}
+  .main {margin-left:220px;padding-left:22px;padding-right:22px}
+  .stats {grid-template-columns:repeat(2,minmax(0,1fr))}
+  .filter-bar {grid-template-columns:1fr 1fr}
 }
-
-.section-header h2 {
-    margin: 0;
+@media(max-width:760px) {
+  .sidebar {width:260px;transform:translateX(-105%);box-shadow:none}
+  body.menu-open .sidebar {transform:translateX(0);box-shadow:20px 0 60px rgba(0,0,0,.15)}
+  .mobile-overlay {position:fixed;inset:0;background:rgba(10,15,9,.45);z-index:19}
+  body.menu-open .mobile-overlay {display:block}
+  .main {margin-left:0;padding:18px 14px 30px}
+  .topbar {margin-bottom:24px}
+  .menu-button {display:inline-flex}
+  .crumb {display:none}
+  .page-heading {align-items:flex-start;flex-direction:column}
+  .heading-pill {white-space:normal}
+  .panel-head {padding:17px 16px;align-items:flex-start}
+  .panel-body {padding:16px}
+  .filter-bar {grid-template-columns:1fr}
+  .stats {gap:10px}
+  .stat {padding:15px}
+  .stat-value {font-size:26px}
+  .table-wrap {overflow:visible}
+  table,tbody,tr,td {display:block;width:100%;min-width:0}
+  thead {display:none}
+  tbody {padding:4px 13px}
+  tbody tr {padding:12px 0;border-bottom:1px solid var(--border)}
+  tbody tr:last-child {border-bottom:0}
+  td {display:flex;align-items:flex-start;justify-content:space-between;gap:16px;padding:7px 0;border:0;text-align:right;overflow-wrap:anywhere}
+  td::before {content:attr(data-label);color:var(--muted);font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;text-align:left;flex:0 0 92px}
+  td > * {max-width:calc(100% - 108px)}
+  .resource-title {max-width:100%}
 }
-
-.section-header p {
-    color: #94a3b8;
-    margin: 7px 0 0 0;
+@media(max-width:420px) {
+  .stats {grid-template-columns:1fr 1fr}
+  .stat-value {font-size:23px}
+  .stat-label {font-size:11px}
+  .stat-icon {width:29px;height:29px}
+  .top-actions {gap:6px}
+  .icon-button {padding:0 10px;font-size:11px}
+  .menu-button {padding:0 10px}
+  .panel-head {flex-wrap:wrap}
+  .analytics-link {width:100%}
 }
-
-.add-button {
-    display: inline-block;
-    padding: 11px 18px;
-    border-radius: 10px;
-    background: #2563eb;
-    color: white;
-    text-decoration: none;
-    font-weight: bold;
-    white-space: nowrap;
+@media(prefers-reduced-motion:reduce) {
+  *,*::before,*::after {scroll-behavior:auto!important;transition:none!important}
 }
-
-.add-button:hover {
-    opacity: 0.9;
-}
-
-
-/* ==========================================
-   SEARCH
-========================================== */
-
-.search-form {
-    display: grid;
-    grid-template-columns: 2fr 1fr auto auto;
-    gap: 12px;
-    margin-bottom: 25px;
-}
-
-.search-form input,
-.search-form select {
-
-    width: 100%;
-    box-sizing: border-box;
-
-    padding: 13px 14px;
-
-    border-radius: 10px;
-
-    border: 1px solid #334155;
-
-    background: #0b1120;
-
-    color: white;
-
-    outline: none;
-
-    font-size: 14px;
-}
-
-.search-form input:focus,
-.search-form select:focus {
-    border-color: #2563eb;
-}
-
-.search-button {
-    border: none;
-    padding: 13px 20px;
-    border-radius: 10px;
-    background: #2563eb;
-    color: white;
-    font-weight: bold;
-    cursor: pointer;
-}
-
-.reset-button {
-    padding: 13px 20px;
-    border-radius: 10px;
-    background: #1e293b;
-    color: white;
-    text-decoration: none;
-    text-align: center;
-}
-
-
-/* ==========================================
-   TEACHER / STUDENT
-========================================== */
-
-.teacher-item,
-.student-item {
-
-    display: flex;
-
-    justify-content: space-between;
-
-    align-items: center;
-
-    gap: 20px;
-
-    padding: 20px 0;
-
-    border-bottom: 1px solid #263244;
-}
-
-.teacher-item:last-child,
-.student-item:last-child {
-    border-bottom: none;
-}
-
-.teacher-info h3,
-.student-info h3 {
-
-    margin: 0 0 7px 0;
-
-    font-size: 18px;
-}
-
-.teacher-info p,
-.student-info p {
-
-    margin: 0;
-
-    color: #94a3b8;
-}
-
-.branch-badge,
-.year-badge {
-
-    display: inline-block;
-
-    margin-top: 9px;
-
-    margin-right: 6px;
-
-    padding: 5px 10px;
-
-    border-radius: 8px;
-
-    background: #172554;
-
-    color: #93c5fd;
-
-    font-size: 12px;
-}
-
-.year-badge {
-
-    background: #3f2a12;
-
-    color: #fbbf24;
-}
-
-.teacher-actions,
-.student-actions {
-
-    display: flex;
-
-    gap: 10px;
-
-    flex-wrap: wrap;
-}
-
-.edit-button {
-
-    padding: 9px 14px;
-
-    border-radius: 8px;
-
-    background: #2563eb;
-
-    color: white;
-
-    text-decoration: none;
-
-    font-size: 14px;
-
-    font-weight: 600;
-}
-
-.delete-button {
-
-    padding: 9px 14px;
-
-    border: none;
-
-    border-radius: 8px;
-
-    background: #991b1b;
-
-    color: white;
-
-    cursor: pointer;
-
-    font-size: 14px;
-
-    font-weight: 600;
-}
-
-
-/* ==========================================
-   RESOURCE MANAGEMENT
-========================================== */
-
-.resource-item {
-
-    padding: 22px 0;
-
-    border-bottom: 1px solid #263244;
-}
-
-.resource-item:last-child {
-    border-bottom: none;
-}
-
-.resource-top {
-
-    display: flex;
-
-    justify-content: space-between;
-
-    align-items: flex-start;
-
-    gap: 20px;
-}
-
-.resource-info h3 {
-
-    margin: 0 0 8px 0;
-
-    font-size: 19px;
-}
-
-.resource-description {
-
-    color: #94a3b8;
-
-    margin: 0 0 12px 0;
-
-    line-height: 1.5;
-}
-
-.resource-meta {
-
-    display: flex;
-
-    flex-wrap: wrap;
-
-    gap: 7px;
-}
-
-.resource-badge {
-
-    display: inline-block;
-
-    padding: 6px 10px;
-
-    border-radius: 8px;
-
-    background: #172554;
-
-    color: #93c5fd;
-
-    font-size: 12px;
-}
-
-.resource-badge.year {
-
-    background: #3f2a12;
-
-    color: #fbbf24;
-}
-
-.resource-badge.subject {
-
-    background: #123524;
-
-    color: #86efac;
-}
-
-.resource-badge.teacher {
-
-    background: #35145e;
-
-    color: #d8b4fe;
-}
-
-.resource-file {
-
-    margin-top: 10px;
-
-    color: #64748b;
-
-    font-size: 13px;
-
-    word-break: break-all;
-}
-
-.resource-actions {
-
-    display: flex;
-
-    gap: 8px;
-
-    flex-wrap: wrap;
-
-    justify-content: flex-end;
-}
-
-.view-button {
-
-    display: inline-block;
-
-    padding: 9px 14px;
-
-    border-radius: 8px;
-
-    background: #0f766e;
-
-    color: white;
-
-    text-decoration: none;
-
-    font-size: 14px;
-
-    font-weight: 600;
-}
-
-.download-button {
-
-    display: inline-block;
-
-    padding: 9px 14px;
-
-    border-radius: 8px;
-
-    background: #2563eb;
-
-    color: white;
-
-    text-decoration: none;
-
-    font-size: 14px;
-
-    font-weight: 600;
-}
-
-.resource-delete {
-
-    padding: 9px 14px;
-
-    border: none;
-
-    border-radius: 8px;
-
-    background: #991b1b;
-
-    color: white;
-
-    cursor: pointer;
-
-    font-size: 14px;
-
-    font-weight: 600;
-}
-
-
-/* ==========================================
-   EMPTY STATE
-========================================== */
-
-.empty-state {
-
-    text-align: center;
-
-    padding: 40px 10px;
-
-    color: #94a3b8;
-}
-
-.empty-state strong {
-
-    display: block;
-
-    color: white;
-
-    font-size: 18px;
-
-    margin-bottom: 7px;
-}
-
-
-/* ==========================================
-   MOBILE
-========================================== */
-
-@media (max-width: 800px) {
-
-    .stats-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .search-form {
-        grid-template-columns: 1fr;
-    }
-
-    .section-header {
-
-        flex-direction: column;
-
-        align-items: flex-start;
-    }
-
-    .teacher-item,
-    .student-item {
-
-        flex-direction: column;
-
-        align-items: flex-start;
-    }
-
-    .teacher-actions,
-    .student-actions {
-
-        width: 100%;
-    }
-
-    .resource-top {
-
-        flex-direction: column;
-    }
-
-    .resource-actions {
-
-        justify-content: flex-start;
-
-        width: 100%;
-    }
-
-}
-
 </style>
-
 </head>
 
-
 <body>
-
-
-<nav class="navbar">
-
-<div class="logo">
-
-    ☁️ <span>EduCloud</span>
-
-</div>
-
-<a href="/logout"
-   class="nav-button">
-
-    Logout
-
-</a>
-
-</nav>
-
-
-<main class="admin-page">
-
-
-<!-- ==========================================
-     HEADER
-========================================== -->
-
-<div class="admin-header">
-
-    <h1>
-        👑 Welcome, {{ name }}
-    </h1>
-
-    <p>
-        Admin Dashboard — Manage EduCloud users and resources.
-    </p>
-<div class="dashboard-actions">
-
-    <a href="/admin/analytics" class="analytics-button">
-        📊 Analytics
+<div class="layout" id="top">
+  <aside class="sidebar" aria-label="Admin navigation">
+    <a class="brand" href="/admin">
+      <span class="brand-mark">e</span>
+      <span>EduCloud<small>Admin workspace</small></span>
     </a>
 
-</div>
-</div>
+    <div class="nav-label">Management</div>
+    <nav class="nav">
+      <a class="active" href="#top"><span class="nav-icon">⌂</span> Overview</a>
+      <a href="#teachers"><span class="nav-icon">♙</span> Teachers</a>
+      <a href="#students"><span class="nav-icon">♧</span> Students</a>
+      <a href="#resources"><span class="nav-icon">▤</span> Resources</a>
+      <a href="/admin/analytics"><span class="nav-icon">▥</span> Analytics</a>
+    </nav>
 
-
-<!-- ==========================================
-     STATS
-========================================== -->
-
-<div class="stats-grid">
-
-    <div class="stat-card">
-
-        <span>
-            👨‍🏫 Total Teachers
-        </span>
-
-        <strong>
-            {{ teacher_count }}
-        </strong>
-
+    <div class="side-bottom">
+      <div class="status-card">
+        <div class="status-line"><span class="status-dot"></span> Admin workspace</div>
+        <p>Manage campus accounts and academic resources from one place.</p>
+      </div>
+      <a class="logout" href="/logout">↪ &nbsp; Log out securely</a>
     </div>
-
-
-    <div class="stat-card">
-
-        <span>
-            🎓 Total Students
-        </span>
-
-        <strong>
-            {{ student_count }}
-        </strong>
-
-    </div>
-
-
-    <div class="stat-card">
-
-        <span>
-            📚 Total Resources
-        </span>
-
-        <strong>
-            {{ resource_count }}
-        </strong>
-
-    </div>
-
-</div>
-
-
-<!-- ==========================================
-     TEACHER MANAGEMENT
-========================================== -->
-
-<div class="section-card">
-
-    <div class="section-header">
-
-        <div>
-
-            <h2>
-                👨‍🏫 Teacher Management
-            </h2>
-
-            <p>
-                Search, filter, edit or delete teacher accounts.
-            </p>
-
-        </div>
-
-        <a href="/admin/add-teacher"
-           class="add-button">
-
-            ➕ Add Teacher
-
-        </a>
-
-    </div>
-
-
-    <form method="GET"
-          action="/admin"
-          class="search-form">
-
-        <input
-            type="text"
-            name="search"
-            value="{{ search }}"
-            placeholder="🔎 Search teacher name or username">
-
-
-        <select name="branch">
-
-            <option value="">
-                All Branches
-            </option>
-
-            {% for branch in branches %}
-
-            <option
-                value="{{ branch['id'] }}"
-                {% if branch_filter == branch['id']|string %}
-                selected
-                {% endif %}>
-
-                {{ branch['name'] }}
-
-            </option>
-
-            {% endfor %}
-
-        </select>
-
-
-        <button
-            type="submit"
-            class="search-button">
-
-            Search
-
-        </button>
-
-
-        <a
-            href="/admin"
-            class="reset-button">
-
-            Reset
-
-        </a>
-
-    </form>
-
-
-    {% if teachers %}
-
-        {% for teacher in teachers %}
-
-        <div class="teacher-item">
-
-            <div class="teacher-info">
-
-                <h3>
-                    👨‍🏫 {{ teacher['name'] }}
-                </h3>
-
-                <p>
-                    @{{ teacher['username'] }}
-                </p>
-
-                <span class="branch-badge">
-
-                    🏫 {{ teacher['branch_name'] }}
-
-                </span>
-
-            </div>
-
-
-            <div class="teacher-actions">
-
-                <a
-                    href="/admin/edit-teacher/{{ teacher['id'] }}"
-                    class="edit-button">
-
-                    ✏️ Edit
-
-                </a>
-
-
-                <form
-                    method="POST"
-                    action="/admin/delete-teacher/{{ teacher['id'] }}"
-                    onsubmit="return confirm('Are you sure you want to delete this teacher account?');">
-
-                    <button
-                        type="submit"
-                        class="delete-button">
-
-                        🗑️ Delete
-
-                    </button>
-
-                </form>
-
-            </div>
-
-        </div>
-
-        {% endfor %}
-
-    {% else %}
-
-        <div class="empty-state">
-
-            <strong>
-                No teachers found
-            </strong>
-
-            Try changing your search or branch filter.
-
-        </div>
-
-    {% endif %}
-
+  </aside>
+
+  <div class="mobile-overlay" id="mobileOverlay"></div>
+
+  <main class="main">
+    <header class="topbar">
+      <div class="crumb">EduCloud / <strong>Admin overview</strong></div>
+      <div class="top-actions">
+        <button class="menu-button" id="menuToggle" type="button" aria-label="Open navigation">☰ Menu</button>
+        <button class="icon-button" id="themeToggle" type="button">◐ <span>Theme</span></button>
+      </div>
+    </header>
+
+    <section class="page-heading">
+      <div>
+        <div class="eyebrow">Campus operations</div>
+        <h1>Admin dashboard.</h1>
+        <p>Monitor accounts, keep academic resources organised, and manage your EduCloud workspace.</p>
+      </div>
+      <div class="heading-pill"><span>●</span> Management overview</div>
+    </section>
+
+    <section class="stats" aria-label="Dashboard totals">
+      <article class="stat">
+        <div class="stat-top"><span class="stat-label">Teachers</span><span class="stat-icon">♙</span></div>
+        <div class="stat-value">{{ teachers|length if teachers is defined else 0 }}</div>
+        <div class="stat-foot">Teacher accounts</div>
+      </article>
+      <article class="stat">
+        <div class="stat-top"><span class="stat-label">Students</span><span class="stat-icon">♧</span></div>
+        <div class="stat-value">{{ students|length if students is defined else 0 }}</div>
+        <div class="stat-foot">Student accounts</div>
+      </article>
+      <article class="stat">
+        <div class="stat-top"><span class="stat-label">Resources</span><span class="stat-icon">▤</span></div>
+        <div class="stat-value">{{ resources|length if resources is defined else 0 }}</div>
+        <div class="stat-foot">Academic materials</div>
+      </article>
+      <article class="stat">
+        <div class="stat-top"><span class="stat-label">Branches</span><span class="stat-icon">⌘</span></div>
+        <div class="stat-value">{{ branches|length if branches is defined else 0 }}</div>
+        <div class="stat-foot">Academic branches</div>
+      </article>
+    </section>
+
+    <section class="panel" id="teachers">
+      <div class="panel-head">
+        <div><h2>Teacher accounts</h2><p>Current teacher records</p></div>
+        <span class="tag">{{ teachers|length if teachers is defined else 0 }} accounts</span>
+      </div>
+      {% if teachers is defined and teachers %}
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Teacher</th><th>Username</th><th>Branch</th><th>Account</th></tr></thead>
+          <tbody>
+          {% for teacher in teachers %}
+            <tr>
+              <td data-label="Teacher"><span class="primary-text">{{ teacher["name"] if teacher["name"] is defined else teacher["username"] if teacher["username"] is defined else "Teacher" }}</span></td>
+              <td data-label="Username">{{ teacher["username"] if teacher["username"] is defined else "—" }}</td>
+              <td data-label="Branch">{{ teacher["branch_name"] if teacher["branch_name"] is defined else teacher["branch"] if teacher["branch"] is defined else "—" }}</td>
+              <td data-label="Account"><span class="tag">Teacher</span></td>
+            </tr>
+          {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      {% else %}
+      <div class="empty"><strong>No teacher records to display</strong>Teacher accounts will appear here when available.</div>
+      {% endif %}
+    </section>
+
+    <section class="panel" id="students">
+      <div class="panel-head">
+        <div><h2>Student accounts</h2><p>Current student records</p></div>
+        <span class="tag">{{ students|length if students is defined else 0 }} accounts</span>
+      </div>
+      {% if students is defined and students %}
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Student</th><th>Username</th><th>Branch</th><th>Year</th></tr></thead>
+          <tbody>
+          {% for student in students %}
+            <tr>
+              <td data-label="Student"><span class="primary-text">{{ student["name"] if student["name"] is defined else student["username"] if student["username"] is defined else "Student" }}</span></td>
+              <td data-label="Username">{{ student["username"] if student["username"] is defined else "—" }}</td>
+              <td data-label="Branch">{{ student["branch_name"] if student["branch_name"] is defined else student["branch"] if student["branch"] is defined else "—" }}</td>
+              <td data-label="Year">{{ student["year_name"] if student["year_name"] is defined else student["year"] if student["year"] is defined else "—" }}</td>
+            </tr>
+          {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      {% else %}
+      <div class="empty"><strong>No student records to display</strong>Student accounts will appear here when available.</div>
+      {% endif %}
+    </section>
+
+    <section class="panel" id="resources">
+      <div class="panel-head">
+        <div><h2>Academic resources</h2><p>Search and filter resources across the portal</p></div>
+        <a class="analytics-link" href="/admin/analytics">View analytics ↗</a>
+      </div>
+      <div class="panel-body">
+        <form class="filter-bar" method="GET" action="/admin" id="resourceFilters">
+          <input class="control" type="search" name="resource_search" id="resourceSearch"
+                 placeholder="Search title, teacher, subject..."
+                 value="{{ resource_search|default('', true) }}">
+          <select class="control" name="resource_branch" id="resourceBranch">
+            <option value="">All branches</option>
+            {% if branches is defined %}
+              {% for branch in branches %}
+                <option value="{{ branch['id'] }}"
+                  {% if resource_branch is defined and resource_branch|string == branch['id']|string %}selected{% endif %}>
+                  {{ branch['name'] }}
+                </option>
+              {% endfor %}
+            {% endif %}
+          </select>
+          <select class="control" name="resource_year" id="resourceYear">
+            <option value="">All years</option>
+            {% if years is defined %}
+              {% for year in years %}
+                <option value="{{ year['id'] }}"
+                  {% if resource_year is defined and resource_year|string == year['id']|string %}selected{% endif %}>
+                  {{ year['name'] }}
+                </option>
+              {% endfor %}
+            {% endif %}
+          </select>
+          <button class="btn btn-primary" type="submit">Apply filters ↗</button>
+        </form>
+      </div>
+
+      {% if resources is defined and resources %}
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Resource</th><th>Branch / Year</th><th>Subject</th><th>Uploaded by</th><th>Added</th><th>Action</th></tr></thead>
+          <tbody>
+          {% for resource in resources %}
+            <tr>
+              <td data-label="Resource">
+                <span class="primary-text resource-title">{{ resource["title"] if resource["title"] is defined else "Untitled resource" }}</span>
+                <span class="secondary-text">{{ resource["filename"] if resource["filename"] is defined else "" }}</span>
+              </td>
+              <td data-label="Branch / Year">
+                {{ resource["branch_name"] if resource["branch_name"] is defined else "—" }}
+                <span class="secondary-text">{{ resource["year_name"] if resource["year_name"] is defined else "—" }}</span>
+              </td>
+              <td data-label="Subject">{{ resource["subject_name"] if resource["subject_name"] is defined else "—" }}</td>
+              <td data-label="Uploaded by">
+                {{ resource["teacher_name"] if resource["teacher_name"] is defined else resource["teacher_username"] if resource["teacher_username"] is defined else "—" }}
+              </td>
+              <td data-label="Added">{{ resource["created_at"] if resource["created_at"] is defined else "—" }}</td>
+              <td data-label="Action">
+                {% if resource["id"] is defined %}
+                  <form method="POST" action="/admin/delete-resource/{{ resource['id'] }}"
+                        onsubmit="return confirm('Delete this resource? This action cannot be undone.');">
+                    <button class="btn" type="submit" style="color:var(--danger)">Delete</button>
+                  </form>
+                {% else %}
+                  <span class="secondary-text">No action available</span>
+                {% endif %}
+              </td>
+            </tr>
+          {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      {% else %}
+      <div class="empty"><strong>No resources found</strong>Try changing the filters, or upload academic material first.</div>
+      {% endif %}
+    </section>
+
+    <div class="footer-note">EduCloud Portal · Academic resources, organised.</div>
+  </main>
 </div>
 
-
-<!-- ==========================================
-     STUDENT MANAGEMENT
-========================================== -->
-
-<div class="section-card">
-
-    <div class="section-header">
-
-        <div>
-
-            <h2>
-                🎓 Student Management
-            </h2>
-
-            <p>
-                Manage student accounts, branch and year assignments.
-            </p>
-
-        </div>
-
-        <a href="/admin/add-student"
-           class="add-button">
-
-            ➕ Add Student
-
-        </a>
-
-    </div>
-
-
-    {% if students %}
-
-        {% for student in students %}
-
-        <div class="student-item">
-
-            <div class="student-info">
-
-                <h3>
-                    🎓 {{ student['name'] }}
-                </h3>
-
-                <p>
-                    @{{ student['username'] }}
-                </p>
-
-                <span class="branch-badge">
-
-                    🏫 {{ student['branch_name'] }}
-
-                </span>
-
-                <span class="year-badge">
-
-                    📅 {{ student['year_name'] }}
-
-                </span>
-
-            </div>
-
-
-            <div class="student-actions">
-
-                <a
-                    href="/admin/edit-student/{{ student['id'] }}"
-                    class="edit-button">
-
-                    ✏️ Edit
-
-                </a>
-
-
-                <form
-                    method="POST"
-                    action="/admin/delete-student/{{ student['id'] }}"
-                    onsubmit="return confirm('Are you sure you want to delete this student account?');">
-
-                    <button
-                        type="submit"
-                        class="delete-button">
-
-                        🗑️ Delete
-
-                    </button>
-
-                </form>
-
-            </div>
-
-        </div>
-
-        {% endfor %}
-
-    {% else %}
-
-        <div class="empty-state">
-
-            <strong>
-                No students found
-            </strong>
-
-            Click "Add Student" to create a student account.
-
-        </div>
-
-    {% endif %}
-
-</div>
-
-
-<!-- ==========================================
-     RESOURCE MANAGEMENT
-========================================== -->
-
-<div class="section-card">
-
-    <div class="section-header">
-
-        <div>
-
-            <h2>
-                📚 Resource Management
-            </h2>
-
-            <p>
-                Manage all uploaded notes, PDFs and learning resources.
-            </p>
-
-        </div>
-
-    </div>
-
-
-    <!-- RESOURCE SEARCH -->
-
-    <form method="GET"
-          action="/admin"
-          class="search-form">
-
-        <input
-            type="text"
-            name="resource_search"
-            value="{{ resource_search }}"
-            placeholder="🔎 Search resource, subject or teacher">
-
-
-        <select name="resource_branch">
-
-            <option value="">
-                All Branches
-            </option>
-
-            {% for branch in branches %}
-
-            <option
-                value="{{ branch['id'] }}"
-                {% if resource_branch == branch['id']|string %}
-                selected
-                {% endif %}>
-
-                {{ branch['name'] }}
-
-            </option>
-
-            {% endfor %}
-
-        </select>
-
-
-        <select name="resource_year">
-
-            <option value="">
-                All Years
-            </option>
-
-            {% for year in years %}
-
-            <option
-                value="{{ year['id'] }}"
-                {% if resource_year == year['id']|string %}
-                selected
-                {% endif %}>
-
-                {{ year['name'] }}
-
-            </option>
-
-            {% endfor %}
-
-        </select>
-
-
-        <button
-            type="submit"
-            class="search-button">
-
-            Search
-
-        </button>
-
-
-        <a
-            href="/admin"
-            class="reset-button">
-
-            Reset
-
-        </a>
-
-    </form>
-
-
-    <!-- RESOURCE LIST -->
-
-    {% if resources %}
-
-        {% for resource in resources %}
-
-        <div class="resource-item">
-
-            <div class="resource-top">
-
-                <div class="resource-info">
-
-                    <h3>
-                        📄 {{ resource['title'] }}
-                    </h3>
-
-
-                    {% if resource['description'] %}
-
-                    <p class="resource-description">
-
-                        {{ resource['description'] }}
-
-                    </p>
-
-                    {% endif %}
-
-
-                    <div class="resource-meta">
-
-                        <span class="resource-badge">
-
-                            🏫 {{ resource['branch_name'] }}
-
-                        </span>
-
-
-                        <span class="resource-badge year">
-
-                            📅 {{ resource['year_name'] }}
-
-                        </span>
-
-
-                        <span class="resource-badge subject">
-
-                            📖 {{ resource['subject_name'] }}
-
-                        </span>
-
-
-                        <span class="resource-badge teacher">
-
-                            👨‍🏫 {{ resource['teacher_name'] or 'Unknown Teacher' }}
-
-                        </span>
-
-                    </div>
-
-
-                    <div class="resource-file">
-
-                        📎 {{ resource['filename'] }}
-
-                    </div>
-
-                </div>
-
-
-                <div class="resource-actions">
-
-                    <a
-                        href="/resource/{{ resource['id'] }}"
-                        class="view-button">
-
-                        👁️ View
-
-                    </a>
-
-
-                    <a
-                        href="/download/{{ resource['id'] }}"
-                        class="download-button">
-
-                        📥 Download
-
-                    </a>
-
-
-                    <form
-                        method="POST"
-                        action="/admin/delete-resource/{{ resource['id'] }}"
-                        onsubmit="return confirm('Are you sure you want to permanently delete this resource?');">
-
-                        <button
-                            type="submit"
-                            class="resource-delete">
-
-                            🗑️ Delete
-
-                        </button>
-
-                    </form>
-
-                </div>
-
-            </div>
-
-        </div>
-
-        {% endfor %}
-
-    {% else %}
-
-        <div class="empty-state">
-
-            <strong>
-                No resources found
-            </strong>
-
-            Try changing your search or filters.
-
-        </div>
-
-    {% endif %}
-
-</div>
-
-
-</main>
-
+<script>
+(function () {
+  const root = document.documentElement;
+  const themeButton = document.getElementById("themeToggle");
+  const menuButton = document.getElementById("menuToggle");
+  const overlay = document.getElementById("mobileOverlay");
+
+  function applyTheme(theme) {
+    const safeTheme = theme === "dark" ? "dark" : "light";
+    root.setAttribute("data-theme", safeTheme);
+    themeButton.innerHTML = safeTheme === "dark"
+      ? "☀ <span>Light mode</span>"
+      : "◐ <span>Dark mode</span>";
+  }
+
+  let savedTheme = "light";
+  try {
+    savedTheme = localStorage.getItem("educloud-theme") || "light";
+  } catch (error) {}
+  applyTheme(savedTheme);
+
+  themeButton.addEventListener("click", function () {
+    const next = root.getAttribute("data-theme") === "dark" ? "light" : "dark";
+    applyTheme(next);
+    try { localStorage.setItem("educloud-theme", next); } catch (error) {}
+  });
+
+  function closeMenu() {
+    document.body.classList.remove("menu-open");
+    menuButton.setAttribute("aria-expanded", "false");
+  }
+  menuButton.addEventListener("click", function () {
+    const isOpen = document.body.classList.toggle("menu-open");
+    menuButton.setAttribute("aria-expanded", String(isOpen));
+  });
+  overlay.addEventListener("click", closeMenu);
+
+  document.querySelectorAll(".nav a").forEach(function (link) {
+    link.addEventListener("click", closeMenu);
+  });
+
+  document.addEventListener("keydown", function (event) {
+    if (event.key === "Escape") closeMenu();
+  });
+
+  const search = document.getElementById("resourceSearch");
+  const branch = document.getElementById("resourceBranch");
+  const year = document.getElementById("resourceYear");
+  [search, branch, year].forEach(function (control) {
+    control.addEventListener("keydown", function (event) {
+      if (event.key === "Enter" && control !== search) {
+        document.getElementById("resourceFilters").requestSubmit();
+      }
+    });
+  });
+})();
+</script>
 </body>
-
 </html>

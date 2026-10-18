@@ -1,381 +1,231 @@
-```html
+
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="en" data-theme="light">
 <head>
-
 <meta charset="UTF-8">
-
-<meta name="viewport"
-      content="width=device-width, initial-scale=1.0">
-
-<title>Edit Resource - EduCloud</title>
-
-<link rel="stylesheet"
-      href="{{ url_for('static', filename='style.css') }}">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Edit Resource | EduCloud</title>
 
 <style>
-
-.edit-container {
-    max-width: 750px;
-    margin: 50px auto;
-    padding: 20px;
+:root {
+  --bg:#f4f6f1;--surface:#fff;--surface2:#f8faf6;
+  --text:#20251f;--muted:#777f73;--border:#e3e8df;
+  --accent:#c8f169;--accentText:#20271a;--shadow:0 18px 55px rgba(31,42,25,.07);
 }
-
-.edit-card {
-    background: #111827;
-    border: 1px solid #263244;
-    border-radius: 18px;
-    padding: 30px;
+html[data-theme="dark"] {
+  --bg:#111510;--surface:#1a2018;--surface2:#20271e;
+  --text:#edf2e8;--muted:#a0aa98;--border:#30392c;
+  --accent:#c8f169;--accentText:#20271a;--shadow:0 18px 55px rgba(0,0,0,.2);
 }
-
-.edit-card h1 {
-    margin-top: 0;
-    margin-bottom: 8px;
-}
-
-.edit-card > p {
-    color: #94a3b8;
-    margin-bottom: 30px;
-}
-
-.form-group {
-    margin-bottom: 20px;
-}
-
-.form-group label {
-    display: block;
-    margin-bottom: 8px;
-    font-weight: 600;
-}
-
-.form-group input,
-.form-group textarea,
-.form-group select {
-    width: 100%;
-    box-sizing: border-box;
-    padding: 13px 14px;
-    border-radius: 10px;
-    border: 1px solid #334155;
-    background: #0b1120;
-    color: white;
-    outline: none;
-    font-size: 15px;
-}
-
-.form-group textarea {
-    min-height: 120px;
-    resize: vertical;
-}
-
-.form-group input:focus,
-.form-group textarea:focus,
-.form-group select:focus {
-    border-color: #2563eb;
-}
-
-.current-file {
-    background: #0b1120;
-    border: 1px solid #263244;
-    padding: 14px;
-    border-radius: 10px;
-    margin-bottom: 25px;
-    color: #94a3b8;
-}
-
-.current-file strong {
-    color: white;
-}
-
-.button-row {
-    display: flex;
-    gap: 12px;
-    margin-top: 25px;
-}
-
-.save-button,
-.cancel-button {
-    flex: 1;
-    border: none;
-    padding: 14px;
-    border-radius: 10px;
-    font-size: 15px;
-    font-weight: bold;
-    cursor: pointer;
-    text-decoration: none;
-    text-align: center;
-}
-
-.save-button {
-    background: #2563eb;
-    color: white;
-}
-
-.save-button:hover {
-    opacity: 0.9;
-}
-
-.cancel-button {
-    background: #334155;
-    color: white;
-}
-
-.cancel-button:hover {
-    background: #475569;
-}
-
-@media (max-width: 600px) {
-
-    .edit-container {
-        padding: 15px;
-        margin: 25px auto;
-    }
-
-    .edit-card {
-        padding: 20px;
-    }
-
-    .button-row {
-        flex-direction: column;
-    }
-
-}
-
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;line-height:1.5;transition:background .2s,color .2s}
+a{color:inherit;text-decoration:none}
+button,input,select,textarea{font:inherit}
+.topbar{height:76px;display:flex;align-items:center;justify-content:space-between;gap:14px;padding:0 clamp(16px,4vw,55px);background:var(--surface);border-bottom:1px solid var(--border)}
+.brand{display:flex;align-items:center;gap:10px;font-weight:850;font-size:19px;letter-spacing:-.6px}
+.brand-mark{width:37px;height:37px;border-radius:12px;background:var(--accent);color:var(--accentText);display:grid;place-items:center;font-size:21px;font-weight:900}
+.brand small{display:block;color:var(--muted);font-size:9px;text-transform:uppercase;letter-spacing:1.5px}
+.top-actions{display:flex;align-items:center;gap:9px}
+.top-btn{display:inline-flex;align-items:center;justify-content:center;min-height:39px;padding:8px 13px;border:1px solid var(--border);border-radius:10px;background:var(--surface);color:var(--text);font-size:12px;font-weight:750;cursor:pointer}
+.top-btn:hover{border-color:var(--muted)}
+.page{width:min(100% - 32px,920px);margin:34px auto 55px}
+.breadcrumb{font-size:12px;color:var(--muted);margin-bottom:20px}
+.breadcrumb a:hover{color:var(--text)}
+.heading{margin-bottom:22px}
+.eyebrow{font-size:10px;text-transform:uppercase;letter-spacing:1.8px;color:var(--muted);font-weight:850}
+h1{font-size:clamp(28px,4vw,38px);letter-spacing:-1.3px;line-height:1.15;margin:8px 0}
+.heading p{margin:0;color:var(--muted);font-size:13px}
+.editor-grid{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(220px,.8fr);gap:18px;align-items:start}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:19px;box-shadow:var(--shadow);overflow:hidden;min-width:0}
+.card-head{padding:21px 23px;border-bottom:1px solid var(--border)}
+.card-head h2{margin:0;font-size:16px;letter-spacing:-.3px}
+.card-head p{margin:5px 0 0;color:var(--muted);font-size:12px}
+.form-body{padding:23px}
+.field{margin-bottom:19px}
+label{display:block;font-size:12px;font-weight:800;margin-bottom:8px}
+input[type=text],select,textarea{width:100%;min-height:45px;padding:11px 13px;border:1px solid var(--border);border-radius:11px;background:var(--surface2);color:var(--text);outline:none;transition:border .2s,box-shadow .2s}
+textarea{min-height:120px;resize:vertical}
+input:focus,select:focus,textarea:focus{border-color:#8fb84b;box-shadow:0 0 0 3px rgba(143,184,75,.14)}
+.hint{font-size:11px;color:var(--muted);margin-top:7px}
+.current-file{padding:15px;border:1px solid var(--border);border-radius:13px;background:var(--surface2);display:flex;align-items:flex-start;gap:12px;margin-bottom:22px;min-width:0}
+.file-icon{width:40px;height:43px;border-radius:10px;background:var(--accent);color:var(--accentText);display:grid;place-items:center;font-size:18px;flex-shrink:0}
+.file-label{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;font-weight:850}
+.file-name{font-size:12px;font-weight:750;overflow-wrap:anywhere;margin-top:4px}
+.actions{display:flex;gap:10px;flex-wrap:wrap;padding-top:5px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:44px;padding:11px 16px;border:1px solid var(--border);border-radius:11px;background:var(--surface2);color:var(--text);font-size:12px;font-weight:800;cursor:pointer}
+.btn-primary{background:var(--accent);border-color:var(--accent);color:var(--accentText)}
+.btn:hover{filter:brightness(.97)}
+.actions .btn-primary{flex:1}
+.side-card{padding:20px;margin-bottom:15px}
+.side-title{font-size:13px;font-weight:850;margin:0 0 7px}
+.side-copy{font-size:12px;color:var(--muted);margin:0;line-height:1.7}
+.tip{display:flex;gap:11px;padding:13px 0;border-bottom:1px solid var(--border)}
+.tip:last-child{border-bottom:0;padding-bottom:0}
+.tip-icon{flex-shrink:0;width:31px;height:31px;border-radius:10px;background:var(--surface2);display:grid;place-items:center}
+.tip b{display:block;font-size:11px;margin-bottom:3px}
+.tip span{font-size:11px;color:var(--muted);line-height:1.5;display:block}
+.footer{text-align:center;color:var(--muted);font-size:11px;padding-top:22px}
+@media(max-width:760px){.editor-grid{grid-template-columns:1fr}.side-column{display:grid;grid-template-columns:1fr 1fr;gap:12px}.side-card{margin:0}.page{margin-top:24px}}
+@media(max-width:480px){.topbar{height:66px;padding:0 12px}.brand{font-size:16px}.brand-mark{width:33px;height:33px}.top-btn{padding:8px 10px;font-size:11px}.page{width:calc(100% - 22px);margin-top:21px}.card-head{padding:17px}.form-body{padding:17px}.side-column{grid-template-columns:1fr}.actions{display:grid;grid-template-columns:1fr}.actions .btn-primary{grid-row:1}.actions .btn{width:100%}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
-
 </head>
 
 <body>
+<header class="topbar">
+  <a class="brand" href="/teacher">
+    <span class="brand-mark">e</span>
+    <span>EduCloud<small>Academic workspace</small></span>
+  </a>
+  <div class="top-actions">
+    <button class="top-btn" type="button" id="themeToggle">◐ Dark mode</button>
+    <a class="top-btn" href="/logout">Log out ↗</a>
+  </div>
+</header>
 
-<nav class="navbar">
+<main class="page">
+  <div class="breadcrumb"><a href="/teacher">Teacher dashboard</a> &nbsp;/&nbsp; <strong>Edit resource</strong></div>
 
-    <div class="logo">
-        ☁️ <span>EduCloud</span>
-    </div>
+  <section class="heading">
+    <div class="eyebrow">Resource management</div>
+    <h1>Edit resource.</h1>
+    <p>Update the academic details while keeping your existing uploaded file.</p>
+  </section>
 
-    <a href="/logout"
-       class="nav-button">
-        Logout
-    </a>
+  <div class="editor-grid">
+    <section class="card">
+      <div class="card-head">
+        <h2>Resource details</h2>
+        <p>Update the information below and save your changes.</p>
+      </div>
 
-</nav>
-
-
-<main class="edit-container">
-
-<div class="edit-card">
-
-    <h1>
-        ✏️ Edit Resource
-    </h1>
-
-    <p>
-        Update the resource details without uploading the file again.
-    </p>
-
-
-    <div class="current-file">
-
-        📄 Current File:
-
-        <strong>
-            {{ resource["filename"] }}
-        </strong>
-
-    </div>
-
-
-    <form
-        method="POST"
-        action="{{ url_for('edit_resource', resource_id=resource['id']) }}">
-
-
-        <div class="form-group">
-
-            <label>
-                Resource Title
-            </label>
-
-            <input
-                type="text"
-                name="title"
-                value="{{ resource['title'] }}"
-                required>
-
+      <div class="form-body">
+        <div class="current-file">
+          <div class="file-icon">▤</div>
+          <div style="min-width:0">
+            <div class="file-label">Currently uploaded file</div>
+            <div class="file-name">{{ resource["filename"] }}</div>
+          </div>
         </div>
 
+        <form method="POST" action="{{ url_for('edit_resource', resource_id=resource['id']) }}">
+          <div class="field">
+            <label for="title">Resource title</label>
+            <input id="title" type="text" name="title" value="{{ resource['title'] }}" placeholder="e.g. Data Structures — Unit 1" required>
+            <div class="hint">Choose a clear title students can recognise.</div>
+          </div>
 
-        <div class="form-group">
-
-            <label>
-                Select Year
-            </label>
-
-            <select
-                name="year_id"
-                id="yearSelect"
-                required>
-
-                {% for year in years %}
-
-                <option
-                    value="{{ year['id'] }}"
-                    {% if year['id'] == resource['year_id'] %}
-                    selected
-                    {% endif %}>
-
-                    {{ year['name'] }}
-
-                </option>
-
-                {% endfor %}
-
+          <div class="field">
+            <label for="yearSelect">Academic year</label>
+            <select name="year_id" id="yearSelect" required>
+              {% for year in years %}
+              <option value="{{ year['id'] }}" {% if year['id']|string == resource['year_id']|string %}selected{% endif %}>
+                {{ year['name'] }}
+              </option>
+              {% endfor %}
             </select>
+          </div>
 
-        </div>
-
-
-        <div class="form-group">
-
-            <label>
-                Select Subject
-            </label>
-
-            <select
-                name="subject_id"
-                id="subjectSelect"
-                required>
-
-                {% for subject in subjects %}
-
-                <option
-                    value="{{ subject['id'] }}"
-                    {% if subject['id'] == resource['subject_id'] %}
-                    selected
-                    {% endif %}>
-
-                    {{ subject['name'] }}
-
-                </option>
-
-                {% endfor %}
-
+          <div class="field">
+            <label for="subjectSelect">Subject</label>
+            <select name="subject_id" id="subjectSelect" required>
+              {% for subject in subjects %}
+              <option value="{{ subject['id'] }}" {% if subject['id']|string == resource['subject_id']|string %}selected{% endif %}>
+                {{ subject['name'] }}
+              </option>
+              {% endfor %}
             </select>
+            <div class="hint" id="subjectHint">Subjects are loaded according to the selected academic year.</div>
+          </div>
 
-        </div>
+          <div class="field">
+            <label for="description">Description</label>
+            <textarea name="description" id="description" placeholder="What does this resource cover?">{{ resource['description'] or '' }}</textarea>
+          </div>
 
+          <div class="actions">
+            <button class="btn btn-primary" type="submit">✓ &nbsp; Save changes</button>
+            <a class="btn" href="/teacher">Cancel and return</a>
+          </div>
+        </form>
+      </div>
+    </section>
 
-        <div class="form-group">
+    <aside class="side-column">
+      <section class="card side-card">
+        <h2 class="side-title">A quick reminder</h2>
+        <p class="side-copy">Check the title, year and subject before saving. This helps students find the correct material in their branch library.</p>
+      </section>
 
-            <label>
-                Description
-            </label>
+      <section class="card side-card">
+        <h2 class="side-title">Editing tips</h2>
+        <div class="tip"><div class="tip-icon">✎</div><div><b>Clear title</b><span>Include a topic, unit or chapter where useful.</span></div></div>
+        <div class="tip"><div class="tip-icon">▤</div><div><b>Correct subject</b><span>Keep the resource under its proper subject and year.</span></div></div>
+        <div class="tip"><div class="tip-icon">↻</div><div><b>Existing file</b><span>This form updates details, not the uploaded file itself.</span></div></div>
+      </section>
+    </aside>
+  </div>
 
-            <textarea
-                name="description"
-                placeholder="Short description of this resource...">{{ resource['description'] or '' }}</textarea>
-
-        </div>
-
-
-        <div class="button-row">
-
-            <button
-                type="submit"
-                class="save-button">
-
-                💾 Save Changes
-
-            </button>
-
-
-            <a
-                href="/teacher"
-                class="cancel-button">
-
-                ← Cancel
-
-            </a>
-
-        </div>
-
-
-    </form>
-
-</div>
-
+  <footer class="footer">EduCloud Portal · Academic resources, organised.</footer>
 </main>
 
-
 <script>
+(function () {
+  const root = document.documentElement;
+  const toggle = document.getElementById("themeToggle");
 
-const yearSelect =
-    document.getElementById("yearSelect");
+  function applyTheme(theme) {
+    const selected = theme === "dark" ? "dark" : "light";
+    root.setAttribute("data-theme", selected);
+    toggle.textContent = selected === "dark" ? "☀ Light mode" : "◐ Dark mode";
+  }
 
-const subjectSelect =
-    document.getElementById("subjectSelect");
+  let saved = "light";
+  try { saved = localStorage.getItem("educloud-theme") || "light"; } catch (e) {}
+  applyTheme(saved);
 
+  toggle.addEventListener("click", function () {
+    const next = root.getAttribute("data-theme") === "dark" ? "light" : "dark";
+    applyTheme(next);
+    try { localStorage.setItem("educloud-theme", next); } catch (e) {}
+  });
 
-yearSelect.addEventListener(
-    "change",
-    async function () {
+  const yearSelect = document.getElementById("yearSelect");
+  const subjectSelect = document.getElementById("subjectSelect");
+  const subjectHint = document.getElementById("subjectHint");
+  let initialYear = yearSelect.value;
 
-        const yearId = this.value;
+  yearSelect.addEventListener("change", async function () {
+    const yearId = this.value;
+    if (!yearId) return;
 
-        subjectSelect.innerHTML =
-            '<option value="">Loading subjects...</option>';
+    subjectSelect.disabled = true;
+    subjectHint.textContent = "Loading subjects…";
+    subjectSelect.innerHTML = '<option value="">Loading subjects…</option>';
 
-        subjectSelect.disabled = true;
+    try {
+      const response = await fetch("/get-subjects/" + encodeURIComponent(yearId));
+      if (!response.ok) throw new Error("Unable to load subjects");
 
+      const data = await response.json();
+      subjectSelect.innerHTML = '<option value="">Select subject</option>';
 
-        try {
+      (data.subjects || []).forEach(function (subject) {
+        const option = document.createElement("option");
+        option.value = subject.id;
+        option.textContent = subject.name;
+        subjectSelect.appendChild(option);
+      });
 
-            const response =
-                await fetch("/get-subjects/" + yearId);
-
-            const data =
-                await response.json();
-
-
-            subjectSelect.innerHTML =
-                '<option value="">Select Subject</option>';
-
-
-            data.subjects.forEach(function (subject) {
-
-                const option =
-                    document.createElement("option");
-
-                option.value =
-                    subject.id;
-
-                option.textContent =
-                    subject.name;
-
-                subjectSelect.appendChild(option);
-
-            });
-
-
-            subjectSelect.disabled = false;
-
-        }
-
-        catch (error) {
-
-            subjectSelect.innerHTML =
-                '<option value="">Unable to load subjects</option>';
-
-            console.error(error);
-
-        }
-
+      subjectSelect.disabled = false;
+      subjectHint.textContent = "Choose the subject for this resource.";
+    } catch (error) {
+      subjectSelect.innerHTML = '<option value="">Unable to load subjects</option>';
+      subjectHint.textContent = "Could not load subjects. Please retry or return to the dashboard.";
+      console.error(error);
     }
-);
-
+  });
+})();
 </script>
-
 </body>
-
 </html>
-```
