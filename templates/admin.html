@@ -789,7 +789,7 @@
                         </td>
                         <td>
                             <span class="pill">
-                                {{ student.get('branch_name', student.get('branch', '—')) }}
+                                {{ student['branch_name'] or student['branch'] or '—' }}
                             </span>
                         </td>
                         <td>
