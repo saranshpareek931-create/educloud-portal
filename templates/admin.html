@@ -9,14 +9,14 @@
     <style>
         :root {
             --bg: #f5f7f2;
-            --panel: #ffffff;
+            --panel: #fff;
             --text: #20251f;
             --muted: #7b8278;
             --border: #e6e9e1;
             --accent: #c8f169;
             --accent-dark: #26331b;
             --danger: #d94747;
-            --shadow: 0 8px 28px rgba(30, 40, 20, .05);
+            --shadow: 0 8px 28px rgba(30,40,20,.05);
         }
 
         body.dark {
@@ -25,16 +25,10 @@
             --text: #f0f3eb;
             --muted: #a1a99a;
             --border: #353b32;
-            --accent: #c8f169;
-            --accent-dark: #26331b;
-            --shadow: 0 8px 28px rgba(0, 0, 0, .14);
+            --shadow: 0 8px 28px rgba(0,0,0,.14);
         }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
 
         body {
             font-family: Inter, "Segoe UI", Arial, sans-serif;
@@ -44,23 +38,11 @@
             transition: background .2s, color .2s;
         }
 
-        a {
-            color: inherit;
-            text-decoration: none;
-        }
+        a { color: inherit; text-decoration: none; }
+        button, input, select { font: inherit; }
+        button, .btn { cursor: pointer; }
 
-        button, input, select {
-            font: inherit;
-        }
-
-        button, .btn {
-            cursor: pointer;
-        }
-
-        .layout {
-            display: flex;
-            min-height: 100vh;
-        }
+        .layout { display: flex; min-height: 100vh; }
 
         .sidebar {
             width: 245px;
@@ -87,21 +69,13 @@
             place-items: center;
             border-radius: 14px;
             background: var(--accent);
-            color: #26331b;
+            color: var(--accent-dark);
             font-size: 22px;
             font-weight: 900;
         }
 
-        .brand h2 {
-            font-size: 18px;
-            letter-spacing: -.5px;
-        }
-
-        .brand p {
-            color: var(--muted);
-            font-size: 11px;
-            margin-top: 3px;
-        }
+        .brand h2 { font-size: 18px; letter-spacing: -.5px; }
+        .brand p { color: var(--muted); font-size: 11px; margin-top: 3px; }
 
         .nav-label {
             padding: 0 12px;
@@ -126,21 +100,13 @@
             transition: .2s;
         }
 
-        .nav-link:hover,
-        .nav-link.active {
+        .nav-link:hover, .nav-link.active {
             background: var(--accent);
-            color: #26331b;
+            color: var(--accent-dark);
         }
 
-        .nav-icon {
-            width: 21px;
-            text-align: center;
-            font-size: 17px;
-        }
-
-        .sidebar-bottom {
-            margin-top: auto;
-        }
+        .nav-icon { width: 21px; text-align: center; font-size: 17px; }
+        .sidebar-bottom { margin-top: auto; }
 
         .sidebar-note {
             margin-top: 25px;
@@ -150,10 +116,7 @@
             border-radius: 14px;
         }
 
-        .sidebar-note strong {
-            font-size: 12px;
-        }
-
+        .sidebar-note strong { font-size: 12px; }
         .sidebar-note p {
             color: var(--muted);
             font-size: 11px;
@@ -161,11 +124,7 @@
             margin-top: 6px;
         }
 
-        .main {
-            min-width: 0;
-            flex: 1;
-            padding: 30px;
-        }
+        .main { min-width: 0; flex: 1; padding: 30px; }
 
         .topbar {
             display: flex;
@@ -184,10 +143,7 @@
             margin-bottom: 8px;
         }
 
-        h1 {
-            font-size: clamp(24px, 3vw, 32px);
-            letter-spacing: -1.2px;
-        }
+        h1 { font-size: clamp(24px, 3vw, 32px); letter-spacing: -1.2px; }
 
         .subtitle {
             color: var(--muted);
@@ -196,11 +152,7 @@
             line-height: 1.6;
         }
 
-        .top-actions {
-            display: flex;
-            gap: 9px;
-            align-items: center;
-        }
+        .top-actions { display: flex; gap: 9px; align-items: center; }
 
         .icon-button {
             height: 42px;
@@ -243,11 +195,7 @@
             gap: 10px;
         }
 
-        .stat-label {
-            color: var(--muted);
-            font-size: 12px;
-            font-weight: 600;
-        }
+        .stat-label { color: var(--muted); font-size: 12px; font-weight: 600; }
 
         .stat-icon {
             width: 39px;
@@ -266,11 +214,7 @@
             letter-spacing: -1px;
         }
 
-        .stat-caption {
-            color: var(--muted);
-            font-size: 11px;
-            margin-top: 7px;
-        }
+        .stat-caption { color: var(--muted); font-size: 11px; margin-top: 7px; }
 
         .panel {
             background: var(--panel);
@@ -290,10 +234,7 @@
             margin-bottom: 20px;
         }
 
-        .panel-header h2 {
-            font-size: 17px;
-            letter-spacing: -.4px;
-        }
+        .panel-header h2 { font-size: 17px; letter-spacing: -.4px; }
 
         .panel-header p {
             color: var(--muted);
@@ -319,19 +260,11 @@
 
         .btn-primary {
             background: var(--accent);
-            color: #26331b;
+            color: var(--accent-dark);
             border-color: var(--accent);
         }
 
-        .btn:hover {
-            filter: brightness(.97);
-            transform: translateY(-1px);
-        }
-
-        .btn-danger {
-            color: var(--danger);
-            border-color: #e7bcbc;
-        }
+        .btn:hover { filter: brightness(.97); transform: translateY(-1px); }
 
         .filters {
             display: flex;
@@ -353,18 +286,11 @@
 
         .field:focus {
             border-color: #94b94a;
-            box-shadow: 0 0 0 3px rgba(200, 241, 105, .17);
+            box-shadow: 0 0 0 3px rgba(200,241,105,.17);
         }
 
-        .search-field {
-            flex: 1;
-            min-width: 180px;
-        }
-
-        .table-wrap {
-            width: 100%;
-            overflow-x: auto;
-        }
+        .search-field { flex: 1; min-width: 180px; }
+        .table-wrap { width: 100%; overflow-x: auto; }
 
         table {
             border-collapse: collapse;
@@ -383,13 +309,8 @@
             background: var(--bg);
         }
 
-        th:first-child {
-            border-radius: 9px 0 0 9px;
-        }
-
-        th:last-child {
-            border-radius: 0 9px 9px 0;
-        }
+        th:first-child { border-radius: 9px 0 0 9px; }
+        th:last-child { border-radius: 0 9px 9px 0; }
 
         td {
             padding: 15px 12px;
@@ -398,19 +319,10 @@
             vertical-align: middle;
         }
 
-        tbody tr:last-child td {
-            border-bottom: none;
-        }
+        tbody tr:last-child td { border-bottom: none; }
+        tbody tr:hover { background: rgba(128,128,128,.035); }
 
-        tbody tr:hover {
-            background: rgba(128, 128, 128, .035);
-        }
-
-        .person {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
+        .person { display: flex; align-items: center; gap: 10px; }
 
         .avatar {
             width: 34px;
@@ -419,15 +331,13 @@
             display: grid;
             place-items: center;
             background: var(--accent);
-            color: #26331b;
+            color: var(--accent-dark);
             font-size: 12px;
             font-weight: 800;
             flex-shrink: 0;
         }
 
-        .person strong {
-            font-size: 12px;
-        }
+        .person strong { font-size: 12px; }
 
         .person small {
             display: block;
@@ -446,13 +356,10 @@
             font-weight: 700;
         }
 
-        .actions {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
+        .actions { display: flex; align-items: center; gap: 6px; }
 
         .action-link {
+            display: inline-block;
             padding: 7px 9px;
             border: 1px solid var(--border);
             border-radius: 8px;
@@ -460,13 +367,8 @@
             font-weight: 700;
         }
 
-        .action-link:hover {
-            border-color: #a8cb60;
-        }
-
-        .delete-form {
-            display: inline;
-        }
+        .action-link:hover { border-color: #a8cb60; }
+        .delete-form { display: inline; }
 
         .delete-button {
             padding: 7px 9px;
@@ -493,101 +395,48 @@
         }
 
         @media (max-width: 1050px) {
-            .sidebar {
-                width: 205px;
-            }
-
-            .main {
-                padding: 23px;
-            }
-
-            .stats {
-                gap: 12px;
-            }
-
-            .stat-card {
-                padding: 18px;
-            }
+            .sidebar { width: 205px; }
+            .main { padding: 23px; }
+            .stats { gap: 12px; }
+            .stat-card { padding: 18px; }
         }
 
         @media (max-width: 760px) {
-            .layout {
-                display: block;
-            }
-
+            .layout { display: block; }
             .sidebar {
                 width: 100%;
                 padding: 14px;
                 border-right: none;
                 border-bottom: 1px solid var(--border);
             }
-
-            .brand {
-                margin-bottom: 15px;
-            }
-
-            .nav-label,
-            .sidebar-bottom {
-                display: none;
-            }
-
+            .brand { margin-bottom: 15px; }
+            .nav-label, .sidebar-bottom { display: none; }
             .sidebar nav {
                 display: flex;
                 gap: 6px;
                 overflow-x: auto;
             }
-
             .nav-link {
                 flex-shrink: 0;
                 margin: 0;
                 padding: 10px;
                 font-size: 11px;
             }
-
-            .main {
-                padding: 18px 13px;
-            }
-
-            .topbar {
-                align-items: flex-start;
-            }
-
-            .stats {
-                grid-template-columns: 1fr;
-                gap: 12px;
-            }
-
-            .stat-card {
-                padding: 17px;
-            }
-
-            .stat-number {
-                font-size: 28px;
-                margin-top: 12px;
-            }
-
-            .panel {
-                padding: 15px;
-            }
-
-            .panel-header {
-                flex-wrap: wrap;
-            }
-
-            .panel-header .btn {
-                white-space: normal;
-            }
-
-            .logout {
-                padding: 11px;
-            }
+            .main { padding: 18px 13px; }
+            .topbar { align-items: flex-start; }
+            .stats { grid-template-columns: 1fr; gap: 12px; }
+            .stat-card { padding: 17px; }
+            .stat-number { font-size: 28px; margin-top: 12px; }
+            .panel { padding: 15px; }
+            .panel-header { flex-wrap: wrap; }
+            .panel-header .btn { white-space: normal; }
+            .logout { padding: 11px; }
         }
     </style>
 </head>
 
 <body>
 <div class="layout">
-
     <aside class="sidebar">
         <a href="#dashboard" class="brand">
             <div class="brand-icon">E</div>
@@ -598,23 +447,12 @@
         </a>
 
         <div class="nav-label">Workspace</div>
-
         <nav>
-            <a class="nav-link active" href="#dashboard">
-                <span class="nav-icon">⌂</span> Dashboard
-            </a>
-            <a class="nav-link" href="#teachers">
-                <span class="nav-icon">♙</span> Teachers
-            </a>
-            <a class="nav-link" href="#students">
-                <span class="nav-icon">♧</span> Students
-            </a>
-            <a class="nav-link" href="#resources">
-                <span class="nav-icon">▤</span> Resources
-            </a>
-            <a class="nav-link" href="/admin/analytics">
-                <span class="nav-icon">▥</span> Analytics
-            </a>
+            <a class="nav-link active" href="#dashboard"><span class="nav-icon">⌂</span>Dashboard</a>
+            <a class="nav-link" href="#teachers"><span class="nav-icon">♙</span>Teachers</a>
+            <a class="nav-link" href="#students"><span class="nav-icon">♧</span>Students</a>
+            <a class="nav-link" href="#resources"><span class="nav-icon">▤</span>Resources</a>
+            <a class="nav-link" href="/admin/analytics"><span class="nav-icon">▥</span>Analytics</a>
         </nav>
 
         <div class="sidebar-bottom">
@@ -622,27 +460,21 @@
                 <strong>Campus resources, simplified.</strong>
                 <p>Manage teachers, students and learning materials from one place.</p>
             </div>
-
             <a href="/logout" class="nav-link" style="margin-top:14px">
-                <span class="nav-icon">↪</span> Logout
+                <span class="nav-icon">↪</span>Logout
             </a>
         </div>
     </aside>
 
     <main class="main" id="dashboard">
-
         <header class="topbar">
             <div>
                 <div class="eyebrow">Administration / Overview</div>
                 <h1>Welcome, {{ name }} 👋</h1>
-                <p class="subtitle">
-                    Here's what's happening across your campus today.
-                </p>
+                <p class="subtitle">Here's what's happening across your campus today.</p>
             </div>
-
             <div class="top-actions">
-                <button class="icon-button" id="themeToggle"
-                        type="button" aria-label="Toggle dark mode">☾</button>
+                <button class="icon-button" id="themeToggle" type="button" aria-label="Toggle dark mode">☾</button>
                 <a href="/logout" class="logout">Log out ↗</a>
             </div>
         </header>
@@ -683,20 +515,16 @@
                     <h2>Teacher Management</h2>
                     <p>Manage teaching staff and their branch details.</p>
                 </div>
-                <a href="/admin/add-teacher" class="btn btn-primary">
-                    + Add Teacher
-                </a>
+                <a href="/admin/add-teacher" class="btn btn-primary">+ Add Teacher</a>
             </div>
 
             <form method="GET" action="/admin" class="filters">
-                <input class="field search-field" type="search"
-                       name="search" placeholder="Search teachers..."
+                <input class="field search-field" type="search" name="search"
+                       placeholder="Search teachers..."
                        value="{{ request.args.get('search', '') }}">
-
                 <input class="field" type="text" name="branch"
                        placeholder="Filter by branch"
                        value="{{ request.args.get('branch', '') }}">
-
                 <button class="btn btn-primary" type="submit">Search</button>
                 <a href="/admin#teachers" class="btn">Reset</a>
             </form>
@@ -704,11 +532,7 @@
             <div class="table-wrap">
                 <table>
                     <thead>
-                    <tr>
-                        <th>Teacher</th>
-                        <th>Branch</th>
-                        <th>Actions</th>
-                    </tr>
+                    <tr><th>Teacher</th><th>Branch</th><th>Actions</th></tr>
                     </thead>
                     <tbody>
                     {% for teacher in teachers %}
@@ -716,30 +540,26 @@
                         <td>
                             <div class="person">
                                 <div class="avatar">
-                                    {{ (teacher['name'] or 'T')[:1]|upper }}
+                                    {{ ((teacher['name'] if 'name' in teacher.keys() else '') or 'T')[:1]|upper }}
                                 </div>
                                 <div>
-                                    <strong>{{ teacher['name'] }}</strong>
+                                    <strong>{{ teacher['name'] if 'name' in teacher.keys() else 'Unnamed teacher' }}</strong>
                                     <small>Teacher account</small>
                                 </div>
                             </div>
                         </td>
                         <td>
                             <span class="pill">
-                                {{ teacher['branch_name'] or teacher['branch'] or '—' }}
+                                {{ (teacher['branch_name'] if 'branch_name' in teacher.keys() else '') or (teacher['branch'] if 'branch' in teacher.keys() else '') or '—' }}
                             </span>
                         </td>
                         <td>
                             <div class="actions">
-                                <a class="action-link"
-                                   href="/admin/edit-teacher/{{ teacher['id'] }}">Edit</a>
-
+                                <a class="action-link" href="/admin/edit-teacher/{{ teacher['id'] }}">Edit</a>
                                 <form class="delete-form" method="POST"
                                       action="/admin/delete-teacher/{{ teacher['id'] }}"
                                       onsubmit="return confirm('Delete this teacher?')">
-                                    <button class="delete-button" type="submit">
-                                        Delete
-                                    </button>
+                                    <button class="delete-button" type="submit">Delete</button>
                                 </form>
                             </div>
                         </td>
@@ -759,19 +579,13 @@
                     <h2>Student Management</h2>
                     <p>Manage student accounts and branch assignments.</p>
                 </div>
-                <a href="/admin/add-student" class="btn btn-primary">
-                    + Add Student
-                </a>
+                <a href="/admin/add-student" class="btn btn-primary">+ Add Student</a>
             </div>
 
             <div class="table-wrap">
                 <table>
                     <thead>
-                    <tr>
-                        <th>Student</th>
-                        <th>Branch</th>
-                        <th>Actions</th>
-                    </tr>
+                    <tr><th>Student</th><th>Branch</th><th>Actions</th></tr>
                     </thead>
                     <tbody>
                     {% for student in students %}
@@ -779,30 +593,26 @@
                         <td>
                             <div class="person">
                                 <div class="avatar">
-                                    {{ (student['name'] or 'S')[:1]|upper }}
+                                    {{ ((student['name'] if 'name' in student.keys() else '') or 'S')[:1]|upper }}
                                 </div>
                                 <div>
-                                    <strong>{{ student['name'] }}</strong>
+                                    <strong>{{ student['name'] if 'name' in student.keys() else 'Unnamed student' }}</strong>
                                     <small>Student account</small>
                                 </div>
                             </div>
                         </td>
                         <td>
                             <span class="pill">
-                                {{ student['branch_name'] or student['branch'] or '—' }}
+                                {{ (student['branch_name'] if 'branch_name' in student.keys() else '') or (student['branch'] if 'branch' in student.keys() else '') or '—' }}
                             </span>
                         </td>
                         <td>
                             <div class="actions">
-                                <a class="action-link"
-                                   href="/admin/edit-student/{{ student['id'] }}">Edit</a>
-
+                                <a class="action-link" href="/admin/edit-student/{{ student['id'] }}">Edit</a>
                                 <form class="delete-form" method="POST"
                                       action="/admin/delete-student/{{ student['id'] }}"
                                       onsubmit="return confirm('Delete this student?')">
-                                    <button class="delete-button" type="submit">
-                                        Delete
-                                    </button>
+                                    <button class="delete-button" type="submit">Delete</button>
                                 </form>
                             </div>
                         </td>
@@ -827,15 +637,14 @@
 
             <form method="GET" action="/admin" class="filters">
                 <input class="field search-field" type="search"
-                       name="resource_search"
-                       placeholder="Search resources..."
+                       name="resource_search" placeholder="Search resources..."
                        value="{{ resource_search|default(request.args.get('resource_search', '')) }}">
 
                 <select class="field" name="resource_branch">
                     <option value="">All Branches</option>
                     {% for branch in branches %}
                     <option value="{{ branch }}"
-                        {% if resource_branch|default(request.args.get('resource_branch', '')) == branch %}selected{% endif %}>
+                        {% if (resource_branch|default(request.args.get('resource_branch', ''))) == branch %}selected{% endif %}>
                         {{ branch }}
                     </option>
                     {% endfor %}
@@ -845,7 +654,7 @@
                     <option value="">All Years</option>
                     {% for year in years %}
                     <option value="{{ year }}"
-                        {% if resource_year|default(request.args.get('resource_year', '')) == year %}selected{% endif %}>
+                        {% if (resource_year|default(request.args.get('resource_year', ''))) == year %}selected{% endif %}>
                         {{ year }}
                     </option>
                     {% endfor %}
@@ -873,42 +682,34 @@
                             <div class="person">
                                 <div class="avatar">▤</div>
                                 <div>
-                                    <strong>{{ resource['title'] }}</strong>
+                                    <strong>{{ resource['title'] if 'title' in resource.keys() else 'Untitled resource' }}</strong>
                                     <small>
-                                        {{ resource.get('filename', '') }}
+                                        {{ resource['filename'] if 'filename' in resource.keys() and resource['filename'] else '' }}
                                     </small>
                                 </div>
                             </div>
                         </td>
                         <td>
-                            <span class="pill">{{ resource['branch_name'] }}</span>
+                            <span class="pill">{{ resource['branch_name'] if 'branch_name' in resource.keys() else '—' }}</span>
                             <br><br>
-                            <span class="pill">{{ resource['year_name'] }}</span>
+                            <span class="pill">{{ resource['year_name'] if 'year_name' in resource.keys() else '—' }}</span>
                         </td>
-                        <td>{{ resource['subject_name'] }}</td>
-                        <td>{{ resource['teacher_name'] }}</td>
+                        <td>{{ resource['subject_name'] if 'subject_name' in resource.keys() else '—' }}</td>
+                        <td>{{ resource['teacher_name'] if 'teacher_name' in resource.keys() else '—' }}</td>
                         <td>
                             <div class="actions">
-                                <a class="action-link"
-                                   href="/resource/{{ resource['id'] }}">View</a>
-
-                                <a class="action-link"
-                                   href="/download/{{ resource['id'] }}">Download</a>
-
+                                <a class="action-link" href="/resource/{{ resource['id'] }}">View</a>
+                                <a class="action-link" href="/download/{{ resource['id'] }}">Download</a>
                                 <form class="delete-form" method="POST"
                                       action="/admin/delete-resource/{{ resource['id'] }}"
                                       onsubmit="return confirm('Delete this resource?')">
-                                    <button class="delete-button" type="submit">
-                                        Delete
-                                    </button>
+                                    <button class="delete-button" type="submit">Delete</button>
                                 </form>
                             </div>
                         </td>
                     </tr>
                     {% else %}
-                    <tr>
-                        <td colspan="5" class="empty">No resources found.</td>
-                    </tr>
+                    <tr><td colspan="5" class="empty">No resources found.</td></tr>
                     {% endfor %}
                     </tbody>
                 </table>
@@ -931,7 +732,10 @@
         themeToggle.textContent = darkMode ? "☀" : "☾";
 
         try {
-            localStorage.setItem("educloud-admin-theme", darkMode ? "dark" : "light");
+            localStorage.setItem(
+                "educloud-admin-theme",
+                darkMode ? "dark" : "light"
+            );
         } catch (error) {
             // Theme still works when browser storage is unavailable.
         }
